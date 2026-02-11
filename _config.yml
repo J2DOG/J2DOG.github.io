@@ -155,15 +155,15 @@ newsletter:
 
 collections:
   books:
-    output: false
+    output: true
   news:
     defaults:
       layout: post
-    output: false
+    output: true
   projects:
-    output: false
+    output: true
   teachings:
-    output: false
+    output: true
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
