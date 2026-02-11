@@ -489,11 +489,11 @@ To create a new collection, follow these steps. We will create a `courses` colle
    Update [\_pages/dropdown.md](_pages/dropdown.md) or the navigation configuration of your page. In the frontmatter of your collection landing page (e.g., `_pages/courses.md`), add:
 
    ```yaml
-   nav: true
+   nav: false
    nav_order: 5
    ```
 
-   - `nav: true` makes the page appear in the navigation menu
+   - `nav: false` makes the page appear in the navigation menu
    - `nav_order` sets the position in the menu (1 = first, 2 = second, etc.)
 
 5. **Create collection items**
@@ -1187,7 +1187,7 @@ For example, books.md do:
 layout: book-shelf
 title: bookshelf
 permalink: /books/
-nav: true
+nav: false
 collection: books
 --- -->
 
