@@ -26,7 +26,10 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-My name is Fengcheng Jiang. Still need some time to figure out what to say to the world.
+My name is Fengcheng Jiang. 
+
+Still need some time to figure out what to say here.
+
 今天晚上忽然想要以后开一个酒吧。
 
 <!-- Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](https://www.reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
