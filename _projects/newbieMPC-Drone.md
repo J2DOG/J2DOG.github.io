@@ -1,7 +1,7 @@
 ---
 layout: page
 title: NewbieMPC-Drone
-description: Quadrotor flight simulator with nonlinear MPC—trajectory optimization and obstacle avoidance (MATLAB).
+description: QSimple quadrotor flight featuring a nonlinear MPC controller based on quadrotor dynamics. 
 img: assets/img/newbieMPC.jpg
 redirect: https://github.com/J2DOG/NewbieMPC-Drone
 github: https://github.com/J2DOG/NewbieMPC-Drone

@@ -3,7 +3,7 @@ layout: page
 title: "polys_mapgen"
 description: "ROS package that generates a 3D point cloud map from convex polytopes (H-rep) and publishes as PointCloud2 for planners."
 img: assets/img/polys_mapgen.png
-importance: 2
+importance: 1
 category: work
 redirect: https://github.com/J2DOG/polys_mapgen
 github: https://github.com/J2DOG/polys_mapgen
