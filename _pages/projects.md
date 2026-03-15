@@ -2,7 +2,7 @@
 layout: page
 title: projects
 permalink: /projects/
-description: Some open souce repos of me.
+description: I hope you will be interested 🐈‍⬛...
 nav: true
 nav_order: 2
 display_categories: [work, fun]
