@@ -18,7 +18,7 @@ ninja.data = [{
           },
         },{id: "nav-projects",
           title: "projects",
-          description: "Some open souce repos of me.",
+          description: "I hope you will be interested 🐈‍⬛...",
           section: "Navigation",
           handler: () => {
             window.location.href = "/projects/";
@@ -61,7 +61,12 @@ ninja.data = [{
             },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
           title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
           description: "",
-          section: "News",},{id: "projects-polys-mapgen",
+          section: "News",},{id: "projects-newbiempc-drone",
+          title: 'NewbieMPC-Drone',
+          description: "Quadrotor flight simulator with nonlinear MPC—trajectory optimization and obstacle avoidance (MATLAB).",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/newbieMPC-Drone/";
+            },},{id: "projects-polys-mapgen",
           title: 'polys_mapgen',
           description: "ROS package that generates a 3D point cloud map from convex polytopes (H-rep) and publishes as PointCloud2 for planners.",
           section: "Projects",handler: () => {
