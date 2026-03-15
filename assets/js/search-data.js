@@ -63,7 +63,7 @@ ninja.data = [{
           description: "",
           section: "News",},{id: "projects-newbiempc-drone",
           title: 'NewbieMPC-Drone',
-          description: "Quadrotor flight simulator with nonlinear MPC—trajectory optimization and obstacle avoidance (MATLAB).",
+          description: "QSimple quadrotor flight featuring a nonlinear MPC controller based on quadrotor dynamics.",
           section: "Projects",handler: () => {
               window.location.href = "/projects/newbieMPC-Drone/";
             },},{id: "projects-polys-mapgen",
