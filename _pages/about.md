@@ -1,6 +1,6 @@
 ---
 layout: about
-title: Fengcheng's space
+title: about
 permalink: /
 subtitle: 
 

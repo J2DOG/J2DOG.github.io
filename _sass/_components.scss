@@ -138,6 +138,9 @@ ul.task-list input[type="checkbox"] {
   .card {
     img {
       width: 100%;
+      min-height: 150px;
+      min-width: 300px;
+      object-fit: cover;
     }
   }
 
