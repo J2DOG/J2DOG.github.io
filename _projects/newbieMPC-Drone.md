@@ -1,11 +1,11 @@
 ---
 layout: page
 title: NewbieMPC-Drone
-description: QSimple quadrotor flight featuring a nonlinear MPC controller based on quadrotor dynamics. 
+description: Simple quadrotor flight featuring a nonlinear MPC controller based on quadrotor dynamics. 
 img: assets/img/newbieMPC.jpg
 redirect: https://github.com/J2DOG/NewbieMPC-Drone
 github: https://github.com/J2DOG/NewbieMPC-Drone
-importance: 1
+importance: 4
 category: work
 ---
 
