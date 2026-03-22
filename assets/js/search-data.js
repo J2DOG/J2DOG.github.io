@@ -61,9 +61,14 @@ ninja.data = [{
             },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
           title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
           description: "",
-          section: "News",},{id: "projects-newbiempc-drone",
+          section: "News",},{id: "projects-da-tmpc-quadrotor",
+          title: 'DA-TMPC-quadrotor',
+          description: "Learning-based rigid tube MPC implemented on a quadrotor.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/da_tmpc_quadrotor/";
+            },},{id: "projects-newbiempc-drone",
           title: 'NewbieMPC-Drone',
-          description: "QSimple quadrotor flight featuring a nonlinear MPC controller based on quadrotor dynamics.",
+          description: "Simple quadrotor flight featuring a nonlinear MPC controller based on quadrotor dynamics.",
           section: "Projects",handler: () => {
               window.location.href = "/projects/newbieMPC-Drone/";
             },},{id: "projects-polys-mapgen",
