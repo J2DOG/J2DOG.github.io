@@ -14,16 +14,30 @@ categories: control
 (参考老王的模型,[视频](https://www.bilibili.com/video/BV1EZ4y1T7jG/?spm_id_from=333.1387.homepage.video_card.click)中给到了详细的推导,不再赘述。亦可参考书目Vehicle Dynamics and Control)
 
 动力学**误差**状态方程:
-$$ \small
+
+$$
+\small
 \begin{pmatrix}
-\dot{e}_d \\ \ddot{e}_d \\ \dot{e}_\varphi \\ \ddot{e}_\varphi
+\dot{e}_d \\
+\ddot{e}_d \\
+\dot{e}_\varphi \\
+\ddot{e}_\varphi
 \end{pmatrix}
 =
 \begin{pmatrix}
 0 & 1 & 0 & 0 \\
-0 & \dfrac{C_{\alpha f}+C_{\alpha r}}{mV_x} & -\dfrac{C_{\alpha f}+C_{\alpha r}}{m} & \dfrac{aC_{\alpha f}-bC_{\alpha r}}{mV_x}\\
+
+0 &
+-\dfrac{C_{\alpha f}+C_{\alpha r}}{mV_x} &
+\dfrac{C_{\alpha f}+C_{\alpha r}}{m} &
+\dfrac{bC_{\alpha r}-aC_{\alpha f}}{mV_x} \\
+
 0 & 0 & 0 & 1 \\
-0 & \dfrac{aC_{\alpha f}-bC_{\alpha r}}{IV_x} & -\dfrac{aC_{\alpha f}-bC_{\alpha r}}{I} & \dfrac{a^2C_{\alpha f}+b^2C_{\alpha r}}{IV_x}
+
+0 &
+\dfrac{bC_{\alpha r}-aC_{\alpha f}}{IV_x} &
+\dfrac{aC_{\alpha f}-bC_{\alpha r}}{I} &
+-\dfrac{a^2C_{\alpha f}+b^2C_{\alpha r}}{IV_x}
 \end{pmatrix}
 \begin{pmatrix}
 e_d \\
@@ -34,22 +48,23 @@ e_\varphi \\
 +
 \begin{pmatrix}
 0 \\
--\dfrac{C_{\alpha f}}{m} \\
+\dfrac{C_{\alpha f}}{m} \\
 0 \\
--\dfrac{aC_{\alpha f}}{I}
+\dfrac{aC_{\alpha f}}{I}
 \end{pmatrix}
-\delta +
+\delta
++
 \begin{pmatrix}
 0\\
-\dfrac{aC_{\alpha f}-bC_{\alpha r}}{mV_x} - V_x \\
+\dfrac{bC_{\alpha r}-aC_{\alpha f}}{mV_x} - V_x \\
 0 \\
-\dfrac{a^2C_{\alpha f}+b^2C_{\alpha r}}{IV_x}
+-\dfrac{a^2C_{\alpha f}+b^2C_{\alpha r}}{IV_x}
 \end{pmatrix}
 \dot{\varphi}_r
 $$
 
 四维状态量为横向误差、横向误差速度、(横摆角-轨迹航向)误差、(横摆角-轨迹航向)误差速度。时变参考并直接进入代价,而是通过初始误差定义再通过轨迹航向角速度进前馈补偿。状态方程$\dot{e}=Ae+B\delta+C\dot{\varphi}^{ref}$。离散化后记作
-$$x_{k+1}=A_dx_k+B_d\delta_k+C_d\dot{\varphi}^{ref}_k$$
+$$e_{k+1}=A_de_k+B_d\delta_k+C_d\dot{\varphi}^{ref}_k$$
 从控制的角度来看,轨迹航向的角速度$\dot{\varphi_r}$给状态方程带来了扰动项$C_d\dot{\varphi}^{ref}_k$。
 
 假设我们使用一个离散lqr控制器:$K = dlqr(A_d, B_d, Q, R)$,但LQR只解决了$$e_{k+1}=A_de_k+B_d\delta_k = (A_d-B_dK)e_k$$
