@@ -1,4 +1,83 @@
-<!DOCTYPE html> <html lang="zh-CN"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="robots" content="noindex, nofollow"> <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"> <meta name="theme-color" content="#f5f7fb"> <meta name="apple-mobile-web-app-capable" content="yes"> <title>Problems Radar</title> <meta name="apple-mobile-web-app-title" content="Problems Radar"> <meta name="description" content="Problems Radar：协助自动驾驶路测问题记录的路线与实时位置工具。"> <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"> <style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17243b;background:#e8eef3}.app{height:100vh;height:100dvh;position:relative;overflow:hidden}#map{position:absolute;inset:0;background:#e8eef3}.panel{position:absolute;top:calc(16px + env(safe - area - inset - top));left:calc(16px + env(safe - area - inset - left));bottom:calc(16px + env(safe - area - inset - bottom));width:320px;max-width:calc(100vw - 32px);padding:22px;background:#fffffff5;backdrop-filter:blur(16px);border:1px solid #fff;border-radius:20px;box-shadow:0 8px 35px #24375120;z-index:1000;overflow-y:auto;transition:transform .2s,opacity .2s}.app.sidebar-closed .panel{transform:translateX(calc( - 100% - 32px - env(safe - area - inset - left)));opacity:0;pointer-events:none}header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:24px}h1{font-size:21px;letter-spacing:-0.7px;margin:0}header small{display:block;font-size:11px;font-weight:500;letter-spacing:1px;color:#7c899a;margin-top:5px}button{min-height:44px;border:0;border-radius:11px;padding:10px 12px;font-size:13px;font-weight:600;background:#edf2f9;color:#254261;cursor:pointer;touch-action:manipulation}button.primary{background:#246bfe;color:white}button:disabled{opacity:.45;cursor:default}button:focus-visible{outline:3px solid #82afff;outline-offset:2px}.icon-button{width:44px;flex:none;font-size:22px;background:#f0f3f7}.sidebar-toggle{position:absolute;top:calc(16px + env(safe - area - inset - top));left:calc(16px + env(safe - area - inset - left));z-index:1000;display:none;background:white;box-shadow:0 4px 20px #24375120}.sidebar-closed .sidebar-toggle{display:block}#status{font-size:13px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:8px}#status:before{content:"";width:7px;height:7px;border-radius:50%;background:#246bfe;flex:none}#hint{font-size:12px;color:#a14c30;line-height:1.6;margin:0 0 12px;overflow-wrap:anywhere}#hint[hidden]{display:none}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stats div{background:#f4f6f9;border-radius:11px;padding:12px}.stats div:first-child{grid-column:1/-1}.stats small{display:block;color:#7b879a;font-size:11px;margin-bottom:6px}.stats strong{font-size:13px;font-variant-numeric:tabular-nums}.stats div:last-child{grid-column:1/-1}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.buttons .primary{grid-column:1/-1}.route-actions{margin-top:22px;padding-top:20px;border-top:1px solid #e7ebf0}.route-actions label{display:block;font-size:12px;color:#7b879a;margin-bottom:8px}.route-actions select{width:100%;min-height:46px;padding:10px 12px;border:1px solid #cce4d4;border-radius:11px;background:#e5f5ea;color:#18683a;font:inherit;font-size:16px;cursor:pointer}.route-actions select:focus-visible{outline:3px solid #82afff;outline-offset:2px}.leaflet-control-attribution{font-size:10px!important}.leaflet-top{top:calc(16px + env(safe - area - inset - top))}.leaflet-right{right:env(safe-area-inset-right)}.leaflet-bottom{bottom:env(safe-area-inset-bottom)}@media(max-width:600px){.panel{width:300px;padding:18px}header{margin-bottom:18px}}@media(prefers-reduced-motion:reduce){.panel{transition:none}}</style> </head> <body> <main class="app"> <div id="map" aria-label="当前位置地图"></div> <button id="sidebarOpen" class="icon-button sidebar-toggle" aria-label="展开控制栏" aria-controls="sidebar" aria-expanded="false">☰</button> <aside id="sidebar" class="panel" aria-label="控制栏"> <header> <h1>Problems Radar<small>自动驾驶路测</small> </h1> <button id="sidebarClose" class="icon-button" aria-label="收起控制栏" aria-controls="sidebar" aria-expanded="true">‹</button> </header> <p id="status" role="status" aria-live="polite">准备定位</p> <p id="hint" hidden></p> <div class="stats"> <div> <small>纬度 / 经度</small><strong id="coords">— / —</strong> </div> <div> <small>定位精度</small><strong id="accuracy">—</strong> </div> <div> <small>最近更新</small><strong id="updated">—</strong> </div> <div> <small>地图状态</small><strong id="mapStatus">正在加载</strong> </div> </div> <div class="route-actions"> <label for="route">路线选择</label><select id="route"> <option value="">不显示路线</option> <option value="wolfsburg">Wolfsburg 环线</option> </select> </div> <div class="buttons"> <button id="start" class="primary" aria-pressed="false">开始定位并跟随</button> </div> </aside> </main> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> <script>
+<!DOCTYPE html> <html lang="zh-CN"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="robots" content="noindex, nofollow"> <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"> <meta name="theme-color" content="#f5f7fb"> <meta name="apple-mobile-web-app-capable" content="yes"> <title>Problems Radar</title> <meta name="apple-mobile-web-app-title" content="Problems Radar"> <meta name="description" content="Problems Radar：协助自动驾驶路测问题记录的路线与实时位置工具。"> <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"> <style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17243b;background:#e8eef3}.app{height:100vh;height:100dvh;position:relative;overflow:hidden}#map{position:absolute;inset:0;background:#e8eef3}.panel{position:absolute;top:calc(16px + env(safe - area - inset - top));left:calc(16px + env(safe - area - inset - left));bottom:calc(16px + env(safe - area - inset - bottom));width:320px;max-width:calc(100vw - 32px);padding:22px;background:#fffffff5;backdrop-filter:blur(16px);border:1px solid #fff;border-radius:20px;box-shadow:0 8px 35px #24375120;z-index:1000;overflow-y:auto;transition:transform .2s,opacity .2s}.app.sidebar-closed .panel{transform:translateX(calc( - 100% - 32px - env(safe - area - inset - left)));opacity:0;pointer-events:none}header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:24px}h1{font-size:21px;letter-spacing:-0.7px;margin:0}header small{display:block;font-size:11px;font-weight:500;letter-spacing:1px;color:#7c899a;margin-top:5px}button{min-height:44px;border:0;border-radius:11px;padding:10px 12px;font-size:13px;font-weight:600;background:#edf2f9;color:#254261;cursor:pointer;touch-action:manipulation}button.primary{background:#246bfe;color:white}button:disabled{opacity:.45;cursor:default}button:focus-visible{outline:3px solid #82afff;outline-offset:2px}.icon-button{width:44px;flex:none;font-size:22px;background:#f0f3f7}.sidebar-toggle{position:absolute;top:calc(16px + env(safe - area - inset - top));left:calc(16px + env(safe - area - inset - left));z-index:1000;display:none;background:white;box-shadow:0 4px 20px #24375120}.sidebar-closed .sidebar-toggle{display:block}#status{font-size:13px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:8px}#status:before{content:"";width:7px;height:7px;border-radius:50%;background:#246bfe;flex:none}#hint{font-size:12px;color:#a14c30;line-height:1.6;margin:0 0 12px;overflow-wrap:anywhere}#hint[hidden]{display:none}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stats div{background:#f4f6f9;border-radius:11px;padding:12px}.stats div:first-child{grid-column:1/-1}.stats small{display:block;color:#7b879a;font-size:11px;margin-bottom:6px}.stats strong{font-size:13px;font-variant-numeric:tabular-nums}.stats div:last-child{grid-column:1/-1}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.buttons .primary{grid-column:1/-1}.route-actions{margin-top:22px;padding-top:20px;border-top:1px solid #e7ebf0}.route-actions label{display:block;font-size:12px;color:#7b879a;margin-bottom:8px}.route-actions select{width:100%;min-height:46px;padding:10px 12px;border:1px solid #cce4d4;border-radius:11px;background:#e5f5ea;color:#18683a;font:inherit;font-size:16px;cursor:pointer}.route-actions select:focus-visible{outline:3px solid #82afff;outline-offset:2px}.leaflet-control-attribution{font-size:10px!important}.leaflet-top{top:calc(16px + env(safe - area - inset - top))}.leaflet-right{right:env(safe-area-inset-right)}.leaflet-bottom{bottom:env(safe-area-inset-bottom)}@media(max-width:600px){.panel{width:300px;padding:18px}header{margin-bottom:18px}}@media(prefers-reduced-motion:reduce){.panel{transition:none}}.test-tools{margin-top:20px;padding-top:18px;border-top:1px solid #e7ebf0}.test-tools label{display:block;font-size:12px;color:#7b879a;margin:0 0 8px}.test-tools input,.issue-row textarea,.issue-row select{width:100%;padding:11px;border:1px solid #d7dfe8;border-radius:10px;font:inherit;font-size:16px;background:white;color:#17243b}.test-tools button{width:100%;margin-top:8px}.record-fab{position:absolute;bottom:calc(40px + env(safe - area - inset - bottom));right:calc(18px + env(safe - area - inset - right));z-index:1000;background:#e4503c;color:white;box-shadow:0 4px 18px #0003;min-width:140px}.test-status{font-size:12px;color:#65758a;line-height:1.5;margin:10px 0 0}dialog{width:720px;max-width:calc(100vw - 24px);max-height:85dvh;border:0;border-radius:18px;padding:22px;color:#17243b;box-shadow:0 12px 60px #0004}dialog::backdrop{background:#17243b66}dialog header{margin-bottom:16px}dialog h2{font-size:18px;margin:0}.issue-row{padding:16px 0;border-top:1px solid #e7ebf0}.issue-row p{font-size:12px;color:#64748b;margin:0 0 10px;overflow-wrap:anywhere}.issue-row textarea{resize:vertical;min-height:70px;margin-bottom:10px}.issue-row label{font-size:13px;display:block;margin:8px 0}.issue-row .confirm{display:flex;align-items:center;gap:8px}.issue-row input[type="checkbox"]{width:20px;height:20px}.dialog-actions{display:flex;gap:10px;position:sticky;bottom:-22px;background:white;padding:14px 0 4px}.dialog-actions button{flex:1}.issue-row{padding:18px;margin:12px 0;border:1px solid #dce3ec;border-left:5px solid #d69a26;border-radius:14px;background:#f8fafc}.issue-row.reviewed{border-left-color:#159447;background:#f2faf5}.issue-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.issue-head strong{font-size:18px}
+.issue-badge{padding:5px 9px;border-radius:20px;font-size:12px;background:#fff0cb;color:#8c630f}.reviewed .issue-badge{background:#ddf2e3;color:#18683a}.issue-row .field-label{color:#526278;font-weight:600;font-size:12px;margin:12px 0 6px}.issue-row .confirm{padding:10px;background:white;border:1px solid #dce3ec;border-radius:9px;margin-top:14px}.issue-meta{display:grid;gap:4px;margin-bottom:12px;font-size:12px;color:#65758a}.issue-pin{border:0;background:0}.issue-pin span{display:block;background:#e4503c;color:white;border:2px solid white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:26px;font-weight:700;box-shadow:0 2px 8px #0003}.issue-map-label{width:180px;max-width:200px;white-space:normal;font-size:12px;border-radius:8px;font-weight:600}.capture-fields label{display:block;margin:14px 0 6px;font-size:13px;font-weight:600}.capture-fields textarea,.capture-fields select{width:100%;font:inherit;font-size:16px;border:1px solid #d7dfe8;border-radius:10px;padding:12px}.capture-fields textarea{min-height:130px;resize:vertical}#captureMeta{font-size:12px;color:#65758a;line-height:1.6}#reviewSummary{padding:12px;background:#edf2f9;border-radius:10px;font-size:13px;margin-bottom:14px}.record-fab small{display:block;font-size:10px;opacity:.85;margin-top:3px}.issue-row:target{outline:3px solid #82afff}.buttons label{grid-column:1/-1;font-size:12px;color:#65758a;margin-top:8px;display:flex;justify-content:space-between}.buttons input[type="range"]{grid-column:1/-1;width:100%;accent-color:#246bfe;min-height:32px}.history-pin span{background:#7357c7}.history-label{border-left:3px solid #7357c7}.history-popup p{margin:6px 0;overflow-wrap:anywhere}.severity-high{--severity-color:#dc3434;--severity-bg:#fff0f0;--severity-text:#a52020}.severity-medium{--severity-color:#ef861d;--severity-bg:#fff3e5;--severity-text:#944a09}.severity-low{--severity-color:#e9c32f;--severity-bg:#fffbe1;--severity-text:#796008}.severity-unknown{--severity-color:#8492a6;--severity-bg:#f0f3f7;--severity-text:#4b5b70}.issue-pin[class*="severity-"] span{background:var(--severity-color);color:var(--severity-text)}.issue-pin.severity-high span{color:white}.issue-map-label[class*="severity-"]{border-left:4px solid var(--severity-color);background:var(--severity-bg);color:var(--severity-text)}.issue-row[class*="severity-"]{border-left-color:var(--severity-color)}.issue-row[class*="severity-"] .issue-head strong{color:var(--severity-text)}.issue-row[class*="severity-"] select{background:var(--severity-bg);border-color:var(--severity-color);color:var(--severity-text)}.panel{width:300px;padding:20px;border-radius:16px;background:#fffffff7;box-shadow:0 5px 28px #24375118}.panel header{margin-bottom:18px}.panel h1{font-size:20px}.panel header small{font-size:10px;letter-spacing:.5px}.panel .icon-button{width:32px;min-height:32px;font-size:20px;padding:4px;background:transparent;color:#8793a3}.panel button{font-weight:500}.active-test{margin-top:12px;padding-top:14px;border-top:1px solid #e9edf2}.active-test input{min-height:40px;padding:9px 11px;font-size:14px;border-color:#e2e7ed;background:#fafbfd}.active-test #beginTest{min-height:40px;margin-top:10px;background:#293d55}.test-secondary{display:flex;gap:8px;margin-top:8px}.test-secondary button{flex:1;width:auto;min-height:36px;margin:0;background:#f4f6f8;color:#5d6b7d;font-size:12px}.panel #downloadAgain{background:transparent;color:#42658c;text-align:left;min-height:34px;padding:5px 0;font-size:12px}.panel .test-status{font-size:11px;line-height:1.5;color:#8994a3;margin-top:9px}.panel #status{font-size:12px;color:#67768a;font-weight:500}.config-section{border-top:1px solid #e9edf2;margin-top:18px;padding-top:14px}.config-section summary{font-size:12px;color:#67768a;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:30px}.config-section summary:after{content:"＋";color:#a0a9b6;font-size:16px}.config-section[open] summary:after{content:"−"}.config-section summary::-webkit-details-marker{display:none}.config-section .route-actions{border:0;margin-top:10px;padding:0}.config-section .route-actions label{font-size:11px;margin-bottom:6px}.config-section .route-actions select{background:#fafbfd;color:#526278;border:1px solid #e2e7ed;min-height:38px;padding:7px 9px;font-size:14px;border-radius:8px}.config-section .buttons{display:block;margin-top:10px}.config-section .follow-toggle{width:100%;text-align:left;background:#f4f6f8;color:#65758a;min-height:34px;font-size:12px;border-radius:8px}.config-section .follow-toggle[aria-pressed="true"]{background:#edf2f7;color:#344b65}.config-section .buttons label{margin-top:12px;font-size:11px}.config-section .buttons input[type="range"]{min-height:24px;accent-color:#7d8fa6}
+.history-tools{margin-top:10px}.import-actions{display:flex;gap:8px}.import-actions button{flex:1;min-height:34px;padding:7px 8px;font-size:12px;color:#65758a;background:#f4f6f8;border-radius:8px}#clearImported{min-height:30px;padding:4px 0;background:transparent;font-size:11px;color:#8a94a2}.telemetry .stats{margin-top:10px;gap:0}.telemetry .stats div{background:transparent;border-bottom:1px solid #f0f2f5;border-radius:0;padding:9px 0}.telemetry .stats small{font-size:10px;margin-bottom:4px}.telemetry .stats strong{font-size:12px;font-weight:500}.issue-row>summary{cursor:pointer;list-style:none;margin-bottom:0}.issue-row>summary::-webkit-details-marker{display:none}.issue-row[open]>summary{margin-bottom:12px}.issue-row>summary strong:before{content:"▸ ";font-size:13px;color:#8994a3}.issue-row[open]>summary strong:before{content:"▾ "}.issue-head strong{font-size:13px;line-height:1.6;flex:1;overflow-wrap:anywhere}.issue-head .issue-badge,.issue-head button{flex-shrink:0}.folder-path{font-size:11px;color:#68798c;overflow-wrap:anywhere;line-height:1.6;margin:10px 0}.history-tools #chooseExportFolder,.history-tools #resetExportFolder{min-height:32px;font-size:12px;padding:7px 9px;background:#f4f6f8;color:#65758a;margin-right:6px;margin-top:8px}.issue-pin{display:flex;align-items:center;justify-content:center}.issue-pin span{width:12px;height:12px;border:0;font-size:0;line-height:0;box-shadow:0 1px 4px #0003}.issue-pin:hover span,.issue-pin:focus span{transform:scale(1.25)}.active-test #testPicker{width:100%;min-height:38px;font:inherit;font-size:13px;padding:8px;border:1px solid #e2e7ed;border-radius:8px;background:#fafbfd;color:#526278;margin-bottom:14px}.panel #downloadAgain,.panel #deleteFinishedTest{border:1px solid #dce3ec!important;border-radius:8px!important;padding:8px 11px!important;min-height:36px!important;margin-top:8px;text-align:center!important}.panel #deleteFinishedTest{border-color:#edccc8!important;background:#fff8f7!important}#toggleHistory{min-height:32px;padding:7px 10px;font-size:12px;background:#f4f6f8;color:#65758a;margin-top:10px;border:1px solid #e2e7ed;border-radius:8px}#toggleHistory[aria-pressed="true"]{color:#344b65;background:#edf2f7}#toggleIssueCards{width:100%;min-height:32px;margin-top:8px;padding:7px 10px;text-align:left;background:#f4f6f8;color:#65758a;font-size:12px;border-radius:8px}#toggleIssueCards[aria-pressed="true"]{background:#edf2f7;color:#344b65}#manualTime{width:100%;padding:11px;border:1px solid #d7dfe8;border-radius:10px;font:inherit;font-size:16px}.test-secondary{flex-wrap:wrap}.test-secondary #manualIssue{flex-basis:100%}#confirmDownloaded{border:1px solid #dce3ec;border-radius:8px;padding:8px 11px;min-height:36px;margin-top:8px;background:#edf5ef;color:#28633a;font-size:12px}</style> </head> <body> <main class="app"> <div id="map" aria-label="当前位置地图"></div> <button id="sidebarOpen" class="icon-button sidebar-toggle" aria-label="展开控制栏" aria-controls="sidebar" aria-expanded="false">☰</button> <aside id="sidebar" class="panel" aria-label="控制栏"> <header> <h1>Problems Radar<small>自动驾驶路测</small> </h1> <button id="sidebarClose" class="icon-button" aria-label="收起控制栏" aria-controls="sidebar" aria-expanded="true">‹</button> </header> <p id="status" role="status" aria-live="polite">准备定位</p> <p id="hint" hidden></p> <section class="test-tools active-test"> <label for="testPicker">测试记录</label><select id="testPicker"> <option value="">选择一趟测试</option></select><label for="testName">新测试名称</label><input id="testName" maxlength="120" placeholder="例如：Wolfsburg 第一次路测"> <button id="beginTest" class="primary">开始测试</button> <div class="test-secondary"> <button id="manualIssue" disabled>手动添加</button><button id="reviewIssues" disabled>问题单 · 0</button> <button id="finishTest" disabled>结束测试</button> </div> <p id="testStatus" class="test-status" role="status" aria-live="polite">未开始测试</p> </section> <details class="config-section"> <summary>地图设置</summary> <div class="route-actions"> <label for="route">路线选择</label><select id="route"> <option value="">不显示路线</option> <option value="wolfsburg">Wolfsburg 环线</option> </select> </div> <div class="buttons"> <button id="start" class="follow-toggle" aria-pressed="true">跟随：开</button> <button id="toggleIssueCards" aria-pressed="false">问题卡片：隐藏</button><label for="followZoom">跟随高度 <output id="followZoomValue">缩放 16</output></label><input id="followZoom" type="range" min="12" max="19" step="1" value="16" aria-label="跟随高度"> </div> </details> <details class="config-section"> <summary>导入历史问题</summary> <section class="history-tools"> <div class="import-actions"> <button id="importFolder">选文件夹</button><button id="importFiles">选文件</button> </div> <input id="folderInput" type="file" webkitdirectory multiple accept=".csv" hidden><input id="csvInput" type="file" multiple accept=".csv,text/csv" hidden> <button id="toggleHistory" aria-pressed="true">历史问题：显示</button> <p id="importFolderPath" class="folder-path">导入位置：未选择</p> <button id="clearImported" hidden>清除显示</button> <p id="importStatus" class="test-status" role="status"></p> </section> </details> <details class="config-section"> <summary>导出设置</summary> <div class="history-tools"> <button id="chooseExportFolder">选择导出文件夹</button><button id="resetExportFolder">使用浏览器下载</button> <p id="exportFolderPath" class="folder-path">导出位置：浏览器下载目录</p> <p id="exportFolderStatus" class="test-status" role="status"></p> </div> </details> <details class="config-section telemetry"> <summary>定位详情</summary> <div class="stats"> <div> <small>纬度 / 经度</small><strong id="coords">— / —</strong> </div> <div> <small>定位精度</small><strong id="accuracy">—</strong> </div> <div> <small>最近更新</small><strong id="updated">—</strong> </div> <div> <small>地图状态</small><strong id="mapStatus">正在加载</strong> </div> </div> </details> </aside> <button id="recordIssue" class="record-fab" disabled title="Alt / Option + P">＋ 记录问题<small>Alt / Option + P</small></button> <dialog id="captureDialog" aria-labelledby="captureTitle"> <h2 id="captureTitle">记录问题</h2> <p id="captureMeta"></p> <div class="capture-fields"> <div id="manualTimeField" hidden> <label for="manualTime">问题发生时间（当地时间）</label><input id="manualTime" type="datetime-local" step="1"> <p id="manualZone" class="test-status"></p> </div> <label for="captureDescription">问题描述</label><textarea id="captureDescription" placeholder="现在发生了什么？"></textarea><label for="captureSeverity">问题等级</label><select id="captureSeverity"> <option>高</option> <option>中</option> <option selected>低</option> <option>未知</option> </select> </div> <p id="captureStatus" class="test-status" role="status"></p> <div class="dialog-actions"> <button id="cancelCapture">取消</button><button id="saveCapture" class="primary">保存问题</button> </div> </dialog> <dialog id="issuesDialog" aria-labelledby="issuesTitle"> <header> <h2 id="issuesTitle">问题单</h2> <button id="closeIssues" aria-label="关闭问题单">×</button> </header> <div id="reviewSummary"></div> <button id="undoDelete" hidden>撤销删除</button> <div id="issuesList"></div> <p id="reviewStatus" class="test-status" role="status"></p> <div class="dialog-actions"> <button id="confirmAll">确认全部</button><button id="exportReviewed" class="primary">结束测试</button> </div> </dialog> </main> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> <script>
+      let radarExportDirectory = null;
+      let radarCardsVisible = false;
+      const radarIssueMarkers = new Set();
+      function radarApplyCards() {
+        for (const marker of radarIssueMarkers) {
+          const tip = marker.getTooltip();
+          if (!tip) continue;
+          tip.options.permanent = radarCardsVisible;
+          if (radarCardsVisible) marker.openTooltip();
+          else marker.closeTooltip();
+        }
+      }
+      function radarRegisterMarker(marker) {
+        radarIssueMarkers.add(marker);
+        const tip = marker.getTooltip();
+        if (tip) tip.options.permanent = radarCardsVisible;
+        if (radarCardsVisible) marker.openTooltip();
+        return marker;
+      }
+
+      function radarHandleStore(mode, value) {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open("problems-radar-files", 1);
+          request.onupgradeneeded = () => request.result.createObjectStore("handles");
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => {
+            const db = request.result,
+              tx = db.transaction("handles", mode === "get" ? "readonly" : "readwrite"),
+              store = tx.objectStore("handles");
+            let op;
+            if (mode === "get") op = store.get("export");
+            else if (value) op = store.put(value, "export");
+            else op = store.delete("export");
+            let result;
+            op.onsuccess = () => {
+              result = op.result;
+            };
+            tx.oncomplete = () => {
+              db.close();
+              resolve(result);
+            };
+            tx.onerror = () => {
+              db.close();
+              reject(tx.error);
+            };
+          };
+        });
+      }
+      async function radarWriteCSV(directory, name, content) {
+        const file = await directory.getFileHandle(name, { create: true });
+        const writer = await file.createWritable();
+        try {
+          await writer.write(content);
+          await writer.close();
+        } catch (error) {
+          try {
+            await writer.abort();
+          } catch (e) {}
+          throw error;
+        }
+      }
+      function radarRead(key, fallback) {
+        try {
+          return JSON.parse(localStorage.getItem(key)) ?? fallback;
+        } catch (e) {
+          return fallback;
+        }
+      }
+      function radarSave(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+    </script> <script>
       (() => {
         "use strict";
         const el = (id) => document.getElementById(id);
@@ -7,8 +86,25 @@
           circle,
           watchId = null,
           lastPosition = null,
-          following = false,
+          following = true,
+          followZoom = 16,
           locationSession = 0;
+        radarCardsVisible = radarRead("radar-cards-visible", false);
+        const cardButton = el("toggleIssueCards");
+        function cardsButtonState() {
+          cardButton.textContent = radarCardsVisible ? "问题卡片：显示" : "问题卡片：隐藏";
+          cardButton.setAttribute("aria-pressed", String(radarCardsVisible));
+        }
+        cardButton.onclick = () => {
+          radarCardsVisible = !radarCardsVisible;
+          radarSave("radar-cards-visible", radarCardsVisible);
+          cardsButtonState();
+          radarApplyCards();
+        };
+        cardsButtonState();
+        const preferences = radarRead("radar-preferences", {});
+        following = preferences.following ?? true;
+        followZoom = Number(preferences.followZoom) || 16;
         const localFile = location.protocol === "file:";
         // OSRM driving geometry, retrieved using the shared route stops.
         const roadRoute = [
@@ -482,7 +578,7 @@
         document.addEventListener("keydown", (event) => {
           if (event.key === "Escape" && !app.classList.contains("sidebar-closed")) el("sidebarClose").click();
         });
-        setSidebar(!window.matchMedia("(max-width:600px)").matches);
+        setSidebar(preferences.sidebarOpen ?? !window.matchMedia("(max-width:600px)").matches);
         function message(status, hint) {
           el("status").textContent = status;
           const isError = /失败|不支持|未成功|无法|需要安全/.test(status);
@@ -491,11 +587,12 @@
           if (isError) setSidebar(true);
         }
         function locationButtonState() {
-          el("start").textContent = watchId !== null ? "停止定位" : "开始定位并跟随";
-          el("start").setAttribute("aria-pressed", String(watchId !== null));
+          el("start").textContent = following ? "跟随：开" : "跟随：关";
+          el("start").setAttribute("aria-pressed", String(following));
         }
         if (window.L) {
           map = L.map("map", { zoomControl: false }).setView([30, 105], 3);
+          window.radarMap = map;
           L.control.zoom({ position: "topright" }).addTo(map);
           L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
           routeLine = L.polyline(roadRoute, {
@@ -597,6 +694,7 @@
           const { latitude, longitude, accuracy } = position.coords;
           const first = !lastPosition;
           lastPosition = [latitude, longitude];
+          window.dispatchEvent(new CustomEvent("radar-position", { detail: { latitude, longitude, accuracy, timestamp: position.timestamp } }));
           el("coords").textContent = latitude.toFixed(5) + " / " + longitude.toFixed(5);
           el("accuracy").textContent = "± " + Math.round(accuracy) + " 米";
           el("updated").textContent = new Date(position.timestamp).toLocaleTimeString("zh-CN", { hour12: false });
@@ -616,23 +714,18 @@
               circle.setLatLng(lastPosition).setRadius(accuracy);
               marker.setLatLng(lastPosition);
             }
-            if (first) map.setView(lastPosition, 16);
-            else if (following) map.panTo(lastPosition, { animate: false });
+            if (following) map.setView(lastPosition, followZoom, { animate: false });
           }
         }
         function stop() {
           if (watchId !== null) navigator.geolocation.clearWatch(watchId);
           watchId = null;
-          following = false;
           locationSession++;
+          window.dispatchEvent(new Event("radar-position-stop"));
           locationButtonState();
         }
-        el("start").onclick = () => {
-          if (watchId !== null) {
-            stop();
-            message("定位已停止", "");
-            return;
-          }
+        function startLocation() {
+          if (watchId !== null) return;
           if (!navigator.geolocation) {
             message("此预览环境不支持定位", "请将文件放到 HTTPS 网站，然后用 Safari 打开。");
             return;
@@ -641,7 +734,6 @@
             message("定位需要安全网址", "请使用 HTTPS 地址打开这个页面。");
             return;
           }
-          following = true;
           const session = ++locationSession;
           message("正在获取位置…", "请允许定位；首次定位可能需要几十秒。");
           try {
@@ -655,10 +747,12 @@
                 const hints = {
                   1: "定位权限被拒绝。请检查 iPhone 定位服务和 Safari 的网站定位权限；本地预览可能无法请求权限，请改用 HTTPS。",
                   2: "暂时无法获取位置。请检查定位服务，尝试移到室外后重试。",
-                  3: "定位超时，仍在等待下一次更新。请保持页面在前台，或停止后重试。",
+                  3: "定位超时，仍在等待下一次更新。请保持页面在前台，检查系统定位服务。",
                 };
                 message("定位未成功", hints[error.code] || error.message);
-                if (error.code === 1) stop();
+                if (error.code === 1) {
+                  stop();
+                }
               },
               { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
             );
@@ -667,7 +761,26 @@
             stop();
             message("此环境无法启动定位", error.message + "；请尝试用 Safari 打开 HTTPS 页面。");
           }
+        }
+        el("start").onclick = () => {
+          following = !following;
+          locationButtonState();
+          startLocation();
+          if (following && map && lastPosition) map.setView(lastPosition, followZoom, { animate: false });
         };
+        el("followZoom").oninput = () => {
+          followZoom = Number(el("followZoom").value);
+          el("followZoomValue").textContent = "缩放 " + followZoom;
+          if (following && map && lastPosition) map.setView(lastPosition, followZoom, { animate: false });
+        };
+        el("followZoom").value = followZoom;
+        el("followZoomValue").textContent = "缩放 " + followZoom;
+        locationButtonState();
+        window.addEventListener("DOMContentLoaded", startLocation);
+        window.addEventListener("radar-ensure-location", startLocation);
+        window.addEventListener("pageshow", (event) => {
+          if (event.persisted) startLocation();
+        });
         el("route").onchange = () => {
           if (!map || !routeLine) return;
           if (!el("route").value) {
@@ -682,6 +795,1087 @@
         document.addEventListener("visibilitychange", () => {
           if (!document.hidden && watchId !== null) message("已回到页面，等待位置更新", "显示的坐标是最后一次定位结果，请留意最近更新时间。");
         });
-        window.addEventListener("pagehide", stop);
+        function savePreferences() {
+          radarSave("radar-preferences", {
+            following,
+            followZoom,
+            route: el("route").value,
+            sidebarOpen: !app.classList.contains("sidebar-closed"),
+            view: map ? { center: [map.getCenter().lat, map.getCenter().lng], zoom: map.getZoom() } : null,
+            sections: [...document.querySelectorAll(".config-section")].map((x) => x.open),
+          });
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+          if (preferences.route) {
+            el("route").value = preferences.route;
+            el("route").onchange();
+          }
+          if (map && preferences.view) map.setView(preferences.view.center, preferences.view.zoom, { animate: false });
+          document.querySelectorAll(".config-section").forEach((section, i) => {
+            section.open = Boolean(preferences.sections?.[i]);
+            section.addEventListener("toggle", savePreferences);
+          });
+          document.addEventListener("click", () => setTimeout(savePreferences, 0));
+          document.addEventListener("input", savePreferences);
+          document.addEventListener("change", savePreferences);
+          if (map) map.on("moveend zoomend", savePreferences);
+        });
+        window.addEventListener("pagehide", () => {
+          savePreferences();
+          stop();
+        });
+      })();
+    </script> <script>
+      function formatLocalTime(utc, offsetMinutes) {
+        const date = new Date(utc);
+        if (!utc || !Number.isFinite(date.getTime())) return "时间未知";
+        const offset = Number.isFinite(offsetMinutes) ? offsetMinutes : -date.getTimezoneOffset();
+        const local = new Date(date.getTime() + offset * 60000),
+          pad = (n) => String(n).padStart(2, "0");
+        const zone = "UTC" + (offset >= 0 ? "+" : "-") + pad(Math.floor(Math.abs(offset) / 60)) + ":" + pad(Math.abs(offset) % 60);
+        return (
+          local.getUTCFullYear() +
+          "-" +
+          pad(local.getUTCMonth() + 1) +
+          "-" +
+          pad(local.getUTCDate()) +
+          " " +
+          pad(local.getUTCHours()) +
+          ":" +
+          pad(local.getUTCMinutes()) +
+          ":" +
+          pad(local.getUTCSeconds()) +
+          " " +
+          zone
+        );
+      }
+      function issueTitle(utc, description, offsetMinutes) {
+        return formatLocalTime(utc, offsetMinutes) + " / " + (description || "待填写问题");
+      }
+
+      function severityClass(value) {
+        return { 高: "severity-high", 中: "severity-medium", 低: "severity-low" }[value] || "severity-unknown";
+      }
+    </script> <script id="test-model">
+      class RoadTest {
+        constructor(name, now = new Date().toISOString()) {
+          this.name = name.trim();
+          if (!this.name) throw Error("请输入测试名称");
+          this.nextIssueId = 1;
+          this.startedUTC = now;
+          this.endedUTC = null;
+          this.issues = [];
+        }
+        renumber() {
+          this.nextIssueId = Math.max(
+            this.nextIssueId || 1,
+            this.issues.reduce((max, x) => Math.max(max, (x.uid || 0) + 1), 1)
+          );
+          for (const issue of this.issues) if (!issue.uid) issue.uid = this.nextIssueId++;
+          this.issues.sort((a, b) => Date.parse(a.utc) - Date.parse(b.utc) || a.uid - b.uid);
+          this.issues.forEach((issue, index) => {
+            issue.id = index + 1;
+          });
+        }
+        record(fix, now = new Date().toISOString()) {
+          if (this.endedUTC) throw Error("测试已经结束");
+          const valid = fix && Number.isFinite(fix.latitude) && Number.isFinite(fix.longitude);
+          this.renumber();
+          const issue = {
+            uid: this.nextIssueId++,
+            id: 0,
+            utc: now,
+            utcOffsetMinutes: -new Date(now).getTimezoneOffset(),
+            latitude: valid ? fix.latitude : null,
+            longitude: valid ? fix.longitude : null,
+            accuracy: valid ? fix.accuracy : null,
+            gpsUTC: valid ? new Date(fix.timestamp).toISOString() : "",
+            gpsAgeSeconds: valid ? Math.max(0, Math.round((Date.parse(now) - fix.timestamp) / 1000)) : null,
+            description: "",
+            severity: "低",
+            confirmed: false,
+          };
+          this.issues.push(issue);
+          this.renumber();
+          return issue;
+        }
+        edit(id, field, value) {
+          const issue = this.issues.find((x) => x.id === id);
+          if (!issue) throw Error("问题单不存在");
+          if (field === "description") issue.description = value;
+          else if (field === "severity" && ["高", "中", "低", "未知"].includes(value)) issue.severity = value;
+          else throw Error("无效字段");
+          issue.confirmed = false;
+          this.renumber();
+        }
+        remove(id) {
+          const index = this.issues.findIndex((x) => x.id === id);
+          if (index < 0) throw Error("问题单不存在");
+          const removed = { issue: this.issues.splice(index, 1)[0], index };
+          this.renumber();
+          return removed;
+        }
+        restore(removed) {
+          if (this.issues.some((x) => x.uid === removed.issue.uid)) throw Error("问题编号重复");
+          this.issues.splice(Math.min(removed.index, this.issues.length), 0, removed.issue);
+          this.renumber();
+        }
+        ready() {
+          return this.issues.every((x) => x.confirmed && x.description.trim());
+        }
+        csv(endUTC) {
+          this.renumber();
+          if (!this.ready()) throw Error("请填写所有问题描述并逐条确认");
+          const cell = (value) => {
+            let text = value == null ? "" : String(value);
+            if (typeof value === "string" && /^[\s]*[=+\-@]/.test(text)) text = "'" + text;
+            return '"' + text.replace(/"/g, '""') + '"';
+          };
+          const rows = [
+            [
+              "测试名称",
+              "测试开始UTC",
+              "测试结束UTC",
+              "问题编号",
+              "记录UTC",
+              "纬度",
+              "经度",
+              "GPS采样UTC",
+              "精度米",
+              "GPS采样距记录秒数",
+              "记录当地时间",
+              "记录时区偏移分钟",
+              "位置来源",
+              "问题描述",
+              "问题等级",
+              "已确认",
+            ],
+          ];
+          for (const x of this.issues)
+            rows.push([
+              this.name,
+              this.startedUTC,
+              endUTC,
+              x.id,
+              x.utc,
+              x.latitude,
+              x.longitude,
+              x.gpsUTC,
+              x.accuracy,
+              x.gpsAgeSeconds,
+              formatLocalTime(x.utc, x.utcOffsetMinutes),
+              x.utcOffsetMinutes,
+              x.source || "GPS",
+              x.description,
+              x.severity,
+              "是",
+            ]);
+          return "\uFEFF" + rows.map((row) => row.map(cell).join(",")).join("\r\n") + "\r\n";
+        }
+      }
+    </script> <script>
+      (() => {
+        const $ = (id) => document.getElementById(id),
+          key = "problems-radar-draft-v1";
+        let test = null,
+          fix = null,
+          locating = false,
+          pendingIssue = null,
+          tests = [];
+        const issueMarkers = new Map(),
+          deletedIssues = [];
+        let pickingPoint = false,
+          manualPointMarker = null;
+        $("manualIssue").onclick = () => {
+          if (!test || !window.radarMap) return;
+          pickingPoint = true;
+          if ($("start").getAttribute("aria-pressed") === "true") $("start").click();
+          notify("点击地图选择问题位置；Esc 取消选点");
+          document.getElementById("sidebarClose").click();
+          window.radarMap.getContainer().style.cursor = "crosshair";
+        };
+        function saveManualDraft() {
+          if (pendingIssue?.manual)
+            radarSave("radar-manual-draft", {
+              runKey: test.runKey,
+              point: pendingIssue,
+              time: $("manualTime").value,
+              description: $("captureDescription").value,
+              severity: $("captureSeverity").value,
+            });
+        }
+        function endPicking() {
+          pickingPoint = false;
+          if (window.radarMap) window.radarMap.getContainer().style.cursor = "";
+        }
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && pickingPoint) {
+            endPicking();
+            notify("已取消手动选点");
+          }
+        });
+        if (window.radarMap)
+          window.radarMap.on("click", (event) => {
+            if (!pickingPoint || !test) return;
+            endPicking();
+            const now = new Date();
+            const dateText = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+            $("manualTime").value = dateText;
+            pendingIssue = { manual: true, latitude: event.latlng.lat, longitude: event.latlng.lng };
+            $("captureTitle").textContent = "手动添加问题";
+            $("captureMeta").textContent = "地图选点：" + pendingIssue.latitude.toFixed(6) + ", " + pendingIssue.longitude.toFixed(6);
+            $("manualTimeField").hidden = false;
+            $("captureDescription").value = "";
+            $("captureSeverity").value = "低";
+            $("captureStatus").textContent = "";
+            $("manualZone").textContent = formatLocalTime(now.toISOString());
+            saveManualDraft();
+            $("captureDialog").showModal();
+            $("captureDescription").focus();
+          });
+        $("manualTime").oninput = () => {
+          saveManualDraft();
+          const date = new Date($("manualTime").value);
+          $("manualZone").textContent = Number.isFinite(date.getTime()) ? formatLocalTime(date.toISOString()) : "请选择有效时间";
+        };
+        function undoState() {
+          $("undoDelete").hidden = !deletedIssues.length;
+        }
+        $("undoDelete").onclick = () => {
+          if (!test || !deletedIssues.length) return;
+          const removed = deletedIssues.pop();
+          test.restore(removed);
+          persist();
+          refreshMarkers();
+          render();
+          undoState();
+          $("reviewStatus").textContent = "已恢复问题 #" + removed.issue.id;
+        };
+        function notify(text) {
+          $("testStatus").textContent = text;
+        }
+        function persist() {
+          try {
+            if (test) {
+              test.runKey ||= test.startedUTC + "-" + Math.random().toString(36).slice(2);
+              const index = tests.findIndex((x) => x.runKey === test.runKey);
+              if (index < 0) tests.push(test);
+              else tests[index] = test;
+            }
+            localStorage.setItem("radar-tests-v1", JSON.stringify({ tests, selected: test?.runKey || null }));
+            localStorage.setItem(key, JSON.stringify(test));
+          } catch (e) {
+            notify("草稿无法保存到此浏览器，请及时导出，避免刷新丢失。");
+          }
+        }
+        function refreshMarkers() {
+          const map = window.radarMap;
+          if (!map || !window.L) return;
+          for (const marker of issueMarkers.values()) {
+            map.removeLayer(marker);
+            radarIssueMarkers.delete(marker);
+          }
+          issueMarkers.clear();
+          if (!test) return;
+          for (const issue of test.issues) {
+            if (!Number.isFinite(issue.latitude) || !Number.isFinite(issue.longitude)) continue;
+            const tag = document.createElement("span");
+            tag.textContent = issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes) + " · " + issue.severity;
+            const icon = L.divIcon({
+              className: "issue-pin " + severityClass(issue.severity),
+              html: "<span>●</span>",
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+            });
+            const marker = L.marker([issue.latitude, issue.longitude], { icon })
+              .addTo(map)
+              .bindTooltip(tag, {
+                permanent: false,
+                direction: "right",
+                offset: [12, 0],
+                className: "issue-map-label " + severityClass(issue.severity),
+              });
+            radarRegisterMarker(marker);
+            marker.on("click", () => {
+              review();
+              const card = document.getElementById("issue-" + issue.id);
+              if (card) {
+                card.open = true;
+                card.scrollIntoView({ block: "center", behavior: "smooth" });
+              }
+            });
+            issueMarkers.set(issue.id, marker);
+          }
+        }
+        function summary() {
+          if (test)
+            $("reviewSummary").textContent =
+              test.issues.length +
+              " 条问题 · " +
+              test.issues.filter((x) => x.confirmed).length +
+              " 已确认 · " +
+              test.issues.filter((x) => !x.confirmed).length +
+              " 待确认";
+        }
+        function controls() {
+          const active = Boolean(test && !test.endedUTC);
+          $("testName").disabled = false;
+          $("beginTest").disabled = false;
+          $("beginTest").textContent = active ? "开始下一趟测试" : "开始测试";
+          const picker = $("testPicker");
+          picker.replaceChildren(new Option("选择一趟测试", ""));
+          for (const run of tests) {
+            picker.add(
+              new Option(
+                run.name + " · " + (run.endedUTC ? "已结束" : run.ready() ? "进行中" : "待确认") + " · " + run.issues.length + " 条",
+                run.runKey
+              )
+            );
+          }
+          picker.value = test?.runKey || "";
+          if ($("downloadAgain")) $("downloadAgain").hidden = !test?.endedUTC;
+          if ($("deleteFinishedTest")) $("deleteFinishedTest").hidden = !test?.endedUTC;
+          if ($("confirmDownloaded")) $("confirmDownloaded").hidden = !test?.awaitingDownloadConfirmation;
+          $("manualIssue").disabled = !test;
+          $("recordIssue").disabled = !active;
+          $("reviewIssues").disabled = !test;
+          $("finishTest").disabled = !active;
+          $("exportReviewed").disabled = !active;
+          $("confirmAll").disabled = !test;
+          $("reviewIssues").textContent = "问题单 · " + (test ? test.issues.length : 0);
+          $("finishTest").textContent = "结束测试";
+        }
+        try {
+          const collection = radarRead("radar-tests-v1", null);
+          if (collection && Array.isArray(collection.tests)) {
+            tests = collection.tests
+              .filter((x) => typeof x.name === "string" && Array.isArray(x.issues))
+              .map((x) => {
+                const run = Object.assign(new RoadTest(x.name), x);
+                run.renumber();
+                return run;
+              });
+          }
+          const saved = collection ? tests.find((x) => x.runKey === collection.selected) : JSON.parse(localStorage.getItem(key) || "null");
+          if (saved && typeof saved.name === "string" && Array.isArray(saved.issues)) {
+            test = Object.assign(new RoadTest(saved.name), saved);
+            test.renumber();
+            persist();
+            $("testName").value = "";
+            notify(test.endedUTC ? "已结束：" + test.name : "已恢复测试：" + test.name);
+          }
+        } catch (e) {
+          notify("无法恢复草稿；可以开始新的测试。");
+        }
+        controls();
+        refreshMarkers();
+        window.addEventListener("radar-position", (event) => {
+          fix = { ...event.detail };
+          locating = true;
+        });
+        window.addEventListener("radar-position-stop", () => {
+          locating = false;
+        });
+        $("beginTest").onclick = () => {
+          try {
+            const next = new RoadTest($("testName").value);
+            persist();
+            test = next;
+          } catch (e) {
+            notify(e.message);
+            $("testName").focus();
+            return;
+          }
+          deletedIssues.length = 0;
+          undoState();
+          persist();
+          controls();
+          refreshMarkers();
+          $("testName").value = "";
+          notify("测试中：" + test.name + " · 快捷键 Alt / Option + P");
+          window.dispatchEvent(new Event("radar-ensure-location"));
+        };
+        function gpsLabel(issue) {
+          if (!Number.isFinite(issue.latitude) || !Number.isFinite(issue.longitude)) return "未取得位置";
+          if (issue.source === "手动选点") return issue.latitude.toFixed(6) + ", " + issue.longitude.toFixed(6) + " · 手动选点";
+          const age = issue.gpsAgeSeconds ?? 0;
+          return (
+            issue.latitude.toFixed(6) +
+            ", " +
+            issue.longitude.toFixed(6) +
+            (age > 30 ? " · 最近位置（" + age + " 秒前采样）" : "") +
+            " · 精度 ±" +
+            Math.round(issue.accuracy || 0) +
+            " 米"
+          );
+        }
+        function record() {
+          if (!test || test.endedUTC) return;
+          if ($("captureDialog").open) {
+            $("captureDescription").focus();
+            return;
+          }
+          const current = locating && fix ? fix : null;
+          $("manualTimeField").hidden = true;
+          pendingIssue = test.record(current);
+          pendingIssue.capturing = true;
+          persist();
+          controls();
+          refreshMarkers();
+          $("captureTitle").textContent = "记录问题";
+          $("captureMeta").textContent = formatLocalTime(pendingIssue.utc, pendingIssue.utcOffsetMinutes) + " · " + gpsLabel(pendingIssue);
+          $("captureDescription").value = "";
+          $("captureSeverity").value = "低";
+          $("captureStatus").textContent = "";
+          if ($("issuesDialog").open) $("issuesDialog").close();
+          $("captureDialog").showModal();
+          $("captureDescription").focus();
+        }
+        $("captureDescription").oninput = () => {
+          saveManualDraft();
+          if (pendingIssue && !pendingIssue.manual) {
+            test.edit(pendingIssue.id, "description", $("captureDescription").value);
+            persist();
+          }
+        };
+        $("captureSeverity").onchange = () => {
+          saveManualDraft();
+          if (pendingIssue && !pendingIssue.manual) {
+            test.edit(pendingIssue.id, "severity", $("captureSeverity").value);
+            persist();
+          }
+        };
+        $("saveCapture").onclick = () => {
+          if (!pendingIssue) return;
+          if (pendingIssue.manual) {
+            const description = $("captureDescription").value.trim(),
+              date = new Date($("manualTime").value);
+            if (!description || !Number.isFinite(date.getTime())) {
+              $("captureStatus").textContent = "请选择有效时间并填写描述";
+              return;
+            }
+            test.renumber();
+            const issue = {
+              uid: test.nextIssueId++,
+              id: 0,
+              utc: date.toISOString(),
+              utcOffsetMinutes: -date.getTimezoneOffset(),
+              latitude: pendingIssue.latitude,
+              longitude: pendingIssue.longitude,
+              accuracy: null,
+              gpsUTC: "",
+              gpsAgeSeconds: null,
+              description,
+              severity: $("captureSeverity").value,
+              confirmed: false,
+              source: "手动选点",
+            };
+            test.issues.push(issue);
+            test.renumber();
+            persist();
+            controls();
+            refreshMarkers();
+            pendingIssue = null;
+            $("captureDialog").close();
+            radarSave("radar-manual-draft", null);
+            notify("已添加手动问题，按时间重新排序");
+            return;
+          }
+          if (!pendingIssue.description.trim()) {
+            $("captureStatus").textContent = "请填写问题描述";
+            $("captureDescription").focus();
+            return;
+          }
+          const id = pendingIssue.id;
+          delete pendingIssue.capturing;
+          persist();
+          refreshMarkers();
+          pendingIssue = null;
+          $("captureDialog").close();
+          notify("已保存问题 #" + id + " · 待测试结束时确认");
+        };
+        function cancelCapture() {
+          if (pendingIssue && !pendingIssue.manual && test && !test.endedUTC) {
+            test.remove(pendingIssue.id);
+            persist();
+            controls();
+            refreshMarkers();
+          }
+          if (pendingIssue?.manual) radarSave("radar-manual-draft", null);
+          pendingIssue = null;
+          $("captureDialog").close();
+          notify("已取消本次问题记录");
+        }
+        $("cancelCapture").onclick = cancelCapture;
+        $("captureDialog").addEventListener("cancel", (event) => {
+          event.preventDefault();
+          cancelCapture();
+        });
+        $("recordIssue").onclick = record;
+        document.addEventListener("keydown", (event) => {
+          if (event.altKey && !event.ctrlKey && !event.metaKey && event.code === "KeyP" && !event.repeat && !event.isComposing) {
+            event.preventDefault();
+            record();
+          }
+        });
+        function render() {
+          const list = $("issuesList");
+          list.replaceChildren();
+          $("issuesTitle").textContent = test.name + " · 问题审核";
+          summary();
+          undoState();
+          if (!test.issues.length) {
+            const p = document.createElement("p");
+            p.textContent = "暂无问题记录";
+            list.append(p);
+          }
+          for (const issue of test.issues) {
+            const row = document.createElement("details");
+            row.id = "issue-" + issue.id;
+            row.className = "issue-row " + severityClass(issue.severity) + (issue.confirmed ? " reviewed" : "");
+            const head = document.createElement("summary");
+            head.className = "issue-head";
+            const number = document.createElement("strong");
+            number.textContent = issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes);
+            const badge = document.createElement("span");
+            badge.className = "issue-badge";
+            badge.textContent = issue.confirmed ? "已确认" : "待确认";
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "删除";
+            deleteButton.setAttribute("aria-label", "删除问题 " + issue.id);
+            deleteButton.style.cssText = "color:#b7372b;background:#feeceb;min-height:36px";
+            deleteButton.disabled = false;
+            deleteButton.onclick = (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              deletedIssues.push(test.remove(issue.id));
+              persist();
+              controls();
+              refreshMarkers();
+              render();
+              undoState();
+              $("reviewStatus").textContent = "已删除问题 #" + issue.id;
+            };
+            head.append(number, badge, deleteButton);
+            row.append(head);
+            const info = document.createElement("div");
+            info.className = "issue-meta";
+            const time = document.createElement("span");
+            time.textContent = "记录时间：" + formatLocalTime(issue.utc, issue.utcOffsetMinutes);
+            const coords = document.createElement("span");
+            coords.textContent = "GPS：" + gpsLabel(issue);
+            info.append(time, coords);
+            row.append(info);
+            const desc = document.createElement("textarea");
+            desc.value = issue.description;
+            desc.placeholder = "问题描述";
+            desc.setAttribute("aria-label", "问题 " + issue.id + " 描述");
+            desc.disabled = false;
+            const severity = document.createElement("select");
+            severity.setAttribute("aria-label", "问题 " + issue.id + " 等级");
+            severity.disabled = false;
+            for (const value of ["高", "中", "低", "未知"]) {
+              const option = document.createElement("option");
+              option.value = value;
+              option.textContent = value;
+              severity.append(option);
+            }
+            severity.value = issue.severity;
+            const label = document.createElement("label");
+            label.className = "confirm";
+            const confirmed = document.createElement("input");
+            confirmed.type = "checkbox";
+            confirmed.checked = issue.confirmed;
+            confirmed.disabled = false;
+            label.append(confirmed, document.createTextNode("已手动确认"));
+            desc.oninput = () => {
+              test.edit(issue.id, "description", desc.value);
+              number.textContent = issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes);
+              confirmed.checked = false;
+              row.classList.remove("reviewed");
+              badge.textContent = "待确认";
+              $("reviewStatus").textContent = "问题 #" + issue.id + " 已修改，请重新确认";
+              persist();
+              summary();
+              refreshMarkers();
+            };
+            severity.onchange = () => {
+              test.edit(issue.id, "severity", severity.value);
+              row.classList.remove("severity-high", "severity-medium", "severity-low", "severity-unknown");
+              row.classList.add(severityClass(issue.severity));
+              confirmed.checked = false;
+              row.classList.remove("reviewed");
+              badge.textContent = "待确认";
+              $("reviewStatus").textContent = "问题 #" + issue.id + " 已修改，请重新确认";
+              persist();
+              summary();
+              refreshMarkers();
+            };
+            confirmed.onchange = () => {
+              if (confirmed.checked && !issue.description.trim()) {
+                confirmed.checked = false;
+                $("reviewStatus").textContent = "请先填写问题 #" + issue.id + " 的描述";
+                desc.focus();
+                return;
+              }
+              issue.confirmed = confirmed.checked;
+              row.classList.toggle("reviewed", issue.confirmed);
+              badge.textContent = issue.confirmed ? "已确认" : "待确认";
+              persist();
+              summary();
+              $("reviewStatus").textContent = "";
+            };
+            const descLabel = document.createElement("label");
+            descLabel.className = "field-label";
+            descLabel.textContent = "问题描述";
+            desc.id = "desc-" + issue.id;
+            descLabel.htmlFor = desc.id;
+            const levelLabel = document.createElement("label");
+            levelLabel.className = "field-label";
+            levelLabel.textContent = "问题等级";
+            severity.id = "level-" + issue.id;
+            levelLabel.htmlFor = severity.id;
+            row.append(descLabel, desc, levelLabel, severity, label);
+            list.append(row);
+          }
+        }
+        function review() {
+          if (!test) return;
+          render();
+          $("reviewStatus").textContent = "";
+          if (!$("issuesDialog").open) $("issuesDialog").showModal();
+        }
+        $("reviewIssues").onclick = review;
+        $("closeIssues").onclick = () => $("issuesDialog").close();
+        $("confirmAll").onclick = () => {
+          if (!test) return;
+          const missing = test.issues.find((x) => !x.description.trim());
+          if (missing) {
+            $("reviewStatus").textContent = "请先填写问题 #" + missing.id + " 的描述";
+            return;
+          }
+          test.issues.forEach((x) => (x.confirmed = true));
+          persist();
+          render();
+          $("reviewStatus").textContent = "全部已确认";
+        };
+        function finish() {
+          if (!test || test.endedUTC) return;
+          if (!test.ready()) {
+            review();
+            $("reviewStatus").textContent = "请填写所有问题描述，并确认问题单后再结束测试。";
+            return;
+          }
+          const ended = new Date().toISOString();
+          test.endedUTC = ended;
+          persist();
+          controls();
+          $("issuesDialog").close();
+          notify("测试已结束，请选择导出 CSV 或删除本趟数据。");
+          $("downloadAgain").hidden = false;
+          $("deleteFinishedTest").hidden = false;
+        }
+        $("finishTest").onclick = finish;
+        $("exportReviewed").onclick = finish;
+        // Export is optional after the test has ended.
+        const again = document.createElement("button");
+        again.id = "downloadAgain";
+        again.textContent = "导出 CSV";
+        again.hidden = !(test && test.endedUTC);
+        again.onclick = async () => {
+          if (!test || !test.endedUTC) return;
+          if (!test.ready()) {
+            review();
+            $("reviewStatus").textContent = "问题单有修改，请重新确认后导出。";
+            return;
+          }
+          if (
+            !window.confirm(
+              "确认导出「" +
+                test.name +
+                "」并清除本趟数据？" +
+                (radarExportDirectory ? "文件写入成功后会清除。" : "下载后保留数据，待你确认已下载再清除。")
+            )
+          )
+            return;
+          const exportingTest = test;
+          const filename = test.name.replace(/[\\/:*?"<>|\x00-\x1f]/g, "_") + "_" + test.endedUTC.replace(/[:.]/g, "-") + ".csv";
+          if (radarExportDirectory) {
+            try {
+              const options = { mode: "readwrite" };
+              if (
+                (await radarExportDirectory.queryPermission(options)) !== "granted" &&
+                (await radarExportDirectory.requestPermission(options)) !== "granted"
+              )
+                throw Error("未获得所选文件夹的写入权限");
+              await radarWriteCSV(radarExportDirectory, filename, exportingTest.csv(exportingTest.endedUTC));
+              clearFinishedRun(exportingTest);
+              notify("CSV 已保存，本趟数据已清除。");
+            } catch (error) {
+              notify("导出未完成：" + error.message + "。可重新选择文件夹或使用浏览器下载。");
+            }
+            return;
+          }
+          const url = URL.createObjectURL(new Blob([exportingTest.csv(exportingTest.endedUTC)], { type: "text/csv;charset=utf-8;" }));
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          document.body.append(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+          exportingTest.awaitingDownloadConfirmation = true;
+          persist();
+          controls();
+          notify("CSV 下载已发起，请确认文件已下载后再删除本趟数据。");
+        };
+        const deleteFinished = document.createElement("button");
+        deleteFinished.id = "deleteFinishedTest";
+        deleteFinished.textContent = "删除本趟数据";
+        deleteFinished.hidden = !(test && test.endedUTC);
+        deleteFinished.style.cssText = "background:transparent;color:#b7372b;text-align:left;font-size:12px;min-height:34px;padding:5px 0";
+        function clearFinishedRun(run) {
+          tests = tests.filter((x) => x.runKey !== run.runKey);
+          if (test?.runKey === run.runKey) {
+            test = null;
+            pendingIssue = null;
+            deletedIssues.length = 0;
+            $("testName").value = "";
+            if ($("issuesDialog").open) $("issuesDialog").close();
+          }
+          const draft = radarRead("radar-manual-draft", null);
+          if (draft?.runKey === run.runKey) radarSave("radar-manual-draft", null);
+          persist();
+          controls();
+          refreshMarkers();
+          undoState();
+        }
+        deleteFinished.onclick = () => {
+          if (!test || !test.endedUTC) return;
+          if (!window.confirm("确认删除「" + test.name + "」的全部问题数据？此操作无法撤销，已导出的 CSV 和导入的历史问题不受影响。")) return;
+          clearFinishedRun(test);
+          notify("本趟数据已删除，可开始新的测试。");
+        };
+        const confirmDownloaded = document.createElement("button");
+        confirmDownloaded.id = "confirmDownloaded";
+        confirmDownloaded.textContent = "已下载，删除本趟数据";
+        confirmDownloaded.hidden = !test?.awaitingDownloadConfirmation;
+        confirmDownloaded.onclick = () => {
+          if (!test?.awaitingDownloadConfirmation) return;
+          if (!window.confirm("确认「" + test.name + "」的 CSV 已下载并保存？确认后将删除本趟数据。")) return;
+          clearFinishedRun(test);
+          notify("已确认下载，本趟数据已删除。");
+        };
+        $("testStatus").before(again, confirmDownloaded, deleteFinished);
+        if (test && !test.endedUTC) {
+          pendingIssue = test.issues.find((x) => x.capturing) || null;
+          if (pendingIssue) {
+            $("captureTitle").textContent = "继续记录问题";
+            $("captureMeta").textContent = formatLocalTime(pendingIssue.utc, pendingIssue.utcOffsetMinutes) + " · " + gpsLabel(pendingIssue);
+            $("captureDescription").value = pendingIssue.description;
+            $("captureSeverity").value = pendingIssue.severity;
+            $("captureDialog").showModal();
+          }
+        }
+        $("testPicker").onchange = () => {
+          const selected = $("testPicker").value;
+          persist();
+          test = tests.find((x) => x.runKey === selected) || null;
+          pendingIssue = null;
+          deletedIssues.length = 0;
+          persist();
+          controls();
+          refreshMarkers();
+          undoState();
+          $("testName").value = "";
+          if ($("issuesDialog").open) $("issuesDialog").close();
+          notify(test ? "当前测试：" + test.name : "可开始新的测试");
+        };
+        const manualDraft = radarRead("radar-manual-draft", null);
+        if (test && manualDraft?.runKey === test.runKey && !pendingIssue) {
+          pendingIssue = manualDraft.point;
+          $("manualTimeField").hidden = false;
+          $("manualTime").value = manualDraft.time;
+          $("captureDescription").value = manualDraft.description;
+          $("captureSeverity").value = manualDraft.severity;
+          $("captureTitle").textContent = "继续手动添加问题";
+          $("captureMeta").textContent = "地图选点：" + pendingIssue.latitude.toFixed(6) + ", " + pendingIssue.longitude.toFixed(6);
+          $("captureDialog").showModal();
+        }
+        const begin = $("beginTest").onclick;
+        $("beginTest").onclick = () => {
+          begin();
+          if (test && !test.endedUTC) {
+            again.hidden = true;
+            deleteFinished.hidden = true;
+          }
+        };
+      })();
+    </script> <script id="csv-parser">
+      function parseRadarCSV(text) {
+        text = text.replace(/^\uFEFF/, "");
+        const rows = [];
+        let row = [],
+          field = "",
+          quoted = false,
+          closed = false;
+        function endField() {
+          row.push(field);
+          field = "";
+          closed = false;
+        }
+        function endRow() {
+          endField();
+          if (row.some((x) => x.trim())) rows.push(row);
+          row = [];
+        }
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i];
+          if (quoted) {
+            if (c === '"') {
+              if (text[i + 1] === '"') {
+                field += '"';
+                i++;
+              } else {
+                quoted = false;
+                closed = true;
+              }
+            } else field += c;
+          } else if (c === '"') {
+            if (field || closed) throw Error("CSV 引号格式错误");
+            quoted = true;
+          } else if (c === ",") endField();
+          else if (c === "\n" || c === "\r") {
+            if (c === "\r" && text[i + 1] === "\n") i++;
+            endRow();
+          } else {
+            if (closed) {
+              if (!/\s/.test(c)) throw Error("CSV 引号后有无效内容");
+            } else field += c;
+          }
+        }
+        if (quoted) throw Error("CSV 引号未闭合");
+        if (field || row.length || closed) endRow();
+        if (!rows.length) throw Error("CSV 文件为空");
+        const header = rows.shift().map((x) => x.trim());
+        if (!["纬度", "经度", "问题描述"].every((x) => header.includes(x))) throw Error("缺少纬度、经度或问题描述列");
+        let skipped = 0;
+        const issues = [];
+        for (const row of rows) {
+          if (row.length !== header.length) {
+            skipped++;
+            continue;
+          }
+          const record = Object.fromEntries(header.map((h, i) => [h, row[i]]));
+          const lat = Number(record["纬度"]),
+            lon = Number(record["经度"]);
+          if (
+            !record["纬度"].trim() ||
+            !record["经度"].trim() ||
+            !Number.isFinite(lat) ||
+            !Number.isFinite(lon) ||
+            Math.abs(lat) > 90 ||
+            Math.abs(lon) > 180
+          ) {
+            skipped++;
+            continue;
+          }
+          issues.push({
+            latitude: lat,
+            longitude: lon,
+            name: record["测试名称"] || "",
+            id: record["问题编号"] || String(issues.length + 1),
+            utc: record["记录UTC"] || "",
+            utcOffsetMinutes:
+              record["记录时区偏移分钟"]?.trim() && Number.isFinite(Number(record["记录时区偏移分钟"]))
+                ? Number(record["记录时区偏移分钟"])
+                : undefined,
+            description: record["问题描述"],
+            severity: record["问题等级"] || "未知",
+            gpsUTC: record["GPS采样UTC"] || "",
+          });
+        }
+        return { issues, skipped };
+      }
+    </script> <script>
+      (() => {
+        const $ = (id) => document.getElementById(id);
+        let layer = null,
+          importRun = 0,
+          historyVisible = radarRead("radar-history-visible", true);
+        function historyVisibility() {
+          $("toggleHistory").textContent = historyVisible ? "历史问题：显示" : "历史问题：隐藏";
+          $("toggleHistory").setAttribute("aria-pressed", String(historyVisible));
+          if (layer && window.radarMap) {
+            if (historyVisible && !window.radarMap.hasLayer(layer)) layer.addTo(window.radarMap);
+            else if (!historyVisible && window.radarMap.hasLayer(layer)) window.radarMap.removeLayer(layer);
+          }
+        }
+        $("toggleHistory").onclick = () => {
+          historyVisible = !historyVisible;
+          radarSave("radar-history-visible", historyVisible);
+          historyVisibility();
+        };
+        historyVisibility();
+        $("importFolder").onclick = () => $("folderInput").click();
+        $("importFiles").onclick = () => $("csvInput").click();
+        $("clearImported").onclick = () => {
+          importRun++;
+          if (layer && window.radarMap) {
+            layer.eachLayer((marker) => radarIssueMarkers.delete(marker));
+            window.radarMap.removeLayer(layer);
+          }
+          layer = null;
+          radarSave("radar-imported", null);
+          $("importFolderPath").textContent = "导入位置：未选择";
+          $("importStatus").textContent = "";
+          $("clearImported").hidden = true;
+        };
+        function drawImported(items) {
+          if (!window.radarMap || !window.L) return;
+          if (layer) {
+            layer.eachLayer((marker) => radarIssueMarkers.delete(marker));
+            window.radarMap.removeLayer(layer);
+          }
+          layer = L.featureGroup().addTo(window.radarMap);
+          for (const issue of items) {
+            const label = document.createElement("span");
+            label.textContent = issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes) + " · " + issue.severity;
+            const icon = L.divIcon({
+              className: "issue-pin history-pin " + severityClass(issue.severity),
+              html: "<span>●</span>",
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+            });
+            const marker = L.marker([issue.latitude, issue.longitude], { icon }).addTo(layer);
+            marker.bindTooltip(label, {
+              permanent: false,
+              direction: "right",
+              offset: [12, 0],
+              className: "issue-map-label history-label " + severityClass(issue.severity),
+            });
+            const popup = document.createElement("div");
+            popup.className = "history-popup";
+            for (const text of [
+              "测试：" + (issue.name || "未命名"),
+              issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes) + " · " + issue.severity,
+              issue.description,
+              "记录时间：" + formatLocalTime(issue.utc, issue.utcOffsetMinutes),
+              "GPS：" + issue.latitude + ", " + issue.longitude,
+              "GPS 采样时间：" + formatLocalTime(issue.gpsUTC, issue.utcOffsetMinutes),
+              "文件：" + issue.file,
+            ]) {
+              const p = document.createElement("p");
+              p.textContent = text;
+              popup.append(p);
+            }
+            marker.bindPopup(popup);
+            radarRegisterMarker(marker);
+          }
+          $("clearImported").hidden = !items.length;
+          historyVisibility();
+        }
+        const cached = radarRead("radar-imported", null);
+        if (cached && Array.isArray(cached.items)) {
+          drawImported(cached.items);
+          $("importStatus").textContent = cached.status;
+          $("importFolderPath").textContent = cached.path || "导入位置：已恢复 CSV 文件";
+        }
+        async function importSelected(event) {
+          const files = Array.from(event.target.files || []).filter((file) => /\.csv$/i.test(file.name));
+          event.target.value = "";
+          if (!files.length) {
+            $("importStatus").textContent = "未选择 CSV 文件";
+            return;
+          }
+          if (!window.radarMap || !window.L) {
+            $("importStatus").textContent = "地图未加载，请检查网络";
+            return;
+          }
+          const roots = [...new Set(files.map((file) => (file.webkitRelativePath ? file.webkitRelativePath.split("/")[0] : "所选 CSV 文件")))];
+          $("importFolderPath").textContent = "导入位置：" + roots.join("、") + "（浏览器不提供完整磁盘路径）";
+          const run = ++importRun;
+          const items = [];
+          let skipped = 0,
+            failed = 0;
+          const errors = [];
+          $("importStatus").textContent = "正在解析 " + files.length + " 个 CSV…";
+          for (const file of files) {
+            try {
+              const result = parseRadarCSV(await file.text());
+              skipped += result.skipped;
+              items.push(...result.issues.map((issue) => ({ ...issue, file: file.webkitRelativePath || file.name })));
+            } catch (error) {
+              failed++;
+              errors.push(file.name + "：" + error.message);
+            }
+            if (run !== importRun) return;
+          }
+          drawImported(items);
+          $("importStatus").textContent =
+            "已解析 " +
+            (files.length - failed) +
+            "/" +
+            files.length +
+            " 个 CSV，显示 " +
+            items.length +
+            " 条问题，跳过 " +
+            skipped +
+            " 条无效记录" +
+            (errors.length ? "。" + errors.join("；") : "");
+          if (!radarSave("radar-imported", { items, status: $("importStatus").textContent, path: $("importFolderPath").textContent }))
+            $("importStatus").textContent += " · 本地存储空间不足，刷新后需重新导入";
+          if (items.length && historyVisible) {
+            const app = document.querySelector(".app"),
+              left = !app.classList.contains("sidebar-closed") && innerWidth > 600 ? 360 : 35;
+            // Turn off following when viewing historical issues; GPS continues running.
+            if ($("start").getAttribute("aria-pressed") === "true") $("start").click();
+            window.radarMap.fitBounds(layer.getBounds(), { paddingTopLeft: [left, 35], paddingBottomRight: [210, 35], maxZoom: 17 });
+          }
+        }
+        $("folderInput").onchange = importSelected;
+        $("csvInput").onchange = importSelected;
+      })();
+    </script> <script>
+      (() => {
+        const $ = (id) => document.getElementById(id);
+        const supported = typeof window.showDirectoryPicker === "function";
+        function showFolder() {
+          $("exportFolderPath").textContent = radarExportDirectory
+            ? "导出位置：" + radarExportDirectory.name + " /（浏览器不提供完整磁盘路径）"
+            : "导出位置：浏览器下载目录（由浏览器设置决定）";
+        }
+        $("chooseExportFolder").disabled = !supported;
+        if (!supported) $("exportFolderStatus").textContent = "当前浏览器不支持指定导出文件夹，导出时由系统下载或保存。";
+        radarHandleStore("get")
+          .then((handle) => {
+            if (handle && supported) {
+              radarExportDirectory = handle;
+              showFolder();
+            }
+          })
+          .catch(() => {});
+        $("chooseExportFolder").onclick = async () => {
+          try {
+            const handle = await window.showDirectoryPicker({ id: "radar-export", mode: "readwrite", startIn: radarExportDirectory || "downloads" });
+            radarExportDirectory = handle;
+            showFolder();
+            try {
+              await radarHandleStore("put", handle);
+              $("exportFolderStatus").textContent = "已选择，刷新后保留；导出时可能需要重新授权。";
+            } catch (e) {
+              $("exportFolderStatus").textContent = "已选择，但刷新后需要重新选择。";
+            }
+          } catch (error) {
+            if (error.name !== "AbortError") $("exportFolderStatus").textContent = "无法选择文件夹：" + error.message;
+          }
+        };
+        $("resetExportFolder").onclick = () => {
+          radarExportDirectory = null;
+          showFolder();
+          radarHandleStore("put", null).catch(() => {});
+          $("exportFolderStatus").textContent = "导出时使用浏览器下载。";
+        };
+        showFolder();
       })();
     </script> </body> </html>
