@@ -1,0 +1,959 @@
+---
+layout: null
+sitemap: false
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Problems Radar</title>
+    <meta name="apple-mobile-web-app-title" content="Problems Radar" />
+    <meta name="description" content="Problems Radar：协助自动驾驶路测问题记录的路线与实时位置工具。" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #17243b;
+        background: #e8eef3;
+      }
+      .app {
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      #map {
+        position: absolute;
+        inset: 0;
+        background: #e8eef3;
+      }
+      .panel {
+        position: absolute;
+        top: calc(16px + env(safe-area-inset-top));
+        left: calc(16px + env(safe-area-inset-left));
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        width: 320px;
+        max-width: calc(100vw - 32px);
+        padding: 22px;
+        background: #fffffff5;
+        backdrop-filter: blur(16px);
+        border: 1px solid #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 35px #24375120;
+        z-index: 1000;
+        overflow-y: auto;
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+      }
+      .app.sidebar-closed .panel {
+        transform: translateX(calc(-100% - 32px - env(safe-area-inset-left)));
+        opacity: 0;
+        pointer-events: none;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+      h1 {
+        font-size: 21px;
+        letter-spacing: -0.7px;
+        margin: 0;
+      }
+      header small {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        color: #7c899a;
+        margin-top: 5px;
+      }
+      button {
+        min-height: 44px;
+        border: 0;
+        border-radius: 11px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #edf2f9;
+        color: #254261;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      button.primary {
+        background: #246bfe;
+        color: white;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      button:focus-visible {
+        outline: 3px solid #82afff;
+        outline-offset: 2px;
+      }
+      .icon-button {
+        width: 44px;
+        flex: none;
+        font-size: 22px;
+        background: #f0f3f7;
+      }
+      .sidebar-toggle {
+        position: absolute;
+        top: calc(16px + env(safe-area-inset-top));
+        left: calc(16px + env(safe-area-inset-left));
+        z-index: 1000;
+        display: none;
+        background: white;
+        box-shadow: 0 4px 20px #24375120;
+      }
+      .sidebar-closed .sidebar-toggle {
+        display: block;
+      }
+      #status {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #status:before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #246bfe;
+        flex: none;
+      }
+      #hint {
+        font-size: 12px;
+        color: #a14c30;
+        line-height: 1.6;
+        margin: 0 0 12px;
+        overflow-wrap: anywhere;
+      }
+      #hint[hidden] {
+        display: none;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .stats div {
+        background: #f4f6f9;
+        border-radius: 11px;
+        padding: 12px;
+      }
+      .stats div:first-child {
+        grid-column: 1/-1;
+      }
+      .stats small {
+        display: block;
+        color: #7b879a;
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+      .stats strong {
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
+      }
+      .stats div:last-child {
+        grid-column: 1/-1;
+      }
+      .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .buttons .primary {
+        grid-column: 1/-1;
+      }
+      .route-actions {
+        margin-top: 22px;
+        padding-top: 20px;
+        border-top: 1px solid #e7ebf0;
+      }
+      .route-actions label {
+        display: block;
+        font-size: 12px;
+        color: #7b879a;
+        margin-bottom: 8px;
+      }
+      .route-actions select {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px 12px;
+        border: 1px solid #cce4d4;
+        border-radius: 11px;
+        background: #e5f5ea;
+        color: #18683a;
+        font: inherit;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .route-actions select:focus-visible {
+        outline: 3px solid #82afff;
+        outline-offset: 2px;
+      }
+      .leaflet-control-attribution {
+        font-size: 10px !important;
+      }
+      .leaflet-top {
+        top: calc(16px + env(safe-area-inset-top));
+      }
+      .leaflet-right {
+        right: env(safe-area-inset-right);
+      }
+      .leaflet-bottom {
+        bottom: env(safe-area-inset-bottom);
+      }
+      @media (max-width: 600px) {
+        .panel {
+          width: 300px;
+          padding: 18px;
+        }
+        header {
+          margin-bottom: 18px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .panel {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <div id="map" aria-label="当前位置地图"></div>
+      <button id="sidebarOpen" class="icon-button sidebar-toggle" aria-label="展开控制栏" aria-controls="sidebar" aria-expanded="false">☰</button>
+      <aside id="sidebar" class="panel" aria-label="控制栏">
+        <header>
+          <h1>Problems Radar<small>自动驾驶路测</small></h1>
+          <button id="sidebarClose" class="icon-button" aria-label="收起控制栏" aria-controls="sidebar" aria-expanded="true">‹</button>
+        </header>
+        <p id="status" role="status" aria-live="polite">准备定位</p>
+        <p id="hint" hidden></p>
+        <div class="stats">
+          <div><small>纬度 / 经度</small><strong id="coords">— / —</strong></div>
+          <div><small>定位精度</small><strong id="accuracy">—</strong></div>
+          <div><small>最近更新</small><strong id="updated">—</strong></div>
+          <div><small>地图状态</small><strong id="mapStatus">正在加载</strong></div>
+        </div>
+        <div class="route-actions">
+          <label for="route">路线选择</label
+          ><select id="route">
+            <option value="">不显示路线</option>
+            <option value="wolfsburg">Wolfsburg 环线</option>
+          </select>
+        </div>
+        <div class="buttons">
+          <button id="start" class="primary" aria-pressed="false">开始定位并跟随</button>
+        </div>
+      </aside>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const el = (id) => document.getElementById(id);
+        let map,
+          marker,
+          circle,
+          watchId = null,
+          lastPosition = null,
+          following = false,
+          locationSession = 0;
+        const localFile = location.protocol === "file:";
+        // OSRM driving geometry, retrieved using the shared route stops.
+        const roadRoute = [
+          [52.437274, 10.807705],
+          [52.43726, 10.807625],
+          [52.437251, 10.807575],
+          [52.437105, 10.807628],
+          [52.436933, 10.807688],
+          [52.436954, 10.807825],
+          [52.436994, 10.808041],
+          [52.437078, 10.808316],
+          [52.437189, 10.808592],
+          [52.43725, 10.808683],
+          [52.437356, 10.80886],
+          [52.437441, 10.808972],
+          [52.437535, 10.809116],
+          [52.437591, 10.809196],
+          [52.437665, 10.809368],
+          [52.437685, 10.809437],
+          [52.437699, 10.80948],
+          [52.437684, 10.80956],
+          [52.437686, 10.80965],
+          [52.437705, 10.809729],
+          [52.437734, 10.809787],
+          [52.437774, 10.809829],
+          [52.437797, 10.809842],
+          [52.437838, 10.809851],
+          [52.437876, 10.809843],
+          [52.437918, 10.809815],
+          [52.43796, 10.809755],
+          [52.437988, 10.809668],
+          [52.437994, 10.809598],
+          [52.437986, 10.809514],
+          [52.438043, 10.809397],
+          [52.43831, 10.809074],
+          [52.438705, 10.80866],
+          [52.438735, 10.808629],
+          [52.438853, 10.808523],
+          [52.438998, 10.808362],
+          [52.438945, 10.808229],
+          [52.438889, 10.808085],
+          [52.438801, 10.807869],
+          [52.43878, 10.807819],
+          [52.438713, 10.807661],
+          [52.43853, 10.807202],
+          [52.438237, 10.806469],
+          [52.438073, 10.806035],
+          [52.437917, 10.805594],
+          [52.437829, 10.805308],
+          [52.437779, 10.805156],
+          [52.4377, 10.804899],
+          [52.437653, 10.804735],
+          [52.437541, 10.804314],
+          [52.437421, 10.803781],
+          [52.437335, 10.803318],
+          [52.437276, 10.802942],
+          [52.43721, 10.802381],
+          [52.437155, 10.801885],
+          [52.437134, 10.801478],
+          [52.437127, 10.801069],
+          [52.437134, 10.800673],
+          [52.437144, 10.800278],
+          [52.437178, 10.799826],
+          [52.437186, 10.799737],
+          [52.437206, 10.79955],
+          [52.437238, 10.799319],
+          [52.437319, 10.798836],
+          [52.437412, 10.798399],
+          [52.437558, 10.797873],
+          [52.437696, 10.797464],
+          [52.43783, 10.797138],
+          [52.437984, 10.796809],
+          [52.438183, 10.796437],
+          [52.438378, 10.796148],
+          [52.43857, 10.795881],
+          [52.438813, 10.795593],
+          [52.43908, 10.795312],
+          [52.439309, 10.795105],
+          [52.439518, 10.794932],
+          [52.43999, 10.794587],
+          [52.44054, 10.794182],
+          [52.441514, 10.793625],
+          [52.441785, 10.793456],
+          [52.442023, 10.793294],
+          [52.44214, 10.793205],
+          [52.442451, 10.792997],
+          [52.44327, 10.792402],
+          [52.443399, 10.792306],
+          [52.443749, 10.792034],
+          [52.443979, 10.791844],
+          [52.444291, 10.791563],
+          [52.444513, 10.791324],
+          [52.444672, 10.791147],
+          [52.444799, 10.791007],
+          [52.444975, 10.790808],
+          [52.445059, 10.790715],
+          [52.445154, 10.790591],
+          [52.445396, 10.790278],
+          [52.445783, 10.789777],
+          [52.446131, 10.789223],
+          [52.446448, 10.788684],
+          [52.446693, 10.78822],
+          [52.446814, 10.787983],
+          [52.447191, 10.787168],
+          [52.447542, 10.786345],
+          [52.44785, 10.785624],
+          [52.448272, 10.784667],
+          [52.448586, 10.784033],
+          [52.448899, 10.783479],
+          [52.449118, 10.783104],
+          [52.449333, 10.782764],
+          [52.449653, 10.78231],
+          [52.450229, 10.781483],
+          [52.450533, 10.78102],
+          [52.451016, 10.78029],
+          [52.451226, 10.779961],
+          [52.451463, 10.7796],
+          [52.451893, 10.778874],
+          [52.452188, 10.77833],
+          [52.45238, 10.777941],
+          [52.452531, 10.777631],
+          [52.452676, 10.777318],
+          [52.452847, 10.776924],
+          [52.452956, 10.776666],
+          [52.453152, 10.776169],
+          [52.453304, 10.775768],
+          [52.453415, 10.775462],
+          [52.453616, 10.774865],
+          [52.453688, 10.774648],
+          [52.454025, 10.773481],
+          [52.454223, 10.772724],
+          [52.454403, 10.77205],
+          [52.454777, 10.770712],
+          [52.4552, 10.769226],
+          [52.455548, 10.767938],
+          [52.456273, 10.765263],
+          [52.456704, 10.763718],
+          [52.457556, 10.760566],
+          [52.458039, 10.758887],
+          [52.458721, 10.756395],
+          [52.458791, 10.756148],
+          [52.458983, 10.755437],
+          [52.459261, 10.75438],
+          [52.459488, 10.753522],
+          [52.459933, 10.75176],
+          [52.460145, 10.750864],
+          [52.460348, 10.749943],
+          [52.460672, 10.748356],
+          [52.460841, 10.747385],
+          [52.46102, 10.746248],
+          [52.461039, 10.746114],
+          [52.461114, 10.745545],
+          [52.461191, 10.744929],
+          [52.461319, 10.743633],
+          [52.461437, 10.74214],
+          [52.461446, 10.742009],
+          [52.461458, 10.741825],
+          [52.461485, 10.741385],
+          [52.461553, 10.740331],
+          [52.46158, 10.739757],
+          [52.461582, 10.739705],
+          [52.461598, 10.739368],
+          [52.461604, 10.739246],
+          [52.461646, 10.738361],
+          [52.461673, 10.73779],
+          [52.461705, 10.737044],
+          [52.461721, 10.736753],
+          [52.461765, 10.736617],
+          [52.461823, 10.736495],
+          [52.461921, 10.73636],
+          [52.461974, 10.736311],
+          [52.462275, 10.736339],
+          [52.462375, 10.736361],
+          [52.462472, 10.736396],
+          [52.462558, 10.736443],
+          [52.462624, 10.736499],
+          [52.462681, 10.736559],
+          [52.462731, 10.736634],
+          [52.46278, 10.736736],
+          [52.46282, 10.736847],
+          [52.462846, 10.736949],
+          [52.462869, 10.737065],
+          [52.462874, 10.737223],
+          [52.462857, 10.737386],
+          [52.462823, 10.737543],
+          [52.462727, 10.737739],
+          [52.462642, 10.737837],
+          [52.462573, 10.7379],
+          [52.462452, 10.737943],
+          [52.462275, 10.737922],
+          [52.46191, 10.737816],
+          [52.461473, 10.73762],
+          [52.460661, 10.737236],
+          [52.460283, 10.737057],
+          [52.459375, 10.73664],
+          [52.458419, 10.736192],
+          [52.458129, 10.736078],
+          [52.457751, 10.735952],
+          [52.457705, 10.735942],
+          [52.457334, 10.735865],
+          [52.457067, 10.735842],
+          [52.456734, 10.73584],
+          [52.45649, 10.735861],
+          [52.456128, 10.735923],
+          [52.455922, 10.735976],
+          [52.455698, 10.736051],
+          [52.455298, 10.736228],
+          [52.454962, 10.736411],
+          [52.454773, 10.736527],
+          [52.454473, 10.736756],
+          [52.454248, 10.736955],
+          [52.454073, 10.737119],
+          [52.453539, 10.737631],
+          [52.45317, 10.737975],
+          [52.452832, 10.738217],
+          [52.452451, 10.738429],
+          [52.451885, 10.738659],
+          [52.451507, 10.738744],
+          [52.451034, 10.738795],
+          [52.450698, 10.738792],
+          [52.450309, 10.738744],
+          [52.449944, 10.738639],
+          [52.449498, 10.738475],
+          [52.449084, 10.738273],
+          [52.448673, 10.737999],
+          [52.448258, 10.73765],
+          [52.447718, 10.737075],
+          [52.447083, 10.736297],
+          [52.446548, 10.735726],
+          [52.445969, 10.735259],
+          [52.445457, 10.734946],
+          [52.445145, 10.734814],
+          [52.444716, 10.734668],
+          [52.444314, 10.734584],
+          [52.443781, 10.734553],
+          [52.443505, 10.734568],
+          [52.443188, 10.734618],
+          [52.44271, 10.734748],
+          [52.441897, 10.735018],
+          [52.441392, 10.735193],
+          [52.43779, 10.736127],
+          [52.436679, 10.736399],
+          [52.435439, 10.736702],
+          [52.435017, 10.736804],
+          [52.433795, 10.737116],
+          [52.432425, 10.737455],
+          [52.432282, 10.737493],
+          [52.431731, 10.737629],
+          [52.430554, 10.73789],
+          [52.429786, 10.738048],
+          [52.429368, 10.738114],
+          [52.428196, 10.738211],
+          [52.427775, 10.738239],
+          [52.427195, 10.738243],
+          [52.426666, 10.738215],
+          [52.426182, 10.738186],
+          [52.425691, 10.738133],
+          [52.425195, 10.738069],
+          [52.424654, 10.737984],
+          [52.424394, 10.737943],
+          [52.423648, 10.737818],
+          [52.423172, 10.737738],
+          [52.422788, 10.737657],
+          [52.422357, 10.737565],
+          [52.4213, 10.737376],
+          [52.420965, 10.737249],
+          [52.420862, 10.737214],
+          [52.420761, 10.737145],
+          [52.420663, 10.737046],
+          [52.420587, 10.73693],
+          [52.420539, 10.736815],
+          [52.420503, 10.736671],
+          [52.420485, 10.736536],
+          [52.420481, 10.736401],
+          [52.420496, 10.736266],
+          [52.420515, 10.736153],
+          [52.420551, 10.736044],
+          [52.420601, 10.735943],
+          [52.420654, 10.735855],
+          [52.420711, 10.735781],
+          [52.420798, 10.735706],
+          [52.420923, 10.735613],
+          [52.420995, 10.73561],
+          [52.421065, 10.735617],
+          [52.422328, 10.735863],
+          [52.422518, 10.735899],
+          [52.422704, 10.73599],
+          [52.422735, 10.736006],
+          [52.422783, 10.736062],
+          [52.422828, 10.736146],
+          [52.422888, 10.736334],
+          [52.422942, 10.737483],
+          [52.423003, 10.738788],
+          [52.423039, 10.739522],
+          [52.423068, 10.740142],
+          [52.423153, 10.741983],
+          [52.423354, 10.746164],
+          [52.423389, 10.746899],
+          [52.423414, 10.747324],
+          [52.423449, 10.747702],
+          [52.423452, 10.747735],
+          [52.423495, 10.748056],
+          [52.423541, 10.748331],
+          [52.423563, 10.74847],
+          [52.423589, 10.748603],
+          [52.423649, 10.748913],
+          [52.423849, 10.749865],
+          [52.424404, 10.752597],
+          [52.424466, 10.752904],
+          [52.42463, 10.753713],
+          [52.424639, 10.753755],
+          [52.424717, 10.754133],
+          [52.424781, 10.754458],
+          [52.425293, 10.757014],
+          [52.425484, 10.7579],
+          [52.425557, 10.758288],
+          [52.425695, 10.759125],
+          [52.425733, 10.759447],
+          [52.425796, 10.760048],
+          [52.425951, 10.761661],
+          [52.426088, 10.763122],
+          [52.426213, 10.764499],
+          [52.426242, 10.764781],
+          [52.426258, 10.76496],
+          [52.426311, 10.765525],
+          [52.426409, 10.766532],
+          [52.42643, 10.766763],
+          [52.426485, 10.767356],
+          [52.426507, 10.767577],
+          [52.426571, 10.768233],
+          [52.426582, 10.768338],
+          [52.426624, 10.768776],
+          [52.426639, 10.768893],
+          [52.426699, 10.769316],
+          [52.426714, 10.769421],
+          [52.42681, 10.769963],
+          [52.426873, 10.770269],
+          [52.426992, 10.7708],
+          [52.42705, 10.77102],
+          [52.427212, 10.771624],
+          [52.427366, 10.772196],
+          [52.427399, 10.772319],
+          [52.427681, 10.773362],
+          [52.427767, 10.773693],
+          [52.427826, 10.773953],
+          [52.427913, 10.774414],
+          [52.427933, 10.774521],
+          [52.428006, 10.775018],
+          [52.42807, 10.775685],
+          [52.428077, 10.775782],
+          [52.428097, 10.776095],
+          [52.428103, 10.776206],
+          [52.428106, 10.776503],
+          [52.428109, 10.776721],
+          [52.428086, 10.777772],
+          [52.428084, 10.777865],
+          [52.428083, 10.777932],
+          [52.428067, 10.77857],
+          [52.428042, 10.779612],
+          [52.427991, 10.781614],
+          [52.427985, 10.781837],
+          [52.427961, 10.782742],
+          [52.427953, 10.783043],
+          [52.427952, 10.783099],
+          [52.427939, 10.783629],
+          [52.427932, 10.783966],
+          [52.427918, 10.784419],
+          [52.427906, 10.785068],
+          [52.427908, 10.785729],
+          [52.427891, 10.786568],
+          [52.427861, 10.787835],
+          [52.427825, 10.789214],
+          [52.427777, 10.790979],
+          [52.42777, 10.79122],
+          [52.427742, 10.792263],
+          [52.427676, 10.794479],
+          [52.427666, 10.794878],
+          [52.427651, 10.795443],
+          [52.427639, 10.79593],
+          [52.427613, 10.796471],
+          [52.427591, 10.796779],
+          [52.427572, 10.796989],
+          [52.427532, 10.797329],
+          [52.427481, 10.797698],
+          [52.427413, 10.798053],
+          [52.427383, 10.798293],
+          [52.427337, 10.798584],
+          [52.427307, 10.798937],
+          [52.427322, 10.799166],
+          [52.427375, 10.799427],
+          [52.427453, 10.79965],
+          [52.427531, 10.799793],
+          [52.427631, 10.799913],
+          [52.42775, 10.800004],
+          [52.42786, 10.800053],
+          [52.427974, 10.800063],
+          [52.428094, 10.800047],
+          [52.428217, 10.799988],
+          [52.428402, 10.799851],
+          [52.428681, 10.79957],
+          [52.428783, 10.799482],
+          [52.428844, 10.799442],
+          [52.429, 10.799386],
+          [52.42913, 10.799347],
+          [52.429258, 10.799335],
+          [52.429501, 10.799304],
+          [52.429831, 10.79931],
+          [52.431383, 10.799375],
+          [52.432231, 10.79939],
+          [52.43305, 10.79942],
+          [52.433136, 10.799423],
+          [52.43319, 10.799424],
+          [52.43334, 10.799431],
+          [52.433856, 10.799456],
+          [52.434864, 10.799505],
+          [52.435568, 10.799529],
+          [52.435971, 10.799546],
+          [52.436163, 10.799639],
+          [52.436328, 10.799715],
+          [52.436463, 10.799825],
+          [52.436592, 10.799968],
+          [52.436733, 10.800225],
+          [52.436763, 10.800299],
+          [52.436807, 10.800408],
+          [52.436863, 10.800611],
+          [52.4369, 10.800818],
+          [52.43695, 10.801228],
+          [52.436969, 10.801662],
+          [52.437001, 10.802122],
+          [52.437061, 10.80267],
+          [52.437135, 10.803201],
+          [52.437293, 10.804092],
+          [52.43749, 10.804854],
+          [52.437479, 10.805153],
+          [52.437434, 10.805313],
+          [52.437402, 10.8054],
+          [52.43732, 10.805508],
+          [52.437102, 10.80569],
+          [52.436972, 10.805797],
+          [52.436993, 10.805893],
+          [52.437007, 10.806],
+          [52.437013, 10.806162],
+          [52.437, 10.806328],
+          [52.436961, 10.806542],
+          [52.436928, 10.806785],
+          [52.436907, 10.806988],
+          [52.436901, 10.807201],
+          [52.436913, 10.807448],
+          [52.436933, 10.807688],
+          [52.437105, 10.807628],
+          [52.437251, 10.807575],
+          [52.43726, 10.807625],
+          [52.437274, 10.807705],
+        ];
+        let routeLine;
+        const app = document.querySelector(".app");
+        function setSidebar(open) {
+          app.classList.toggle("sidebar-closed", !open);
+          el("sidebar").inert = !open;
+          el("sidebarOpen").setAttribute("aria-expanded", String(open));
+          el("sidebarClose").setAttribute("aria-expanded", String(open));
+        }
+        el("sidebarOpen").onclick = () => {
+          setSidebar(true);
+          el("sidebarClose").focus();
+        };
+        el("sidebarClose").onclick = () => {
+          setSidebar(false);
+          el("sidebarOpen").focus();
+        };
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !app.classList.contains("sidebar-closed")) el("sidebarClose").click();
+        });
+        setSidebar(!window.matchMedia("(max-width:600px)").matches);
+        function message(status, hint) {
+          el("status").textContent = status;
+          const isError = /失败|不支持|未成功|无法|需要安全/.test(status);
+          el("hint").textContent = isError ? hint : "";
+          el("hint").hidden = !isError;
+          if (isError) setSidebar(true);
+        }
+        function locationButtonState() {
+          el("start").textContent = watchId !== null ? "停止定位" : "开始定位并跟随";
+          el("start").setAttribute("aria-pressed", String(watchId !== null));
+        }
+        if (window.L) {
+          map = L.map("map", { zoomControl: false }).setView([30, 105], 3);
+          L.control.zoom({ position: "topright" }).addTo(map);
+          L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
+          routeLine = L.polyline(roadRoute, {
+            color: "#159447",
+            weight: 5,
+            opacity: 0.95,
+            lineCap: "round",
+            lineJoin: "round",
+          });
+          const cumulative = [0];
+          for (let i = 1; i < roadRoute.length; i++) {
+            cumulative.push(cumulative[i - 1] + L.latLng(roadRoute[i - 1]).distanceTo(L.latLng(roadRoute[i])));
+          }
+          const mileageTip = L.tooltip({ direction: "top", offset: [0, -10], opacity: 1 });
+          let screenRoute = [];
+          function refreshScreenRoute() {
+            screenRoute = roadRoute.map((point) => map.latLngToContainerPoint(point));
+            map.closeTooltip(mileageTip);
+          }
+          function projectOnSegment(point, a, b) {
+            const dx = b.x - a.x,
+              dy = b.y - a.y;
+            const lengthSquared = dx * dx + dy * dy;
+            const t = lengthSquared ? Math.max(0, Math.min(1, ((point.x - a.x) * dx + (point.y - a.y) * dy) / lengthSquared)) : 0;
+            const x = a.x + t * dx,
+              y = a.y + t * dy;
+            return { t, x, y, distance: Math.hypot(point.x - x, point.y - y) };
+          }
+          function showMileage(event) {
+            if (!map.hasLayer(routeLine)) return;
+            if (!screenRoute.length) refreshScreenRoute();
+            const hits = [];
+            let nearest = null;
+            for (let i = 1; i < screenRoute.length; i++) {
+              const hit = projectOnSegment(event.containerPoint, screenRoute[i - 1], screenRoute[i]);
+              hit.meters = cumulative[i - 1] + hit.t * (cumulative[i] - cumulative[i - 1]);
+              if (!nearest || hit.distance < nearest.distance) nearest = hit;
+              hits.push(hit);
+            }
+            if (!nearest || nearest.distance > 18) {
+              map.closeTooltip(mileageTip);
+              return;
+            }
+            // Where the route doubles back, show each distinct passage's mileage.
+            const passages = hits
+              .filter((hit) => hit.distance <= Math.min(18, nearest.distance + 2))
+              .map((hit) => hit.meters)
+              .sort((a, b) => a - b);
+            const distinct = passages.filter((meters, i) => i === 0 || meters - passages[i - 1] > 150);
+            const text =
+              distinct.length > 1
+                ? "重合路段 · 距起点 " + distinct.map((meters) => (meters / 1000).toFixed(2)).join(" / ") + " 公里"
+                : "距起点 " + (nearest.meters / 1000).toFixed(2) + " 公里";
+            mileageTip.setLatLng(map.containerPointToLatLng(L.point(nearest.x, nearest.y))).setContent(text);
+            if (!map.hasLayer(mileageTip)) mileageTip.addTo(map);
+          }
+          map.on("mousemove click", showMileage);
+          map.on("zoomend moveend resize", refreshScreenRoute);
+          map.on("movestart zoomstart", () => map.closeTooltip(mileageTip));
+          map.getContainer().addEventListener("mouseleave", () => map.closeTooltip(mileageTip));
+          refreshScreenRoute();
+          {
+            // Local files have no HTTP Referer; use Esri for the local test instead of OSM's web tile server.
+            const tiles = L.tileLayer(
+              localFile
+                ? "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+                : "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              {
+                maxZoom: 19,
+                attribution: localFile
+                  ? "Tiles &copy; Esri &mdash; Sources: Esri, DeLorme, HERE, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), MapmyIndia, TomTom"
+                  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+              }
+            );
+            let tileErrors = 0;
+            tiles.on("tileerror", () => {
+              tileErrors++;
+              el("mapStatus").textContent = "地图加载失败，请检查网络";
+            });
+            tiles.on("loading", () => {
+              tileErrors = 0;
+              el("mapStatus").textContent = "加载地图中";
+            });
+            tiles.on("load", () => {
+              el("mapStatus").textContent = tileErrors ? "部分地图加载失败" : "地图已加载";
+            });
+            tiles.addTo(map);
+          }
+          window.addEventListener("resize", () => map.invalidateSize());
+        } else {
+          el("route").disabled = true;
+          el("mapStatus").textContent = "地图库未加载";
+          message("地图加载失败，仍可尝试定位", "请检查网络；如果 iPhone 只显示源码，请改用支持 HTML 的浏览器预览或 HTTPS 网站。");
+        }
+        if (localFile && map)
+          message("正在本地预览 · 在线地图", "地图可直接联网加载。点击开始定位尝试获取位置；若本地环境限制定位，请改用 HTTPS 网站。");
+        else if (!window.isSecureContext) message("当前网址不支持安全定位", "请使用 HTTPS 打开。通过电脑局域网 HTTP 地址访问通常无法定位。");
+        function display(position) {
+          const { latitude, longitude, accuracy } = position.coords;
+          const first = !lastPosition;
+          lastPosition = [latitude, longitude];
+          el("coords").textContent = latitude.toFixed(5) + " / " + longitude.toFixed(5);
+          el("accuracy").textContent = "± " + Math.round(accuracy) + " 米";
+          el("updated").textContent = new Date(position.timestamp).toLocaleTimeString("zh-CN", { hour12: false });
+          message("位置已更新", accuracy > 100 ? "当前误差较大，移到室外或窗边可能改善精度。" : "蓝点是你的位置，浅蓝圆圈表示定位误差范围。");
+          if (map) {
+            if (!marker) {
+              circle = L.circle(lastPosition, { radius: accuracy, color: "#246bfe", weight: 1, fillOpacity: 0.12, interactive: false }).addTo(map);
+              marker = L.circleMarker(lastPosition, {
+                radius: 8,
+                color: "#fff",
+                weight: 3,
+                fillColor: "#246bfe",
+                fillOpacity: 1,
+                interactive: false,
+              }).addTo(map);
+            } else {
+              circle.setLatLng(lastPosition).setRadius(accuracy);
+              marker.setLatLng(lastPosition);
+            }
+            if (first) map.setView(lastPosition, 16);
+            else if (following) map.panTo(lastPosition, { animate: false });
+          }
+        }
+        function stop() {
+          if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+          watchId = null;
+          following = false;
+          locationSession++;
+          locationButtonState();
+        }
+        el("start").onclick = () => {
+          if (watchId !== null) {
+            stop();
+            message("定位已停止", "");
+            return;
+          }
+          if (!navigator.geolocation) {
+            message("此预览环境不支持定位", "请将文件放到 HTTPS 网站，然后用 Safari 打开。");
+            return;
+          }
+          if (!window.isSecureContext && !localFile) {
+            message("定位需要安全网址", "请使用 HTTPS 地址打开这个页面。");
+            return;
+          }
+          following = true;
+          const session = ++locationSession;
+          message("正在获取位置…", "请允许定位；首次定位可能需要几十秒。");
+          try {
+            watchId = navigator.geolocation.watchPosition(
+              (position) => {
+                if (session !== locationSession) return;
+                display(position);
+              },
+              (error) => {
+                if (session !== locationSession) return;
+                const hints = {
+                  1: "定位权限被拒绝。请检查 iPhone 定位服务和 Safari 的网站定位权限；本地预览可能无法请求权限，请改用 HTTPS。",
+                  2: "暂时无法获取位置。请检查定位服务，尝试移到室外后重试。",
+                  3: "定位超时，仍在等待下一次更新。请保持页面在前台，或停止后重试。",
+                };
+                message("定位未成功", hints[error.code] || error.message);
+                if (error.code === 1) stop();
+              },
+              { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
+            );
+            locationButtonState();
+          } catch (error) {
+            stop();
+            message("此环境无法启动定位", error.message + "；请尝试用 Safari 打开 HTTPS 页面。");
+          }
+        };
+        el("route").onchange = () => {
+          if (!map || !routeLine) return;
+          if (!el("route").value) {
+            map.removeLayer(routeLine);
+            map.closeTooltip();
+            return;
+          }
+          if (!map.hasLayer(routeLine)) routeLine.addTo(map);
+          const sidePadding = !app.classList.contains("sidebar-closed") && window.innerWidth > 600 ? 360 : 35;
+          map.fitBounds(routeLine.getBounds(), { paddingTopLeft: [sidePadding, 35], paddingBottomRight: [35, 35] });
+        };
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden && watchId !== null) message("已回到页面，等待位置更新", "显示的坐标是最后一次定位结果，请留意最近更新时间。");
+        });
+        window.addEventListener("pagehide", stop);
+      })();
+    </script>
+  </body>
+</html>
