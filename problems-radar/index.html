@@ -859,6 +859,23 @@ sitemap: false
         color: #28633a;
         font-size: 12px;
       }
+      .manual-clock {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+      .manual-clock input {
+        padding: 9px 5px;
+        border: 1px solid #d7dfe8;
+        border-radius: 8px;
+        font: inherit;
+        font-size: 16px;
+        width: 50px;
+      }
+      .manual-clock #manualDate {
+        width: 160px;
+      }
     </style>
   </head>
   <body>
@@ -941,7 +958,20 @@ sitemap: false
         <p id="captureMeta"></p>
         <div class="capture-fields">
           <div id="manualTimeField" hidden>
-            <label for="manualTime">问题发生时间（当地时间）</label><input id="manualTime" type="datetime-local" step="1" />
+            <label for="manualTime">问题发生时间（当地时间）</label><input id="manualTime" type="hidden" />
+            <div class="manual-clock">
+              <input id="manualDate" type="date" aria-label="问题日期" /><input
+                id="manualHour"
+                type="number"
+                min="0"
+                max="23"
+                inputmode="numeric"
+                aria-label="小时"
+                placeholder="时"
+              /><span>:</span><input id="manualMinute" type="number" min="0" max="59" inputmode="numeric" aria-label="分钟" placeholder="分" /><span
+                >:</span
+              ><input id="manualSecond" type="number" min="0" max="59" inputmode="numeric" aria-label="秒" placeholder="秒" />
+            </div>
             <p id="manualZone" class="test-status"></p>
           </div>
           <label for="captureDescription">问题描述</label><textarea id="captureDescription" placeholder="现在发生了什么？"></textarea
@@ -1994,6 +2024,7 @@ sitemap: false
             const now = new Date();
             const dateText = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
             $("manualTime").value = dateText;
+            fillManualClock();
             pendingIssue = { manual: true, latitude: event.latlng.lat, longitude: event.latlng.lng };
             $("captureTitle").textContent = "手动添加问题";
             $("captureMeta").textContent = "地图选点：" + pendingIssue.latitude.toFixed(6) + ", " + pendingIssue.longitude.toFixed(6);
@@ -2006,6 +2037,23 @@ sitemap: false
             $("captureDialog").showModal();
             $("captureDescription").focus();
           });
+        function fillManualClock() {
+          const parts = $("manualTime").value.split("T");
+          $("manualDate").value = parts[0] || "";
+          const time = (parts[1] || "00:00:00").split(":");
+          $("manualHour").value = time[0];
+          $("manualMinute").value = time[1];
+          $("manualSecond").value = time[2] || "00";
+        }
+        for (const id of ["manualDate", "manualHour", "manualMinute", "manualSecond"])
+          $(id).oninput = () => {
+            const values = ["manualHour", "manualMinute", "manualSecond"].map((id) => $(id).value);
+            const valid =
+              $("manualDate").value &&
+              values.every((v, i) => v !== "" && Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) < (i === 0 ? 24 : 60));
+            $("manualTime").value = valid ? $("manualDate").value + "T" + values.map((v) => String(Number(v)).padStart(2, "0")).join(":") : "";
+            $("manualTime").oninput();
+          };
         $("manualTime").oninput = () => {
           saveManualDraft();
           const date = new Date($("manualTime").value);
@@ -2569,6 +2617,7 @@ sitemap: false
           pendingIssue = manualDraft.point;
           $("manualTimeField").hidden = false;
           $("manualTime").value = manualDraft.time;
+          fillManualClock();
           $("captureDescription").value = manualDraft.description;
           $("captureSeverity").value = manualDraft.severity;
           $("captureTitle").textContent = "继续手动添加问题";
