@@ -1,6 +1,973 @@
-<!DOCTYPE html> <html lang="zh-CN"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="robots" content="noindex, nofollow"> <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"> <meta name="theme-color" content="#f5f7fb"> <meta name="apple-mobile-web-app-capable" content="yes"> <title>Problems Radar</title> <meta name="apple-mobile-web-app-title" content="Problems Radar"> <meta name="description" content="Problems Radar：协助自动驾驶路测问题记录的路线与实时位置工具。"> <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"> <style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17243b;background:#e8eef3}.app{height:100vh;height:100dvh;position:relative;overflow:hidden}#map{position:absolute;inset:0;background:#e8eef3}.panel{position:absolute;top:calc(16px + env(safe - area - inset - top));left:calc(16px + env(safe - area - inset - left));bottom:calc(16px + env(safe - area - inset - bottom));width:320px;max-width:calc(100vw - 32px);padding:22px;background:#fffffff5;backdrop-filter:blur(16px);border:1px solid #fff;border-radius:20px;box-shadow:0 8px 35px #24375120;z-index:1000;overflow-y:auto;transition:transform .2s,opacity .2s}.app.sidebar-closed .panel{transform:translateX(calc( - 100% - 32px - env(safe - area - inset - left)));opacity:0;pointer-events:none}header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:24px}h1{font-size:21px;letter-spacing:-0.7px;margin:0}header small{display:block;font-size:11px;font-weight:500;letter-spacing:1px;color:#7c899a;margin-top:5px}button{min-height:44px;border:0;border-radius:11px;padding:10px 12px;font-size:13px;font-weight:600;background:#edf2f9;color:#254261;cursor:pointer;touch-action:manipulation}button.primary{background:#246bfe;color:white}button:disabled{opacity:.45;cursor:default}button:focus-visible{outline:3px solid #82afff;outline-offset:2px}.icon-button{width:44px;flex:none;font-size:22px;background:#f0f3f7}.sidebar-toggle{position:absolute;top:calc(16px + env(safe - area - inset - top));left:calc(16px + env(safe - area - inset - left));z-index:1000;display:none;background:white;box-shadow:0 4px 20px #24375120}.sidebar-closed .sidebar-toggle{display:block}#status{font-size:13px;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:8px}#status:before{content:"";width:7px;height:7px;border-radius:50%;background:#246bfe;flex:none}#hint{font-size:12px;color:#a14c30;line-height:1.6;margin:0 0 12px;overflow-wrap:anywhere}#hint[hidden]{display:none}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stats div{background:#f4f6f9;border-radius:11px;padding:12px}.stats div:first-child{grid-column:1/-1}.stats small{display:block;color:#7b879a;font-size:11px;margin-bottom:6px}.stats strong{font-size:13px;font-variant-numeric:tabular-nums}.stats div:last-child{grid-column:1/-1}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.buttons .primary{grid-column:1/-1}.route-actions{margin-top:22px;padding-top:20px;border-top:1px solid #e7ebf0}.route-actions label{display:block;font-size:12px;color:#7b879a;margin-bottom:8px}.route-actions select{width:100%;min-height:46px;padding:10px 12px;border:1px solid #cce4d4;border-radius:11px;background:#e5f5ea;color:#18683a;font:inherit;font-size:16px;cursor:pointer}.route-actions select:focus-visible{outline:3px solid #82afff;outline-offset:2px}.leaflet-control-attribution{font-size:10px!important}.leaflet-top{top:calc(16px + env(safe - area - inset - top))}.leaflet-right{right:env(safe-area-inset-right)}.leaflet-bottom{bottom:env(safe-area-inset-bottom)}@media(max-width:600px){.panel{width:300px;padding:18px}header{margin-bottom:18px}}@media(prefers-reduced-motion:reduce){.panel{transition:none}}.test-tools{margin-top:20px;padding-top:18px;border-top:1px solid #e7ebf0}.test-tools label{display:block;font-size:12px;color:#7b879a;margin:0 0 8px}.test-tools input,.issue-row textarea,.issue-row select{width:100%;padding:11px;border:1px solid #d7dfe8;border-radius:10px;font:inherit;font-size:16px;background:white;color:#17243b}.test-tools button{width:100%;margin-top:8px}.record-fab{position:absolute;bottom:calc(40px + env(safe - area - inset - bottom));right:calc(18px + env(safe - area - inset - right));z-index:1000;background:#e4503c;color:white;box-shadow:0 4px 18px #0003;min-width:140px}.test-status{font-size:12px;color:#65758a;line-height:1.5;margin:10px 0 0}dialog{width:720px;max-width:calc(100vw - 24px);max-height:85dvh;border:0;border-radius:18px;padding:22px;color:#17243b;box-shadow:0 12px 60px #0004}dialog::backdrop{background:#17243b66}dialog header{margin-bottom:16px}dialog h2{font-size:18px;margin:0}.issue-row{padding:16px 0;border-top:1px solid #e7ebf0}.issue-row p{font-size:12px;color:#64748b;margin:0 0 10px;overflow-wrap:anywhere}.issue-row textarea{resize:vertical;min-height:70px;margin-bottom:10px}.issue-row label{font-size:13px;display:block;margin:8px 0}.issue-row .confirm{display:flex;align-items:center;gap:8px}.issue-row input[type="checkbox"]{width:20px;height:20px}.dialog-actions{display:flex;gap:10px;position:sticky;bottom:-22px;background:white;padding:14px 0 4px}.dialog-actions button{flex:1}.issue-row{padding:18px;margin:12px 0;border:1px solid #dce3ec;border-left:5px solid #d69a26;border-radius:14px;background:#f8fafc}.issue-row.reviewed{border-left-color:#159447;background:#f2faf5}.issue-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.issue-head strong{font-size:18px}
-.issue-badge{padding:5px 9px;border-radius:20px;font-size:12px;background:#fff0cb;color:#8c630f}.reviewed .issue-badge{background:#ddf2e3;color:#18683a}.issue-row .field-label{color:#526278;font-weight:600;font-size:12px;margin:12px 0 6px}.issue-row .confirm{padding:10px;background:white;border:1px solid #dce3ec;border-radius:9px;margin-top:14px}.issue-meta{display:grid;gap:4px;margin-bottom:12px;font-size:12px;color:#65758a}.issue-pin{border:0;background:0}.issue-pin span{display:block;background:#e4503c;color:white;border:2px solid white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:26px;font-weight:700;box-shadow:0 2px 8px #0003}.issue-map-label{width:180px;max-width:200px;white-space:normal;font-size:12px;border-radius:8px;font-weight:600}.capture-fields label{display:block;margin:14px 0 6px;font-size:13px;font-weight:600}.capture-fields textarea,.capture-fields select{width:100%;font:inherit;font-size:16px;border:1px solid #d7dfe8;border-radius:10px;padding:12px}.capture-fields textarea{min-height:130px;resize:vertical}#captureMeta{font-size:12px;color:#65758a;line-height:1.6}#reviewSummary{padding:12px;background:#edf2f9;border-radius:10px;font-size:13px;margin-bottom:14px}.record-fab small{display:block;font-size:10px;opacity:.85;margin-top:3px}.issue-row:target{outline:3px solid #82afff}.buttons label{grid-column:1/-1;font-size:12px;color:#65758a;margin-top:8px;display:flex;justify-content:space-between}.buttons input[type="range"]{grid-column:1/-1;width:100%;accent-color:#246bfe;min-height:32px}.history-pin span{background:#7357c7}.history-label{border-left:3px solid #7357c7}.history-popup p{margin:6px 0;overflow-wrap:anywhere}.severity-high{--severity-color:#dc3434;--severity-bg:#fff0f0;--severity-text:#a52020}.severity-medium{--severity-color:#ef861d;--severity-bg:#fff3e5;--severity-text:#944a09}.severity-low{--severity-color:#e9c32f;--severity-bg:#fffbe1;--severity-text:#796008}.severity-unknown{--severity-color:#8492a6;--severity-bg:#f0f3f7;--severity-text:#4b5b70}.issue-pin[class*="severity-"] span{background:var(--severity-color);color:var(--severity-text)}.issue-pin.severity-high span{color:white}.issue-map-label[class*="severity-"]{border-left:4px solid var(--severity-color);background:var(--severity-bg);color:var(--severity-text)}.issue-row[class*="severity-"]{border-left-color:var(--severity-color)}.issue-row[class*="severity-"] .issue-head strong{color:var(--severity-text)}.issue-row[class*="severity-"] select{background:var(--severity-bg);border-color:var(--severity-color);color:var(--severity-text)}.panel{width:300px;padding:20px;border-radius:16px;background:#fffffff7;box-shadow:0 5px 28px #24375118}.panel header{margin-bottom:18px}.panel h1{font-size:20px}.panel header small{font-size:10px;letter-spacing:.5px}.panel .icon-button{width:32px;min-height:32px;font-size:20px;padding:4px;background:transparent;color:#8793a3}.panel button{font-weight:500}.active-test{margin-top:12px;padding-top:14px;border-top:1px solid #e9edf2}.active-test input{min-height:40px;padding:9px 11px;font-size:14px;border-color:#e2e7ed;background:#fafbfd}.active-test #beginTest{min-height:40px;margin-top:10px;background:#293d55}.test-secondary{display:flex;gap:8px;margin-top:8px}.test-secondary button{flex:1;width:auto;min-height:36px;margin:0;background:#f4f6f8;color:#5d6b7d;font-size:12px}.panel #downloadAgain{background:transparent;color:#42658c;text-align:left;min-height:34px;padding:5px 0;font-size:12px}.panel .test-status{font-size:11px;line-height:1.5;color:#8994a3;margin-top:9px}.panel #status{font-size:12px;color:#67768a;font-weight:500}.config-section{border-top:1px solid #e9edf2;margin-top:18px;padding-top:14px}.config-section summary{font-size:12px;color:#67768a;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:30px}.config-section summary:after{content:"＋";color:#a0a9b6;font-size:16px}.config-section[open] summary:after{content:"−"}.config-section summary::-webkit-details-marker{display:none}.config-section .route-actions{border:0;margin-top:10px;padding:0}.config-section .route-actions label{font-size:11px;margin-bottom:6px}.config-section .route-actions select{background:#fafbfd;color:#526278;border:1px solid #e2e7ed;min-height:38px;padding:7px 9px;font-size:14px;border-radius:8px}.config-section .buttons{display:block;margin-top:10px}.config-section .follow-toggle{width:100%;text-align:left;background:#f4f6f8;color:#65758a;min-height:34px;font-size:12px;border-radius:8px}.config-section .follow-toggle[aria-pressed="true"]{background:#edf2f7;color:#344b65}.config-section .buttons label{margin-top:12px;font-size:11px}.config-section .buttons input[type="range"]{min-height:24px;accent-color:#7d8fa6}
-.history-tools{margin-top:10px}.import-actions{display:flex;gap:8px}.import-actions button{flex:1;min-height:34px;padding:7px 8px;font-size:12px;color:#65758a;background:#f4f6f8;border-radius:8px}#clearImported{min-height:30px;padding:4px 0;background:transparent;font-size:11px;color:#8a94a2}.telemetry .stats{margin-top:10px;gap:0}.telemetry .stats div{background:transparent;border-bottom:1px solid #f0f2f5;border-radius:0;padding:9px 0}.telemetry .stats small{font-size:10px;margin-bottom:4px}.telemetry .stats strong{font-size:12px;font-weight:500}.issue-row>summary{cursor:pointer;list-style:none;margin-bottom:0}.issue-row>summary::-webkit-details-marker{display:none}.issue-row[open]>summary{margin-bottom:12px}.issue-row>summary strong:before{content:"▸ ";font-size:13px;color:#8994a3}.issue-row[open]>summary strong:before{content:"▾ "}.issue-head strong{font-size:13px;line-height:1.6;flex:1;overflow-wrap:anywhere}.issue-head .issue-badge,.issue-head button{flex-shrink:0}.folder-path{font-size:11px;color:#68798c;overflow-wrap:anywhere;line-height:1.6;margin:10px 0}.history-tools #chooseExportFolder,.history-tools #resetExportFolder{min-height:32px;font-size:12px;padding:7px 9px;background:#f4f6f8;color:#65758a;margin-right:6px;margin-top:8px}.issue-pin{display:flex;align-items:center;justify-content:center}.issue-pin span{width:12px;height:12px;border:0;font-size:0;line-height:0;box-shadow:0 1px 4px #0003}.issue-pin:hover span,.issue-pin:focus span{transform:scale(1.25)}.active-test #testPicker{width:100%;min-height:38px;font:inherit;font-size:13px;padding:8px;border:1px solid #e2e7ed;border-radius:8px;background:#fafbfd;color:#526278;margin-bottom:14px}.panel #downloadAgain,.panel #deleteFinishedTest{border:1px solid #dce3ec!important;border-radius:8px!important;padding:8px 11px!important;min-height:36px!important;margin-top:8px;text-align:center!important}.panel #deleteFinishedTest{border-color:#edccc8!important;background:#fff8f7!important}#toggleHistory{min-height:32px;padding:7px 10px;font-size:12px;background:#f4f6f8;color:#65758a;margin-top:10px;border:1px solid #e2e7ed;border-radius:8px}#toggleHistory[aria-pressed="true"]{color:#344b65;background:#edf2f7}#toggleIssueCards{width:100%;min-height:32px;margin-top:8px;padding:7px 10px;text-align:left;background:#f4f6f8;color:#65758a;font-size:12px;border-radius:8px}#toggleIssueCards[aria-pressed="true"]{background:#edf2f7;color:#344b65}#manualTime{width:100%;padding:11px;border:1px solid #d7dfe8;border-radius:10px;font:inherit;font-size:16px}.test-secondary{flex-wrap:wrap}.test-secondary #manualIssue{flex-basis:100%}#confirmDownloaded{border:1px solid #dce3ec;border-radius:8px;padding:8px 11px;min-height:36px;margin-top:8px;background:#edf5ef;color:#28633a;font-size:12px}</style> </head> <body> <main class="app"> <div id="map" aria-label="当前位置地图"></div> <button id="sidebarOpen" class="icon-button sidebar-toggle" aria-label="展开控制栏" aria-controls="sidebar" aria-expanded="false">☰</button> <aside id="sidebar" class="panel" aria-label="控制栏"> <header> <h1>Problems Radar<small>自动驾驶路测</small> </h1> <button id="sidebarClose" class="icon-button" aria-label="收起控制栏" aria-controls="sidebar" aria-expanded="true">‹</button> </header> <p id="status" role="status" aria-live="polite">准备定位</p> <p id="hint" hidden></p> <section class="test-tools active-test"> <label for="testPicker">测试记录</label><select id="testPicker"> <option value="">选择一趟测试</option></select><label for="testName">新测试名称</label><input id="testName" maxlength="120" placeholder="例如：Wolfsburg 第一次路测"> <button id="beginTest" class="primary">开始测试</button> <div class="test-secondary"> <button id="manualIssue" disabled>手动添加</button><button id="reviewIssues" disabled>问题单 · 0</button> <button id="finishTest" disabled>结束测试</button> </div> <p id="testStatus" class="test-status" role="status" aria-live="polite">未开始测试</p> </section> <details class="config-section"> <summary>地图设置</summary> <div class="route-actions"> <label for="route">路线选择</label><select id="route"> <option value="">不显示路线</option> <option value="wolfsburg">Wolfsburg 环线</option> </select> </div> <div class="buttons"> <button id="start" class="follow-toggle" aria-pressed="true">跟随：开</button> <button id="toggleIssueCards" aria-pressed="false">问题卡片：隐藏</button><label for="followZoom">跟随高度 <output id="followZoomValue">缩放 16</output></label><input id="followZoom" type="range" min="12" max="19" step="1" value="16" aria-label="跟随高度"> </div> </details> <details class="config-section"> <summary>导入历史问题</summary> <section class="history-tools"> <div class="import-actions"> <button id="importFolder">选文件夹</button><button id="importFiles">选文件</button> </div> <input id="folderInput" type="file" webkitdirectory multiple accept=".csv" hidden><input id="csvInput" type="file" multiple accept=".csv,text/csv" hidden> <button id="toggleHistory" aria-pressed="true">历史问题：显示</button> <p id="importFolderPath" class="folder-path">导入位置：未选择</p> <button id="clearImported" hidden>清除显示</button> <p id="importStatus" class="test-status" role="status"></p> </section> </details> <details class="config-section"> <summary>导出设置</summary> <div class="history-tools"> <button id="chooseExportFolder">选择导出文件夹</button><button id="resetExportFolder">使用浏览器下载</button> <p id="exportFolderPath" class="folder-path">导出位置：浏览器下载目录</p> <p id="exportFolderStatus" class="test-status" role="status"></p> </div> </details> <details class="config-section telemetry"> <summary>定位详情</summary> <div class="stats"> <div> <small>纬度 / 经度</small><strong id="coords">— / —</strong> </div> <div> <small>定位精度</small><strong id="accuracy">—</strong> </div> <div> <small>最近更新</small><strong id="updated">—</strong> </div> <div> <small>地图状态</small><strong id="mapStatus">正在加载</strong> </div> </div> </details> </aside> <button id="recordIssue" class="record-fab" disabled title="Alt / Option + P">＋ 记录问题<small>Alt / Option + P</small></button> <dialog id="captureDialog" aria-labelledby="captureTitle"> <h2 id="captureTitle">记录问题</h2> <p id="captureMeta"></p> <div class="capture-fields"> <div id="manualTimeField" hidden> <label for="manualTime">问题发生时间（当地时间）</label><input id="manualTime" type="datetime-local" step="1"> <p id="manualZone" class="test-status"></p> </div> <label for="captureDescription">问题描述</label><textarea id="captureDescription" placeholder="现在发生了什么？"></textarea><label for="captureSeverity">问题等级</label><select id="captureSeverity"> <option>高</option> <option>中</option> <option selected>低</option> <option>未知</option> </select> </div> <p id="captureStatus" class="test-status" role="status"></p> <div class="dialog-actions"> <button id="cancelCapture">取消</button><button id="saveCapture" class="primary">保存问题</button> </div> </dialog> <dialog id="issuesDialog" aria-labelledby="issuesTitle"> <header> <h2 id="issuesTitle">问题单</h2> <button id="closeIssues" aria-label="关闭问题单">×</button> </header> <div id="reviewSummary"></div> <button id="undoDelete" hidden>撤销删除</button> <div id="issuesList"></div> <p id="reviewStatus" class="test-status" role="status"></p> <div class="dialog-actions"> <button id="confirmAll">确认全部</button><button id="exportReviewed" class="primary">结束测试</button> </div> </dialog> </main> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> <script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Problems Radar</title>
+    <meta name="apple-mobile-web-app-title" content="Problems Radar">
+    <meta name="description" content="Problems Radar：协助自动驾驶路测问题记录的路线与实时位置工具。">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #17243b;
+        background: #e8eef3;
+      }
+      .app {
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      #map {
+        position: absolute;
+        inset: 0;
+        background: #e8eef3;
+      }
+      .panel {
+        position: absolute;
+        top: calc(16px + env(safe-area-inset-top));
+        left: calc(16px + env(safe-area-inset-left));
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        width: 320px;
+        max-width: calc(100vw - 32px);
+        padding: 22px;
+        background: #fffffff5;
+        backdrop-filter: blur(16px);
+        border: 1px solid #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 35px #24375120;
+        z-index: 1000;
+        overflow-y: auto;
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+      }
+      .app.sidebar-closed .panel {
+        transform: translateX(calc(-100% - 32px - env(safe-area-inset-left)));
+        opacity: 0;
+        pointer-events: none;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+      h1 {
+        font-size: 21px;
+        letter-spacing: -0.7px;
+        margin: 0;
+      }
+      header small {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        color: #7c899a;
+        margin-top: 5px;
+      }
+      button {
+        min-height: 44px;
+        border: 0;
+        border-radius: 11px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #edf2f9;
+        color: #254261;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      button.primary {
+        background: #246bfe;
+        color: white;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      button:focus-visible {
+        outline: 3px solid #82afff;
+        outline-offset: 2px;
+      }
+      .icon-button {
+        width: 44px;
+        flex: none;
+        font-size: 22px;
+        background: #f0f3f7;
+      }
+      .sidebar-toggle {
+        position: absolute;
+        top: calc(16px + env(safe-area-inset-top));
+        left: calc(16px + env(safe-area-inset-left));
+        z-index: 1000;
+        display: none;
+        background: white;
+        box-shadow: 0 4px 20px #24375120;
+      }
+      .sidebar-closed .sidebar-toggle {
+        display: block;
+      }
+      #status {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #status:before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #246bfe;
+        flex: none;
+      }
+      #hint {
+        font-size: 12px;
+        color: #a14c30;
+        line-height: 1.6;
+        margin: 0 0 12px;
+        overflow-wrap: anywhere;
+      }
+      #hint[hidden] {
+        display: none;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .stats div {
+        background: #f4f6f9;
+        border-radius: 11px;
+        padding: 12px;
+      }
+      .stats div:first-child {
+        grid-column: 1/-1;
+      }
+      .stats small {
+        display: block;
+        color: #7b879a;
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+      .stats strong {
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
+      }
+      .stats div:last-child {
+        grid-column: 1/-1;
+      }
+      .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .buttons .primary {
+        grid-column: 1/-1;
+      }
+      .route-actions {
+        margin-top: 22px;
+        padding-top: 20px;
+        border-top: 1px solid #e7ebf0;
+      }
+      .route-actions label {
+        display: block;
+        font-size: 12px;
+        color: #7b879a;
+        margin-bottom: 8px;
+      }
+      .route-actions select {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px 12px;
+        border: 1px solid #cce4d4;
+        border-radius: 11px;
+        background: #e5f5ea;
+        color: #18683a;
+        font: inherit;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .route-actions select:focus-visible {
+        outline: 3px solid #82afff;
+        outline-offset: 2px;
+      }
+      .leaflet-control-attribution {
+        font-size: 10px !important;
+      }
+      .leaflet-top {
+        top: calc(16px + env(safe-area-inset-top));
+      }
+      .leaflet-right {
+        right: env(safe-area-inset-right);
+      }
+      .leaflet-bottom {
+        bottom: env(safe-area-inset-bottom);
+      }
+      @media (max-width: 600px) {
+        .panel {
+          width: 300px;
+          padding: 18px;
+        }
+        header {
+          margin-bottom: 18px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .panel {
+          transition: none;
+        }
+      }
+
+      .test-tools {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid #e7ebf0;
+      }
+      .test-tools label {
+        display: block;
+        font-size: 12px;
+        color: #7b879a;
+        margin: 0 0 8px;
+      }
+      .test-tools input,
+      .issue-row textarea,
+      .issue-row select {
+        width: 100%;
+        padding: 11px;
+        border: 1px solid #d7dfe8;
+        border-radius: 10px;
+        font: inherit;
+        font-size: 16px;
+        background: white;
+        color: #17243b;
+      }
+      .test-tools button {
+        width: 100%;
+        margin-top: 8px;
+      }
+      .record-fab {
+        position: absolute;
+        bottom: calc(40px + env(safe-area-inset-bottom));
+        right: calc(18px + env(safe-area-inset-right));
+        z-index: 1000;
+        background: #e4503c;
+        color: white;
+        box-shadow: 0 4px 18px #0003;
+        min-width: 140px;
+      }
+      .test-status {
+        font-size: 12px;
+        color: #65758a;
+        line-height: 1.5;
+        margin: 10px 0 0;
+      }
+      dialog {
+        width: 720px;
+        max-width: calc(100vw - 24px);
+        max-height: 85dvh;
+        border: 0;
+        border-radius: 18px;
+        padding: 22px;
+        color: #17243b;
+        box-shadow: 0 12px 60px #0004;
+      }
+      dialog::backdrop {
+        background: #17243b66;
+      }
+      dialog header {
+        margin-bottom: 16px;
+      }
+      dialog h2 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .issue-row {
+        padding: 16px 0;
+        border-top: 1px solid #e7ebf0;
+      }
+      .issue-row p {
+        font-size: 12px;
+        color: #64748b;
+        margin: 0 0 10px;
+        overflow-wrap: anywhere;
+      }
+      .issue-row textarea {
+        resize: vertical;
+        min-height: 70px;
+        margin-bottom: 10px;
+      }
+      .issue-row label {
+        font-size: 13px;
+        display: block;
+        margin: 8px 0;
+      }
+      .issue-row .confirm {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .issue-row input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+      .dialog-actions {
+        display: flex;
+        gap: 10px;
+        position: sticky;
+        bottom: -22px;
+        background: white;
+        padding: 14px 0 4px;
+      }
+      .dialog-actions button {
+        flex: 1;
+      }
+
+      .issue-row {
+        padding: 18px;
+        margin: 12px 0;
+        border: 1px solid #dce3ec;
+        border-left: 5px solid #d69a26;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+      .issue-row.reviewed {
+        border-left-color: #159447;
+        background: #f2faf5;
+      }
+      .issue-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .issue-head strong {
+        font-size: 18px;
+      }
+      .issue-badge {
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 12px;
+        background: #fff0cb;
+        color: #8c630f;
+      }
+      .reviewed .issue-badge {
+        background: #ddf2e3;
+        color: #18683a;
+      }
+      .issue-row .field-label {
+        color: #526278;
+        font-weight: 600;
+        font-size: 12px;
+        margin: 12px 0 6px;
+      }
+      .issue-row .confirm {
+        padding: 10px;
+        background: white;
+        border: 1px solid #dce3ec;
+        border-radius: 9px;
+        margin-top: 14px;
+      }
+      .issue-meta {
+        display: grid;
+        gap: 4px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #65758a;
+      }
+      .issue-pin {
+        border: 0;
+        background: none;
+      }
+      .issue-pin span {
+        display: block;
+        background: #e4503c;
+        color: white;
+        border: 2px solid white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 26px;
+        font-weight: 700;
+        box-shadow: 0 2px 8px #0003;
+      }
+      .issue-map-label {
+        width: 180px;
+        max-width: 200px;
+        white-space: normal;
+        font-size: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .capture-fields label {
+        display: block;
+        margin: 14px 0 6px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .capture-fields textarea,
+      .capture-fields select {
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+        border: 1px solid #d7dfe8;
+        border-radius: 10px;
+        padding: 12px;
+      }
+      .capture-fields textarea {
+        min-height: 130px;
+        resize: vertical;
+      }
+      #captureMeta {
+        font-size: 12px;
+        color: #65758a;
+        line-height: 1.6;
+      }
+      #reviewSummary {
+        padding: 12px;
+        background: #edf2f9;
+        border-radius: 10px;
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .record-fab small {
+        display: block;
+        font-size: 10px;
+        opacity: 0.85;
+        margin-top: 3px;
+      }
+      .issue-row:target {
+        outline: 3px solid #82afff;
+      }
+      .buttons label {
+        grid-column: 1/-1;
+        font-size: 12px;
+        color: #65758a;
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .buttons input[type="range"] {
+        grid-column: 1/-1;
+        width: 100%;
+        accent-color: #246bfe;
+        min-height: 32px;
+      }
+      .history-pin span {
+        background: #7357c7;
+      }
+      .history-label {
+        border-left: 3px solid #7357c7;
+      }
+      .history-popup p {
+        margin: 6px 0;
+        overflow-wrap: anywhere;
+      }
+
+      .severity-high {
+        --severity-color: #dc3434;
+        --severity-bg: #fff0f0;
+        --severity-text: #a52020;
+      }
+      .severity-medium {
+        --severity-color: #ef861d;
+        --severity-bg: #fff3e5;
+        --severity-text: #944a09;
+      }
+      .severity-low {
+        --severity-color: #e9c32f;
+        --severity-bg: #fffbe1;
+        --severity-text: #796008;
+      }
+      .severity-unknown {
+        --severity-color: #8492a6;
+        --severity-bg: #f0f3f7;
+        --severity-text: #4b5b70;
+      }
+      .issue-pin[class*="severity-"] span {
+        background: var(--severity-color);
+        color: var(--severity-text);
+      }
+      .issue-pin.severity-high span {
+        color: white;
+      }
+      .issue-map-label[class*="severity-"] {
+        border-left: 4px solid var(--severity-color);
+        background: var(--severity-bg);
+        color: var(--severity-text);
+      }
+      .issue-row[class*="severity-"] {
+        border-left-color: var(--severity-color);
+      }
+      .issue-row[class*="severity-"] .issue-head strong {
+        color: var(--severity-text);
+      }
+      .issue-row[class*="severity-"] select {
+        background: var(--severity-bg);
+        border-color: var(--severity-color);
+        color: var(--severity-text);
+      }
+
+      .panel {
+        width: 300px;
+        padding: 20px;
+        border-radius: 16px;
+        background: #fffffff7;
+        box-shadow: 0 5px 28px #24375118;
+      }
+      .panel header {
+        margin-bottom: 18px;
+      }
+      .panel h1 {
+        font-size: 20px;
+      }
+      .panel header small {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+      }
+      .panel .icon-button {
+        width: 32px;
+        min-height: 32px;
+        font-size: 20px;
+        padding: 4px;
+        background: transparent;
+        color: #8793a3;
+      }
+      .panel button {
+        font-weight: 500;
+      }
+      .active-test {
+        margin-top: 12px;
+        padding-top: 14px;
+        border-top: 1px solid #e9edf2;
+      }
+      .active-test input {
+        min-height: 40px;
+        padding: 9px 11px;
+        font-size: 14px;
+        border-color: #e2e7ed;
+        background: #fafbfd;
+      }
+      .active-test #beginTest {
+        min-height: 40px;
+        margin-top: 10px;
+        background: #293d55;
+      }
+      .test-secondary {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .test-secondary button {
+        flex: 1;
+        width: auto;
+        min-height: 36px;
+        margin: 0;
+        background: #f4f6f8;
+        color: #5d6b7d;
+        font-size: 12px;
+      }
+      .panel #downloadAgain {
+        background: transparent;
+        color: #42658c;
+        text-align: left;
+        min-height: 34px;
+        padding: 5px 0;
+        font-size: 12px;
+      }
+      .panel .test-status {
+        font-size: 11px;
+        line-height: 1.5;
+        color: #8994a3;
+        margin-top: 9px;
+      }
+      .panel #status {
+        font-size: 12px;
+        color: #67768a;
+        font-weight: 500;
+      }
+      .config-section {
+        border-top: 1px solid #e9edf2;
+        margin-top: 18px;
+        padding-top: 14px;
+      }
+      .config-section summary {
+        font-size: 12px;
+        color: #67768a;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 30px;
+      }
+      .config-section summary:after {
+        content: "＋";
+        color: #a0a9b6;
+        font-size: 16px;
+      }
+      .config-section[open] summary:after {
+        content: "−";
+      }
+      .config-section summary::-webkit-details-marker {
+        display: none;
+      }
+      .config-section .route-actions {
+        border: 0;
+        margin-top: 10px;
+        padding: 0;
+      }
+      .config-section .route-actions label {
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+      .config-section .route-actions select {
+        background: #fafbfd;
+        color: #526278;
+        border: 1px solid #e2e7ed;
+        min-height: 38px;
+        padding: 7px 9px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+      .config-section .buttons {
+        display: block;
+        margin-top: 10px;
+      }
+      .config-section .follow-toggle {
+        width: 100%;
+        text-align: left;
+        background: #f4f6f8;
+        color: #65758a;
+        min-height: 34px;
+        font-size: 12px;
+        border-radius: 8px;
+      }
+      .config-section .follow-toggle[aria-pressed="true"] {
+        background: #edf2f7;
+        color: #344b65;
+      }
+      .config-section .buttons label {
+        margin-top: 12px;
+        font-size: 11px;
+      }
+      .config-section .buttons input[type="range"] {
+        min-height: 24px;
+        accent-color: #7d8fa6;
+      }
+      .history-tools {
+        margin-top: 10px;
+      }
+      .import-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .import-actions button {
+        flex: 1;
+        min-height: 34px;
+        padding: 7px 8px;
+        font-size: 12px;
+        color: #65758a;
+        background: #f4f6f8;
+        border-radius: 8px;
+      }
+      #clearImported {
+        min-height: 30px;
+        padding: 4px 0;
+        background: transparent;
+        font-size: 11px;
+        color: #8a94a2;
+      }
+      .telemetry .stats {
+        margin-top: 10px;
+        gap: 0;
+      }
+      .telemetry .stats div {
+        background: transparent;
+        border-bottom: 1px solid #f0f2f5;
+        border-radius: 0;
+        padding: 9px 0;
+      }
+      .telemetry .stats small {
+        font-size: 10px;
+        margin-bottom: 4px;
+      }
+      .telemetry .stats strong {
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .issue-row > summary {
+        cursor: pointer;
+        list-style: none;
+        margin-bottom: 0;
+      }
+      .issue-row > summary::-webkit-details-marker {
+        display: none;
+      }
+      .issue-row[open] > summary {
+        margin-bottom: 12px;
+      }
+      .issue-row > summary strong:before {
+        content: "▸ ";
+        font-size: 13px;
+        color: #8994a3;
+      }
+      .issue-row[open] > summary strong:before {
+        content: "▾ ";
+      }
+      .issue-head strong {
+        font-size: 13px;
+        line-height: 1.6;
+        flex: 1;
+        overflow-wrap: anywhere;
+      }
+      .issue-head .issue-badge,
+      .issue-head button {
+        flex-shrink: 0;
+      }
+      .folder-path {
+        font-size: 11px;
+        color: #68798c;
+        overflow-wrap: anywhere;
+        line-height: 1.6;
+        margin: 10px 0;
+      }
+      .history-tools #chooseExportFolder,
+      .history-tools #resetExportFolder {
+        min-height: 32px;
+        font-size: 12px;
+        padding: 7px 9px;
+        background: #f4f6f8;
+        color: #65758a;
+        margin-right: 6px;
+        margin-top: 8px;
+      }
+
+      .issue-pin {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .issue-pin span {
+        width: 12px;
+        height: 12px;
+        border: 0;
+        font-size: 0;
+        line-height: 0;
+        box-shadow: 0 1px 4px #0003;
+      }
+      .issue-pin:hover span,
+      .issue-pin:focus span {
+        transform: scale(1.25);
+      }
+
+      .active-test #testPicker {
+        width: 100%;
+        min-height: 38px;
+        font: inherit;
+        font-size: 13px;
+        padding: 8px;
+        border: 1px solid #e2e7ed;
+        border-radius: 8px;
+        background: #fafbfd;
+        color: #526278;
+        margin-bottom: 14px;
+      }
+      .panel #downloadAgain,
+      .panel #deleteFinishedTest {
+        border: 1px solid #dce3ec !important;
+        border-radius: 8px !important;
+        padding: 8px 11px !important;
+        min-height: 36px !important;
+        margin-top: 8px;
+        text-align: center !important;
+      }
+      .panel #deleteFinishedTest {
+        border-color: #edccc8 !important;
+        background: #fff8f7 !important;
+      }
+      #toggleHistory {
+        min-height: 32px;
+        padding: 7px 10px;
+        font-size: 12px;
+        background: #f4f6f8;
+        color: #65758a;
+        margin-top: 10px;
+        border: 1px solid #e2e7ed;
+        border-radius: 8px;
+      }
+      #toggleHistory[aria-pressed="true"] {
+        color: #344b65;
+        background: #edf2f7;
+      }
+      #toggleIssueCards {
+        width: 100%;
+        min-height: 32px;
+        margin-top: 8px;
+        padding: 7px 10px;
+        text-align: left;
+        background: #f4f6f8;
+        color: #65758a;
+        font-size: 12px;
+        border-radius: 8px;
+      }
+      #toggleIssueCards[aria-pressed="true"] {
+        background: #edf2f7;
+        color: #344b65;
+      }
+      #manualTime {
+        width: 100%;
+        padding: 11px;
+        border: 1px solid #d7dfe8;
+        border-radius: 10px;
+        font: inherit;
+        font-size: 16px;
+      }
+      .test-secondary {
+        flex-wrap: wrap;
+      }
+      .test-secondary #manualIssue {
+        flex-basis: 100%;
+      }
+      #confirmDownloaded {
+        border: 1px solid #dce3ec;
+        border-radius: 8px;
+        padding: 8px 11px;
+        min-height: 36px;
+        margin-top: 8px;
+        background: #edf5ef;
+        color: #28633a;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <div id="map" aria-label="当前位置地图"></div>
+      <button id="sidebarOpen" class="icon-button sidebar-toggle" aria-label="展开控制栏" aria-controls="sidebar" aria-expanded="false">☰</button>
+      <aside id="sidebar" class="panel" aria-label="控制栏">
+        <header>
+          <h1>Problems Radar<small>自动驾驶路测</small>
+</h1>
+          <button id="sidebarClose" class="icon-button" aria-label="收起控制栏" aria-controls="sidebar" aria-expanded="true">‹</button>
+        </header>
+        <p id="status" role="status" aria-live="polite">准备定位</p>
+        <p id="hint" hidden></p>
+        <section class="test-tools active-test">
+          <label for="testPicker">测试记录</label><select id="testPicker">
+            <option value="">选择一趟测试</option></select><label for="testName">新测试名称</label><input id="testName" maxlength="120" placeholder="例如：Wolfsburg 第一次路测">
+          <button id="beginTest" class="primary">开始测试</button>
+          <div class="test-secondary">
+            <button id="manualIssue" disabled>手动添加</button><button id="reviewIssues" disabled>问题单 · 0</button>
+            <button id="finishTest" disabled>结束测试</button>
+          </div>
+          <p id="testStatus" class="test-status" role="status" aria-live="polite">未开始测试</p>
+        </section>
+        <details class="config-section">
+          <summary>地图设置</summary>
+          <div class="route-actions">
+            <label for="route">路线选择</label><select id="route">
+              <option value="">不显示路线</option>
+              <option value="wolfsburg">Wolfsburg 环线</option>
+            </select>
+          </div>
+          <div class="buttons">
+            <button id="start" class="follow-toggle" aria-pressed="true">跟随：开</button>
+            <button id="toggleIssueCards" aria-pressed="false">问题卡片：隐藏</button><label for="followZoom">跟随高度 <output id="followZoomValue">缩放 16</output></label><input id="followZoom" type="range" min="12" max="19" step="1" value="16" aria-label="跟随高度">
+          </div>
+        </details>
+        <details class="config-section">
+          <summary>导入历史问题</summary>
+          <section class="history-tools">
+            <div class="import-actions">
+<button id="importFolder">选文件夹</button><button id="importFiles">选文件</button>
+</div>
+            <input id="folderInput" type="file" webkitdirectory multiple accept=".csv" hidden><input id="csvInput" type="file" multiple accept=".csv,text/csv" hidden>
+            <button id="toggleHistory" aria-pressed="true">历史问题：显示</button>
+            <p id="importFolderPath" class="folder-path">导入位置：未选择</p>
+            <button id="clearImported" hidden>清除显示</button>
+            <p id="importStatus" class="test-status" role="status"></p>
+          </section>
+        </details>
+        <details class="config-section">
+          <summary>导出设置</summary>
+          <div class="history-tools">
+            <button id="chooseExportFolder">选择导出文件夹</button><button id="resetExportFolder">使用浏览器下载</button>
+            <p id="exportFolderPath" class="folder-path">导出位置：浏览器下载目录</p>
+            <p id="exportFolderStatus" class="test-status" role="status"></p>
+          </div>
+        </details>
+        <details class="config-section telemetry">
+          <summary>定位详情</summary>
+          <div class="stats">
+            <div>
+<small>纬度 / 经度</small><strong id="coords">— / —</strong>
+</div>
+            <div>
+<small>定位精度</small><strong id="accuracy">—</strong>
+</div>
+            <div>
+<small>最近更新</small><strong id="updated">—</strong>
+</div>
+            <div>
+<small>地图状态</small><strong id="mapStatus">正在加载</strong>
+</div>
+          </div>
+        </details>
+      </aside>
+      <button id="recordIssue" class="record-fab" disabled title="Alt / Option + P">＋ 记录问题<small>Alt / Option + P</small></button>
+      <dialog id="captureDialog" aria-labelledby="captureTitle">
+        <h2 id="captureTitle">记录问题</h2>
+        <p id="captureMeta"></p>
+        <div class="capture-fields">
+          <div id="manualTimeField" hidden>
+            <label for="manualTime">问题发生时间（当地时间）</label><input id="manualTime" type="datetime-local" step="1">
+            <p id="manualZone" class="test-status"></p>
+          </div>
+          <label for="captureDescription">问题描述</label><textarea id="captureDescription" placeholder="现在发生了什么？"></textarea><label for="captureSeverity">问题等级</label><select id="captureSeverity">
+            <option>高</option>
+            <option>中</option>
+            <option selected>低</option>
+            <option>未知</option>
+          </select>
+        </div>
+        <p id="captureStatus" class="test-status" role="status"></p>
+        <div class="dialog-actions">
+<button id="cancelCapture">取消</button><button id="saveCapture" class="primary">保存问题</button>
+</div>
+      </dialog>
+      <dialog id="issuesDialog" aria-labelledby="issuesTitle">
+        <header>
+          <h2 id="issuesTitle">问题单</h2>
+          <button id="closeIssues" aria-label="关闭问题单">×</button>
+        </header>
+        <div id="reviewSummary"></div>
+        <button id="undoDelete" hidden>撤销删除</button>
+        <div id="issuesList"></div>
+        <p id="reviewStatus" class="test-status" role="status"></p>
+        <div class="dialog-actions">
+<button id="confirmAll">确认全部</button><button id="exportReviewed" class="primary">结束测试</button>
+</div>
+      </dialog>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
       let radarExportDirectory = null;
       let radarCardsVisible = false;
       const radarIssueMarkers = new Set();
@@ -77,7 +1044,8 @@
           return false;
         }
       }
-    </script> <script>
+    </script>
+    <script>
       (() => {
         "use strict";
         const el = (id) => document.getElementById(id);
@@ -825,7 +1793,8 @@
           stop();
         });
       })();
-    </script> <script>
+    </script>
+    <script>
       function formatLocalTime(utc, offsetMinutes) {
         const date = new Date(utc);
         if (!utc || !Number.isFinite(date.getTime())) return "时间未知";
@@ -856,7 +1825,8 @@
       function severityClass(value) {
         return { 高: "severity-high", 中: "severity-medium", 低: "severity-low" }[value] || "severity-unknown";
       }
-    </script> <script id="test-model">
+    </script>
+    <script id="test-model">
       class RoadTest {
         constructor(name, now = new Date().toISOString()) {
           this.name = name.trim();
@@ -973,7 +1943,8 @@
           return "\uFEFF" + rows.map((row) => row.map(cell).join(",")).join("\r\n") + "\r\n";
         }
       }
-    </script> <script>
+    </script>
+    <script>
       (() => {
         const $ = (id) => document.getElementById(id),
           key = "problems-radar-draft-v1";
@@ -1611,7 +2582,9 @@
           }
         };
       })();
-    </script> <script id="csv-parser">
+    </script>
+
+    <script id="csv-parser">
       function parseRadarCSV(text) {
         text = text.replace(/^\uFEFF/, "");
         const rows = [];
@@ -1697,7 +2670,8 @@
         }
         return { issues, skipped };
       }
-    </script> <script>
+    </script>
+    <script>
       (() => {
         const $ = (id) => document.getElementById(id);
         let layer = null,
@@ -1836,7 +2810,9 @@
         $("folderInput").onchange = importSelected;
         $("csvInput").onchange = importSelected;
       })();
-    </script> <script>
+    </script>
+
+    <script>
       (() => {
         const $ = (id) => document.getElementById(id);
         const supported = typeof window.showDirectoryPicker === "function";
@@ -1878,4 +2854,6 @@
         };
         showFolder();
       })();
-    </script> </body> </html>
+    </script>
+  </body>
+</html>
