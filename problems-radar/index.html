@@ -504,6 +504,17 @@ sitemap: false
         --severity-bg: #f0f3f7;
         --severity-text: #4b5b70;
       }
+      .history-resolved {
+        --severity-color: #18875b;
+        --severity-bg: #eaf8f0;
+        --severity-text: #12623f;
+      }
+      .issue-map-label.history-resolved,
+      .history-popup.history-resolved {
+        background: #eaf8f0;
+        color: #12623f;
+        border-color: #18875b;
+      }
       .issue-pin[class*="severity-"] span {
         background: var(--severity-color);
         color: var(--severity-text);
@@ -769,8 +780,8 @@ sitemap: false
         justify-content: center;
       }
       .issue-pin span {
-        width: 12px;
-        height: 12px;
+        width: 8px;
+        height: 8px;
         border: 0;
         font-size: 0;
         line-height: 0;
@@ -876,6 +887,361 @@ sitemap: false
       .manual-clock #manualDate {
         width: 160px;
       }
+      #historyDisplayMode {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid #dce4ec;
+        border-radius: 10px;
+        background: #f7f9fc;
+        color: #263d50;
+        padding: 10px 12px;
+        font: inherit;
+        font-size: 13px;
+      }
+      #toggleAllHistory {
+        width: 100%;
+        min-height: 38px;
+        border: 1px solid #dce4ec;
+        border-radius: 9px;
+        background: #f4f7fb;
+        color: #38536a;
+        margin: 6px 0 12px;
+        font-size: 12px;
+      }
+      #historyEditDialog {
+        width: min(580px, calc(100vw - 24px));
+        max-height: calc(100dvh - 32px);
+        padding: 24px;
+        border: 1px solid #e4eaf0;
+        border-radius: 18px;
+        box-shadow: 0 24px 90px #172c4540;
+        color: #20354b;
+        background: #fff;
+      }
+      #historyEditDialog header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        gap: 12px;
+      }
+      #historyEditDialog h2 {
+        margin: 4px 0 0;
+        font-size: 23px;
+        letter-spacing: -0.5px;
+      }
+      .edit-eyebrow {
+        font-size: 11px;
+        color: #76899a;
+        letter-spacing: 2px;
+      }
+      #closeHistoryEdit {
+        width: 34px;
+        min-height: 34px;
+        border: 0;
+        border-radius: 50%;
+        background: #f0f4f8;
+        color: #6b7f90;
+        font-size: 24px;
+        padding: 0;
+      }
+      .edit-status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #8493a0;
+        gap: 8px;
+      }
+      #historyEditState {
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: #eff4f9;
+        color: #55718a;
+      }
+      #historyEditState[data-dirty="true"] {
+        color: #986018;
+        background: #fff4df;
+      }
+      #historyEditFile {
+        font-size: 11px;
+        overflow-wrap: anywhere;
+        color: #8292a0;
+        line-height: 1.5;
+        margin: 12px 0 20px;
+      }
+      .edit-field-label,
+      .edit-position-head strong {
+        font-size: 13px;
+        font-weight: 600;
+        color: #304a60;
+      }
+      #historyEditDescription {
+        width: 100%;
+        min-height: 112px;
+        resize: vertical;
+        padding: 12px 14px;
+        border: 1px solid #dce5ed;
+        border-radius: 10px;
+        font: inherit;
+        font-size: 14px;
+        line-height: 1.65;
+        margin-top: 8px;
+        background: #fbfcfe;
+        color: #20354b;
+      }
+      #historyEditDialog input:focus,
+      #historyEditDescription:focus {
+        outline: 2px solid #c7d9f6;
+        outline-offset: 1px;
+        border-color: #8babdf;
+      }
+      #historyEditDialog .edit-resolved {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        margin: 16px 0;
+        background: #f3faf6;
+        border: 1px solid #dceee3;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      #historyEditResolved {
+        width: 18px;
+        height: 18px;
+        min-height: 18px;
+        margin: 0;
+        accent-color: #18875b;
+      }
+      .edit-resolved strong {
+        display: block;
+        font-size: 13px;
+        color: #256547;
+      }
+      .edit-resolved small {
+        display: block;
+        color: #718b7c;
+        font-size: 11px;
+        margin-top: 3px;
+      }
+      .edit-position-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      #historyEditDrag {
+        font-size: 12px;
+        color: #32629a;
+        background: #f0f5fc;
+        min-height: 34px;
+        padding: 6px 10px;
+        border: 0;
+        border-radius: 7px;
+      }
+      .edit-coordinates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 10px;
+      }
+      .edit-coordinates label {
+        display: block;
+        font-size: 11px;
+        color: #7b8e9e;
+        margin-bottom: 6px;
+      }
+      .edit-coordinates input {
+        width: 100%;
+        min-height: 42px;
+        padding: 10px;
+        border: 1px solid #dce5ed;
+        border-radius: 8px;
+        font-size: 13px;
+        background: #fbfcfe;
+        color: #304a60;
+      }
+      #historyEditStatus {
+        font-size: 12px;
+        line-height: 1.6;
+        color: #738798;
+        min-height: 38px;
+        margin: 14px 0;
+      }
+      #historyEditDialog .edit-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        border-top: 1px solid #edf1f5;
+        padding-top: 16px;
+        margin: 0;
+      }
+      .edit-footer button {
+        flex: 0 1 auto;
+        min-height: 40px;
+        padding: 9px 15px;
+        border-radius: 9px;
+        font-size: 13px;
+      }
+      .edit-footer #historyEditUndo {
+        margin-right: auto;
+        background: #f1f4f8;
+        color: #657d92;
+      }
+      #returnHistoryEdit {
+        position: absolute;
+        left: 50%;
+        bottom: 100px;
+        transform: translateX(-50%);
+        z-index: 1100;
+        border: 1px solid #d6e2ef;
+        border-radius: 24px;
+        background: white;
+        color: #244a75;
+        box-shadow: 0 4px 18px #1b365030;
+        padding: 12px 22px;
+        font-size: 14px;
+      }
+      #map {
+        background: #e5e7eb;
+      }
+      #map .leaflet-tile-pane {
+        filter: grayscale(1);
+        opacity: 0.55;
+      }
+
+      #historyDashboardDialog {
+        width: min(960px, calc(100vw - 32px));
+        max-width: 960px;
+        max-height: 90dvh;
+        padding: 24px;
+        border: 1px solid #dce4ef;
+        border-radius: 20px;
+        overflow: auto;
+        color: #183047;
+      }
+      #historyDashboardDialog::backdrop {
+        background: #152b4666;
+        backdrop-filter: blur(3px);
+      }
+      #historyDashboardDialog header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      #historyDashboardDialog h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+      .trend-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 20px 0 14px;
+      }
+      .trend-card {
+        padding: 16px;
+        border-radius: 14px;
+        background: #f3f6fb;
+        border-top: 3px solid var(--trend-color);
+      }
+      .trend-card span {
+        display: block;
+        color: #53677d;
+        font-size: 13px;
+      }
+      .trend-card strong {
+        display: block;
+        margin-top: 6px;
+        font-size: 30px;
+        color: var(--trend-color);
+      }
+      #historyTrendChart {
+        display: block;
+        width: 100%;
+        height: auto;
+        min-height: 190px;
+      }
+      #historyTrendChart[hidden] {
+        display: none;
+      }
+      #historyTrendChart rect:focus {
+        outline: none;
+        fill: #2864dc0c;
+      }
+      .trend-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin: 12px 0 6px;
+        font-size: 13px;
+      }
+      .trend-legend span::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        border-top: 3px solid var(--trend-color);
+        margin-right: 7px;
+        vertical-align: middle;
+      }
+      #historyTrendReadout {
+        min-height: 20px;
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
+        color: #35506e;
+      }
+      .trend-note {
+        color: #63738a;
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      #historyTrendEmpty {
+        padding: 48px 12px;
+        text-align: center;
+        background: #f5f7fb;
+        border-radius: 14px;
+      }
+      #historyTrendDetails {
+        margin-top: 18px;
+      }
+      #historyTrendDetails table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+        font-size: 13px;
+      }
+      #historyTrendDetails th,
+      #historyTrendDetails td {
+        padding: 9px 6px;
+        border-bottom: 1px solid #e5ebf3;
+        text-align: right;
+      }
+      #historyTrendDetails th:first-child,
+      #historyTrendDetails td:first-child {
+        text-align: left;
+      }
+      #historyDashboardSummary {
+        margin: 0;
+        font-size: 12px;
+        color: #53677d;
+        line-height: 1.7;
+      }
+      @media (max-width: 520px) {
+        #historyDashboardDialog {
+          padding: 16px;
+        }
+        .trend-cards {
+          gap: 6px;
+        }
+        .trend-card {
+          padding: 10px;
+        }
+        .trend-card strong {
+          font-size: 25px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -889,6 +1255,7 @@ sitemap: false
         </header>
         <p id="status" role="status" aria-live="polite">准备定位</p>
         <p id="hint" hidden></p>
+        <button id="toggleAllHistory" aria-pressed="false" hidden>隐藏全部历史问题（含点位）</button>
         <section class="test-tools active-test">
           <label for="testPicker">测试记录</label
           ><select id="testPicker">
@@ -901,14 +1268,23 @@ sitemap: false
           </div>
           <p id="testStatus" class="test-status" role="status" aria-live="polite">未开始测试</p>
         </section>
+        <details class="config-section" id="historyDashboardPanel" open>
+          <summary>数据看板</summary>
+          <div class="history-tools">
+            <p id="historyDashboardSummary">尚无历史数据</p>
+            <button id="openHistoryDashboard">查看每日累计趋势</button>
+          </div>
+        </details>
         <details class="config-section">
           <summary>地图设置</summary>
           <div class="route-actions">
             <label for="route">路线选择</label
             ><select id="route">
               <option value="">不显示路线</option>
-              <option value="wolfsburg">Wolfsburg 环线</option>
+              <option value="wolfsburg">901 · IZB_allerpark</option>
+              <option value="900">900 · Volkswagen R&amp;D Loop</option>
             </select>
+            <p id="routeSummary" class="test-status" hidden></p>
           </div>
           <div class="buttons">
             <button id="start" class="follow-toggle" aria-pressed="true">跟随：开</button>
@@ -921,18 +1297,35 @@ sitemap: false
           <summary>导入历史问题</summary>
           <section class="history-tools">
             <div class="import-actions"><button id="importFolder">选文件夹</button><button id="importFiles">选文件</button></div>
-            <input id="folderInput" type="file" webkitdirectory multiple accept=".csv" hidden /><input
+            <input id="folderInput" type="file" webkitdirectory multiple hidden /><input
               id="csvInput"
               type="file"
               multiple
               accept=".csv,text/csv"
               hidden
             />
-            <button id="toggleHistory" aria-pressed="true">历史问题：显示</button>
+            <button id="toggleHistory" aria-pressed="true" hidden>历史问题：显示</button>
+            <label for="historyDisplayMode">历史问题显示方式</label>
+            <select id="historyDisplayMode">
+              <option value="hover">保留点位，悬停显示卡片</option>
+              <option value="always">点位和卡片常驻显示</option>
+              <option value="hidden">全部隐藏（含点位）</option>
+            </select>
             <p id="importFolderPath" class="folder-path">导入位置：未选择</p>
-            <button id="clearImported" hidden>清除显示</button>
+            <button id="clearImported" hidden>清空历史问题</button>
             <p id="importStatus" class="test-status" role="status"></p>
           </section>
+        </details>
+        <details class="config-section">
+          <summary>CSV 问题表重编辑</summary>
+          <div class="history-tools">
+            <button id="editCSVFile">选择 CSV 文件</button>
+            <input id="editCSVInput" type="file" accept=".csv,text/csv" hidden />
+            <button id="openCSVEditor" disabled>编辑问题单</button>
+            <button id="saveEditedCSV" disabled>保存修改后的 CSV</button>
+            <button id="finishCSVEditing" disabled>编辑完成</button>
+            <p id="csvEditorStatus" class="test-status" role="status">选择一个文件，修改字段或拖动地图上的问题点。</p>
+          </div>
         </details>
         <details class="config-section">
           <summary>导出设置</summary>
@@ -997,6 +1390,115 @@ sitemap: false
         <p id="reviewStatus" class="test-status" role="status"></p>
         <div class="dialog-actions"><button id="confirmAll">确认全部</button><button id="exportReviewed" class="primary">结束测试</button></div>
       </dialog>
+      <dialog id="csvEditorDialog" aria-labelledby="csvEditorTitle">
+        <header>
+          <h2 id="csvEditorTitle">CSV 问题单</h2>
+          <button id="closeCSVEditor" aria-label="关闭 CSV 问题单">×</button>
+        </header>
+        <div class="dialog-actions">
+          <button id="addCSVProblem">添加问题</button><button id="sortCSVProblems">按记录时间排序</button>
+          <button id="undoCSVDelete" hidden>撤销删除</button>
+        </div>
+        <p class="test-status">修改记录UTC后自动按时间排序，问题编号随顺序更新；空时间排在最后。</p>
+        <div id="csvEditorList"></div>
+        <div class="dialog-actions">
+          <button id="saveCSVDialog" class="primary">保存修改后的 CSV</button><button id="finishCSVDialog">编辑完成</button>
+        </div>
+      </dialog>
+      <dialog id="csvFinishDialog" aria-labelledby="csvFinishTitle">
+        <header><h2 id="csvFinishTitle">完成 CSV 编辑</h2></header>
+        <p id="csvFinishMessage">退出前请保存 CSV。保存会下载新文件，请确认文件已保存。</p>
+        <div class="dialog-actions">
+          <button id="continueCSVEditing">继续编辑</button><button id="discardCSVEditing">不保存退出</button>
+          <button id="saveAndFinishCSV" class="primary">保存并退出</button>
+        </div>
+      </dialog>
+      <dialog id="historyDashboardDialog" aria-labelledby="historyDashboardTitle">
+        <header>
+          <div>
+            <h2 id="historyDashboardTitle">历史问题数据看板</h2>
+            <p id="historyTrendRange" class="trend-note"></p>
+          </div>
+          <button id="closeHistoryDashboard" class="icon-button" aria-label="关闭数据看板">×</button>
+        </header>
+        <div class="trend-cards">
+          <div class="trend-card" style="--trend-color: #2864dc"><span>剩余问题</span><strong id="trendCount-total">0</strong></div>
+          <div class="trend-card" style="--trend-color: #16815d"><span>累计已解决</span><strong id="trendCount-resolved">0</strong></div>
+          <div class="trend-card" style="--trend-color: #b96b0a"><span>剩余高优问题</span><strong id="trendCount-high">0</strong></div>
+        </div>
+        <div class="trend-legend">
+          <span style="--trend-color: #2864dc">剩余问题</span><span style="--trend-color: #16815d">累计已解决</span
+          ><span style="--trend-color: #b96b0a">剩余高优问题</span>
+        </div>
+        <p id="historyTrendReadout"></p>
+        <svg id="historyTrendChart" role="img" aria-labelledby="historyTrendTitle"></svg>
+        <p id="historyTrendEmpty">导入历史问题后，将在这里展示三条累计趋势线。</p>
+        <p class="trend-note">统计全部已加载的历史记录，不受地图显示开关影响。按北京时间的问题记录日期逐日累计，无新增的日期延续前一天数值。</p>
+        <p class="trend-note">“剩余问题”和“剩余高优问题”均不包含已解决的问题。“已解决”按当前解决状态归入原问题记录日，并非实际解决日期。</p>
+        <p id="historyTrendQuality" class="trend-note" role="status"></p>
+        <h3>每日每趟平均剩余问题数</h3>
+        <p id="historyAverageReadout" class="trend-note">悬停数据点查看每日统计</p>
+        <svg id="historyAverageChart" role="img" aria-label="每日每趟平均剩余问题数" style="width: 100%; height: auto; display: block"></svg>
+        <p class="trend-note">
+          按北京时间统计：当天未解决问题数 ÷
+          当天有问题记录的测试趟数。同一趟中已解决的问题不计入分子，仍计入趟数；没有问题记录的测试无法从历史数据识别。
+        </p>
+        <details id="historyAverageDetails">
+          <summary>每日每趟明细</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>日期（北京）</th>
+                <th>未解决问题</th>
+                <th>测试趟数</th>
+                <th>平均剩余问题 / 趟</th>
+              </tr>
+            </thead>
+            <tbody id="historyAverageRows"></tbody>
+          </table>
+        </details>
+        <details id="historyTrendDetails">
+          <summary>每日累计明细</summary>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">日期（北京）</th>
+                <th scope="col">剩余问题</th>
+                <th scope="col">累计已解决</th>
+                <th scope="col">剩余高优问题</th>
+              </tr>
+            </thead>
+            <tbody id="historyTrendRows"></tbody>
+          </table>
+        </details>
+      </dialog>
+      <dialog id="historyEditDialog" aria-labelledby="historyEditTitle">
+        <header>
+          <div>
+            <small class="edit-eyebrow">历史问题</small>
+            <h2 id="historyEditTitle">编辑问题</h2>
+          </div>
+          <button id="closeHistoryEdit" aria-label="关闭历史问题编辑">×</button>
+        </header>
+        <div class="edit-status-row"><span id="historyEditState">尚未修改</span><span>保存后更新原文件</span></div>
+        <p id="historyEditFile" class="test-status"></p>
+        <label class="edit-field-label" for="historyEditDescription">问题描述</label
+        ><textarea id="historyEditDescription" placeholder="描述问题现象及处理情况"></textarea>
+        <label class="edit-resolved" for="historyEditResolved"
+          ><input id="historyEditResolved" type="checkbox" /><span><strong>已解决</strong><small>标记后，点位和卡片以绿色显示</small></span></label
+        >
+        <div class="edit-position-head"><strong>问题位置</strong><button id="historyEditDrag">在地图上调整</button></div>
+        <div class="edit-coordinates">
+          <div><label for="historyEditLat">纬度</label><input id="historyEditLat" type="number" step="any" /></div>
+          <div><label for="historyEditLon">经度</label><input id="historyEditLon" type="number" step="any" /></div>
+        </div>
+        <p id="historyEditStatus" class="test-status" role="status"></p>
+        <div class="dialog-actions edit-footer">
+          <button id="historyEditUndo" disabled>撤回改动</button><button id="historyEditCancel">取消</button
+          ><button id="historyEditSave" class="primary">保存修改</button>
+        </div>
+      </dialog>
+      <button id="returnHistoryEdit" hidden>返回问题编辑</button>
     </main>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -1005,18 +1507,22 @@ sitemap: false
       const radarIssueMarkers = new Set();
       function radarApplyCards() {
         for (const marker of radarIssueMarkers) {
+          if (!window.radarMap?.hasLayer(marker)) continue;
           const tip = marker.getTooltip();
           if (!tip) continue;
-          tip.options.permanent = radarCardsVisible;
-          if (radarCardsVisible) marker.openTooltip();
+          const permanent = marker.options.radarCardsPermanent ?? radarCardsVisible;
+          tip.options.permanent = permanent;
+          if (permanent) marker.openTooltip();
           else marker.closeTooltip();
         }
       }
       function radarRegisterMarker(marker) {
         radarIssueMarkers.add(marker);
         const tip = marker.getTooltip();
-        if (tip) tip.options.permanent = radarCardsVisible;
-        if (radarCardsVisible) marker.openTooltip();
+        const permanent = marker.options.radarCardsPermanent ?? radarCardsVisible;
+        if (tip) tip.options.permanent = permanent;
+        if (permanent) marker.openTooltip();
+        else marker.closeTooltip();
         return marker;
       }
 
@@ -1559,7 +2065,456 @@ sitemap: false
           [52.43726, 10.807625],
           [52.437274, 10.807705],
         ];
-        let routeLine;
+        const route900 = {
+          name: "900 · Volkswagen R&D Loop",
+          startName: "Volkswagen R&D Parking (FE Gate)",
+          stops: [
+            [52.4361129, 10.7455684],
+            [52.4305848, 10.7378593],
+            [52.4234526, 10.7478216],
+            [52.4400169, 10.794658],
+            [52.4596163, 10.7367553],
+            [52.4359227, 10.7455908],
+          ],
+          distanceMeters: 18455.4,
+          stopKilometers: [0, 1.5526425706687166, 3.805171201962787, 8.988516731980917, 14.387318673846767, 18.417421864052013],
+          geometry: [
+            [52.436114, 10.745578],
+            [52.436104, 10.745582],
+            [52.436051, 10.744984],
+            [52.436029, 10.744747],
+            [52.436015, 10.744599],
+            [52.436003, 10.74447],
+            [52.43594, 10.743816],
+            [52.435926, 10.743668],
+            [52.435921, 10.743612],
+            [52.435821, 10.742515],
+            [52.4357, 10.741203],
+            [52.435652, 10.740652],
+            [52.435639, 10.740519],
+            [52.435529, 10.739453],
+            [52.435391, 10.738156],
+            [52.435248, 10.736584],
+            [52.435209, 10.736099],
+            [52.435222, 10.735786],
+            [52.435232, 10.735572],
+            [52.435273, 10.735432],
+            [52.435319, 10.735343],
+            [52.43538, 10.735275],
+            [52.435692, 10.735176],
+            [52.435809, 10.735143],
+            [52.435973, 10.735109],
+            [52.436106, 10.7351],
+            [52.436231, 10.735146],
+            [52.436331, 10.735244],
+            [52.436394, 10.735352],
+            [52.436438, 10.735457],
+            [52.436469, 10.735575],
+            [52.436487, 10.735728],
+            [52.436476, 10.735882],
+            [52.436436, 10.736053],
+            [52.436385, 10.736172],
+            [52.436294, 10.736306],
+            [52.436192, 10.736392],
+            [52.435544, 10.736602],
+            [52.435439, 10.736702],
+            [52.435017, 10.736804],
+            [52.433795, 10.737116],
+            [52.432425, 10.737455],
+            [52.432282, 10.737493],
+            [52.431731, 10.737629],
+            [52.430587, 10.737883],
+            [52.430554, 10.73789],
+            [52.429786, 10.738048],
+            [52.429368, 10.738114],
+            [52.428196, 10.738211],
+            [52.427775, 10.738239],
+            [52.427195, 10.738243],
+            [52.426666, 10.738215],
+            [52.426182, 10.738186],
+            [52.425691, 10.738133],
+            [52.425195, 10.738069],
+            [52.424654, 10.737984],
+            [52.424394, 10.737943],
+            [52.423172, 10.737738],
+            [52.422788, 10.737657],
+            [52.422357, 10.737565],
+            [52.4213, 10.737376],
+            [52.420965, 10.737249],
+            [52.420862, 10.737214],
+            [52.420761, 10.737145],
+            [52.420663, 10.737046],
+            [52.420587, 10.73693],
+            [52.420539, 10.736815],
+            [52.420503, 10.736671],
+            [52.420485, 10.736536],
+            [52.420481, 10.736401],
+            [52.420496, 10.736266],
+            [52.420515, 10.736153],
+            [52.420551, 10.736044],
+            [52.420601, 10.735943],
+            [52.420654, 10.735855],
+            [52.420711, 10.735781],
+            [52.420798, 10.735706],
+            [52.420923, 10.735613],
+            [52.420995, 10.73561],
+            [52.421065, 10.735617],
+            [52.422328, 10.735863],
+            [52.422518, 10.735899],
+            [52.422704, 10.73599],
+            [52.422735, 10.736006],
+            [52.422783, 10.736062],
+            [52.422828, 10.736146],
+            [52.422888, 10.736334],
+            [52.422942, 10.737483],
+            [52.423003, 10.738788],
+            [52.423039, 10.739522],
+            [52.423068, 10.740142],
+            [52.423153, 10.741983],
+            [52.423354, 10.746164],
+            [52.423389, 10.746899],
+            [52.423414, 10.747324],
+            [52.423449, 10.747702],
+            [52.423452, 10.747735],
+            [52.423463, 10.747818],
+            [52.423495, 10.748056],
+            [52.423541, 10.748331],
+            [52.423563, 10.74847],
+            [52.423589, 10.748603],
+            [52.423649, 10.748913],
+            [52.423849, 10.749865],
+            [52.424404, 10.752597],
+            [52.424466, 10.752904],
+            [52.42463, 10.753713],
+            [52.424639, 10.753755],
+            [52.424717, 10.754133],
+            [52.424781, 10.754458],
+            [52.425293, 10.757014],
+            [52.425484, 10.7579],
+            [52.425557, 10.758288],
+            [52.425695, 10.759125],
+            [52.425733, 10.759447],
+            [52.425796, 10.760048],
+            [52.425951, 10.761661],
+            [52.426088, 10.763122],
+            [52.426213, 10.764499],
+            [52.426242, 10.764781],
+            [52.426258, 10.76496],
+            [52.426311, 10.765525],
+            [52.426409, 10.766532],
+            [52.42643, 10.766763],
+            [52.426485, 10.767356],
+            [52.426507, 10.767577],
+            [52.426571, 10.768233],
+            [52.426582, 10.768338],
+            [52.426624, 10.768776],
+            [52.426639, 10.768893],
+            [52.426699, 10.769316],
+            [52.426714, 10.769421],
+            [52.42681, 10.769963],
+            [52.426873, 10.770269],
+            [52.426992, 10.7708],
+            [52.42705, 10.77102],
+            [52.427212, 10.771624],
+            [52.427366, 10.772196],
+            [52.427399, 10.772319],
+            [52.427681, 10.773362],
+            [52.427767, 10.773693],
+            [52.427826, 10.773953],
+            [52.427913, 10.774414],
+            [52.427933, 10.774521],
+            [52.428006, 10.775018],
+            [52.42807, 10.775685],
+            [52.428077, 10.775782],
+            [52.428097, 10.776095],
+            [52.428103, 10.776206],
+            [52.428106, 10.776503],
+            [52.428109, 10.776721],
+            [52.428086, 10.777772],
+            [52.428084, 10.777865],
+            [52.428083, 10.777932],
+            [52.428067, 10.77857],
+            [52.428042, 10.779612],
+            [52.427991, 10.781614],
+            [52.427985, 10.781837],
+            [52.427961, 10.782742],
+            [52.427953, 10.783043],
+            [52.427952, 10.783099],
+            [52.427939, 10.783629],
+            [52.427932, 10.783966],
+            [52.427918, 10.784419],
+            [52.427906, 10.785068],
+            [52.427908, 10.785729],
+            [52.427891, 10.786568],
+            [52.427861, 10.787835],
+            [52.427825, 10.789214],
+            [52.427777, 10.790979],
+            [52.42777, 10.79122],
+            [52.427742, 10.792263],
+            [52.427676, 10.794479],
+            [52.427666, 10.794878],
+            [52.427651, 10.795443],
+            [52.427639, 10.79593],
+            [52.427613, 10.796471],
+            [52.427591, 10.796779],
+            [52.427572, 10.796989],
+            [52.427532, 10.797329],
+            [52.427481, 10.797698],
+            [52.427413, 10.798053],
+            [52.427383, 10.798293],
+            [52.427337, 10.798584],
+            [52.427307, 10.798937],
+            [52.427322, 10.799166],
+            [52.427375, 10.799427],
+            [52.427453, 10.79965],
+            [52.427531, 10.799793],
+            [52.427631, 10.799913],
+            [52.42775, 10.800004],
+            [52.42786, 10.800053],
+            [52.427974, 10.800063],
+            [52.428094, 10.800047],
+            [52.428217, 10.799988],
+            [52.428402, 10.799851],
+            [52.428681, 10.79957],
+            [52.428783, 10.799482],
+            [52.428844, 10.799442],
+            [52.429, 10.799386],
+            [52.42913, 10.799347],
+            [52.429258, 10.799335],
+            [52.429501, 10.799304],
+            [52.429831, 10.79931],
+            [52.431383, 10.799375],
+            [52.432231, 10.79939],
+            [52.43305, 10.79942],
+            [52.433136, 10.799423],
+            [52.43319, 10.799424],
+            [52.43334, 10.799431],
+            [52.433856, 10.799456],
+            [52.434864, 10.799505],
+            [52.435568, 10.799529],
+            [52.435971, 10.799546],
+            [52.436342, 10.79956],
+            [52.43689, 10.799581],
+            [52.43693, 10.799583],
+            [52.437025, 10.799584],
+            [52.437206, 10.79955],
+            [52.437238, 10.799319],
+            [52.437319, 10.798836],
+            [52.437412, 10.798399],
+            [52.437558, 10.797873],
+            [52.437696, 10.797464],
+            [52.43783, 10.797138],
+            [52.437984, 10.796809],
+            [52.438183, 10.796437],
+            [52.438378, 10.796148],
+            [52.43857, 10.795881],
+            [52.438813, 10.795593],
+            [52.43908, 10.795312],
+            [52.439309, 10.795105],
+            [52.439518, 10.794932],
+            [52.439996, 10.794582],
+            [52.44054, 10.794182],
+            [52.441514, 10.793625],
+            [52.441785, 10.793456],
+            [52.442023, 10.793294],
+            [52.44214, 10.793205],
+            [52.442451, 10.792997],
+            [52.44327, 10.792402],
+            [52.443399, 10.792306],
+            [52.443749, 10.792034],
+            [52.443979, 10.791844],
+            [52.444291, 10.791563],
+            [52.444513, 10.791324],
+            [52.444672, 10.791147],
+            [52.444799, 10.791007],
+            [52.444975, 10.790808],
+            [52.445059, 10.790715],
+            [52.445154, 10.790591],
+            [52.445396, 10.790278],
+            [52.445783, 10.789777],
+            [52.446131, 10.789223],
+            [52.446448, 10.788684],
+            [52.446693, 10.78822],
+            [52.446814, 10.787983],
+            [52.447191, 10.787168],
+            [52.447542, 10.786345],
+            [52.44785, 10.785624],
+            [52.448272, 10.784667],
+            [52.448586, 10.784033],
+            [52.448899, 10.783479],
+            [52.449118, 10.783104],
+            [52.449333, 10.782764],
+            [52.449653, 10.78231],
+            [52.450229, 10.781483],
+            [52.450533, 10.78102],
+            [52.451016, 10.78029],
+            [52.451226, 10.779961],
+            [52.451463, 10.7796],
+            [52.451893, 10.778874],
+            [52.452188, 10.77833],
+            [52.45238, 10.777941],
+            [52.452531, 10.777631],
+            [52.452676, 10.777318],
+            [52.452847, 10.776924],
+            [52.452956, 10.776666],
+            [52.453152, 10.776169],
+            [52.453304, 10.775768],
+            [52.453415, 10.775462],
+            [52.453616, 10.774865],
+            [52.453688, 10.774648],
+            [52.454025, 10.773481],
+            [52.454223, 10.772724],
+            [52.454403, 10.77205],
+            [52.454777, 10.770712],
+            [52.4552, 10.769226],
+            [52.455548, 10.767938],
+            [52.456273, 10.765263],
+            [52.456704, 10.763718],
+            [52.457556, 10.760566],
+            [52.458039, 10.758887],
+            [52.458721, 10.756395],
+            [52.458791, 10.756148],
+            [52.458983, 10.755437],
+            [52.459261, 10.75438],
+            [52.459488, 10.753522],
+            [52.459933, 10.75176],
+            [52.460145, 10.750864],
+            [52.460348, 10.749943],
+            [52.460672, 10.748356],
+            [52.460841, 10.747385],
+            [52.46102, 10.746248],
+            [52.461039, 10.746114],
+            [52.461114, 10.745545],
+            [52.461191, 10.744929],
+            [52.461319, 10.743633],
+            [52.461437, 10.74214],
+            [52.461446, 10.742009],
+            [52.461485, 10.741385],
+            [52.461553, 10.740331],
+            [52.46158, 10.739757],
+            [52.461582, 10.739705],
+            [52.461598, 10.739368],
+            [52.461604, 10.739246],
+            [52.461646, 10.738361],
+            [52.461673, 10.73779],
+            [52.461705, 10.737044],
+            [52.461721, 10.736753],
+            [52.461765, 10.736617],
+            [52.461823, 10.736495],
+            [52.461921, 10.73636],
+            [52.461974, 10.736311],
+            [52.462275, 10.736339],
+            [52.462375, 10.736361],
+            [52.462472, 10.736396],
+            [52.462558, 10.736443],
+            [52.462624, 10.736499],
+            [52.462681, 10.736559],
+            [52.462731, 10.736634],
+            [52.46278, 10.736736],
+            [52.46282, 10.736847],
+            [52.462846, 10.736949],
+            [52.462869, 10.737065],
+            [52.462874, 10.737223],
+            [52.462857, 10.737386],
+            [52.462823, 10.737543],
+            [52.462727, 10.737739],
+            [52.462642, 10.737837],
+            [52.462573, 10.7379],
+            [52.462452, 10.737943],
+            [52.462275, 10.737922],
+            [52.46191, 10.737816],
+            [52.461473, 10.73762],
+            [52.460661, 10.737236],
+            [52.460283, 10.737057],
+            [52.459617, 10.736751],
+            [52.459375, 10.73664],
+            [52.458419, 10.736192],
+            [52.458129, 10.736078],
+            [52.457751, 10.735952],
+            [52.457334, 10.735865],
+            [52.457067, 10.735842],
+            [52.456734, 10.73584],
+            [52.45649, 10.735861],
+            [52.456128, 10.735923],
+            [52.455922, 10.735976],
+            [52.455698, 10.736051],
+            [52.455298, 10.736228],
+            [52.454962, 10.736411],
+            [52.454773, 10.736527],
+            [52.454473, 10.736756],
+            [52.454248, 10.736955],
+            [52.454073, 10.737119],
+            [52.453539, 10.737631],
+            [52.45317, 10.737975],
+            [52.452832, 10.738217],
+            [52.452451, 10.738429],
+            [52.451885, 10.738659],
+            [52.451507, 10.738744],
+            [52.451034, 10.738795],
+            [52.450698, 10.738792],
+            [52.450309, 10.738744],
+            [52.449944, 10.738639],
+            [52.449498, 10.738475],
+            [52.449084, 10.738273],
+            [52.448673, 10.737999],
+            [52.448258, 10.73765],
+            [52.447718, 10.737075],
+            [52.447083, 10.736297],
+            [52.446548, 10.735726],
+            [52.445969, 10.735259],
+            [52.445457, 10.734946],
+            [52.445145, 10.734814],
+            [52.444716, 10.734668],
+            [52.444314, 10.734584],
+            [52.443781, 10.734553],
+            [52.443505, 10.734568],
+            [52.443188, 10.734618],
+            [52.44271, 10.734748],
+            [52.441897, 10.735018],
+            [52.441392, 10.735193],
+            [52.43779, 10.736127],
+            [52.436679, 10.736399],
+            [52.435439, 10.736702],
+            [52.435017, 10.736804],
+            [52.433795, 10.737116],
+            [52.433678, 10.737103],
+            [52.433594, 10.737108],
+            [52.433466, 10.737072],
+            [52.433348, 10.737],
+            [52.433237, 10.736855],
+            [52.43317, 10.736693],
+            [52.433143, 10.736374],
+            [52.433157, 10.736171],
+            [52.433195, 10.736015],
+            [52.433249, 10.735886],
+            [52.433321, 10.735775],
+            [52.433465, 10.73561],
+            [52.433542, 10.735492],
+            [52.43371, 10.73544],
+            [52.43387, 10.73541],
+            [52.433988, 10.735394],
+            [52.4342, 10.73537],
+            [52.434471, 10.735374],
+            [52.434768, 10.735421],
+            [52.434861, 10.735478],
+            [52.434916, 10.735527],
+            [52.434975, 10.735618],
+            [52.43502, 10.735706],
+            [52.43507, 10.735827],
+            [52.435145, 10.736624],
+            [52.435226, 10.737504],
+            [52.435356, 10.739074],
+            [52.435516, 10.741049],
+            [52.435656, 10.742559],
+            [52.435763, 10.743718],
+            [52.435924, 10.745416],
+            [52.43594, 10.745587],
+          ],
+        };
+        let routeLine,
+          route900Stops,
+          activeRoutePoints = roadRoute,
+          applyRouteSelection;
         const app = document.querySelector(".app");
         function setSidebar(open) {
           app.classList.toggle("sidebar-closed", !open);
@@ -1596,7 +2551,7 @@ sitemap: false
           L.control.zoom({ position: "topright" }).addTo(map);
           L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
           routeLine = L.polyline(roadRoute, {
-            color: "#159447",
+            color: "#41464d",
             weight: 5,
             opacity: 0.95,
             lineCap: "round",
@@ -1606,12 +2561,48 @@ sitemap: false
           for (let i = 1; i < roadRoute.length; i++) {
             cumulative.push(cumulative[i - 1] + L.latLng(roadRoute[i - 1]).distanceTo(L.latLng(roadRoute[i])));
           }
-          const mileageTip = L.tooltip({ direction: "top", offset: [0, -10], opacity: 1 });
+          const mileageTip = L.tooltip({
+            direction: "top",
+            offset: [0, -10],
+            opacity: 1,
+          });
           let screenRoute = [];
           function refreshScreenRoute() {
-            screenRoute = roadRoute.map((point) => map.latLngToContainerPoint(point));
+            screenRoute = activeRoutePoints.map((point) => map.latLngToContainerPoint(point));
             map.closeTooltip(mileageTip);
           }
+          applyRouteSelection = (value) => {
+            if (route900Stops) {
+              route900Stops.eachLayer((marker) => marker.closeTooltip());
+              map.removeLayer(route900Stops);
+            }
+            const is900 = value === "900";
+            activeRoutePoints = is900 ? route900.geometry || [] : roadRoute;
+            cumulative.splice(0, cumulative.length, 0);
+            for (let i = 1; i < activeRoutePoints.length; i++)
+              cumulative.push(cumulative[i - 1] + L.latLng(activeRoutePoints[i - 1]).distanceTo(L.latLng(activeRoutePoints[i])));
+            routeLine.setLatLngs(activeRoutePoints);
+            refreshScreenRoute();
+            el("routeSummary").hidden = !is900;
+            if (is900) {
+              el("routeSummary").textContent =
+                route900.name + " · 全长 " + (cumulative.at(-1) / 1000).toFixed(2) + " km · Start: " + route900.startName;
+              route900Stops = L.featureGroup();
+              route900.stops.forEach((point, index) => {
+                const marker = L.circleMarker(point, { radius: 5, color: "#41464d", weight: 2, fillColor: "white", fillOpacity: 1 }).addTo(
+                  route900Stops
+                );
+                const label = document.createElement("span");
+                label.textContent = index === 0 ? "900 Start · " + route900.startName : index === 5 ? "900 Finish · FE Gate" : "900 · Stop " + index;
+                label.textContent += " · " + route900.stopKilometers[index].toFixed(2) + " km";
+                marker.bindTooltip(label, { permanent: index === 0, direction: "top" });
+              });
+              route900Stops.addTo(map);
+            }
+            if (value && activeRoutePoints.length) routeLine.addTo(map);
+            else map.removeLayer(routeLine);
+            return is900 ? route900Stops : routeLine;
+          };
           function projectOnSegment(point, a, b) {
             const dx = b.x - a.x,
               dy = b.y - a.y;
@@ -1694,14 +2685,29 @@ sitemap: false
           const { latitude, longitude, accuracy } = position.coords;
           const first = !lastPosition;
           lastPosition = [latitude, longitude];
-          window.dispatchEvent(new CustomEvent("radar-position", { detail: { latitude, longitude, accuracy, timestamp: position.timestamp } }));
+          window.dispatchEvent(
+            new CustomEvent("radar-position", {
+              detail: {
+                latitude,
+                longitude,
+                accuracy,
+                timestamp: position.timestamp,
+              },
+            })
+          );
           el("coords").textContent = latitude.toFixed(5) + " / " + longitude.toFixed(5);
           el("accuracy").textContent = "± " + Math.round(accuracy) + " 米";
           el("updated").textContent = new Date(position.timestamp).toLocaleTimeString("zh-CN", { hour12: false });
           message("位置已更新", accuracy > 100 ? "当前误差较大，移到室外或窗边可能改善精度。" : "蓝点是你的位置，浅蓝圆圈表示定位误差范围。");
           if (map) {
             if (!marker) {
-              circle = L.circle(lastPosition, { radius: accuracy, color: "#246bfe", weight: 1, fillOpacity: 0.12, interactive: false }).addTo(map);
+              circle = L.circle(lastPosition, {
+                radius: accuracy,
+                color: "#246bfe",
+                weight: 1,
+                fillOpacity: 0.12,
+                interactive: false,
+              }).addTo(map);
               marker = L.circleMarker(lastPosition, {
                 radius: 8,
                 color: "#fff",
@@ -1783,14 +2789,17 @@ sitemap: false
         });
         el("route").onchange = () => {
           if (!map || !routeLine) return;
+          const boundsLayer = applyRouteSelection(el("route").value);
           if (!el("route").value) {
             map.removeLayer(routeLine);
             map.closeTooltip();
             return;
           }
-          if (!map.hasLayer(routeLine)) routeLine.addTo(map);
           const sidePadding = !app.classList.contains("sidebar-closed") && window.innerWidth > 600 ? 360 : 35;
-          map.fitBounds(routeLine.getBounds(), { paddingTopLeft: [sidePadding, 35], paddingBottomRight: [35, 35] });
+          map.fitBounds(boundsLayer.getBounds(), {
+            paddingTopLeft: [sidePadding, 35],
+            paddingBottomRight: [35, 35],
+          });
         };
         document.addEventListener("visibilitychange", () => {
           if (!document.hidden && watchId !== null) message("已回到页面，等待位置更新", "显示的坐标是最后一次定位结果，请留意最近更新时间。");
@@ -1801,7 +2810,12 @@ sitemap: false
             followZoom,
             route: el("route").value,
             sidebarOpen: !app.classList.contains("sidebar-closed"),
-            view: map ? { center: [map.getCenter().lat, map.getCenter().lng], zoom: map.getZoom() } : null,
+            view: map
+              ? {
+                  center: [map.getCenter().lat, map.getCenter().lng],
+                  zoom: map.getZoom(),
+                }
+              : null,
             sections: [...document.querySelectorAll(".config-section")].map((x) => x.open),
           });
         }
@@ -1810,7 +2824,10 @@ sitemap: false
             el("route").value = preferences.route;
             el("route").onchange();
           }
-          if (map && preferences.view) map.setView(preferences.view.center, preferences.view.zoom, { animate: false });
+          if (map && preferences.view)
+            map.setView(preferences.view.center, preferences.view.zoom, {
+              animate: false,
+            });
           document.querySelectorAll(".config-section").forEach((section, i) => {
             section.open = Boolean(preferences.sections?.[i]);
             section.addEventListener("toggle", savePreferences);
@@ -2025,7 +3042,11 @@ sitemap: false
             const dateText = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
             $("manualTime").value = dateText;
             fillManualClock();
-            pendingIssue = { manual: true, latitude: event.latlng.lat, longitude: event.latlng.lng };
+            pendingIssue = {
+              manual: true,
+              latitude: event.latlng.lat,
+              longitude: event.latlng.lng,
+            };
             $("captureTitle").textContent = "手动添加问题";
             $("captureMeta").textContent = "地图选点：" + pendingIssue.latitude.toFixed(6) + ", " + pendingIssue.longitude.toFixed(6);
             $("manualTimeField").hidden = false;
@@ -2537,7 +3558,11 @@ sitemap: false
             }
             return;
           }
-          const url = URL.createObjectURL(new Blob([exportingTest.csv(exportingTest.endedUTC)], { type: "text/csv;charset=utf-8;" }));
+          const url = URL.createObjectURL(
+            new Blob([exportingTest.csv(exportingTest.endedUTC)], {
+              type: "text/csv;charset=utf-8;",
+            })
+          );
           const a = document.createElement("a");
           a.href = url;
           a.download = filename;
@@ -2636,7 +3661,7 @@ sitemap: false
     </script>
 
     <script id="csv-parser">
-      function parseRadarCSV(text) {
+      function parseRadarCSVRows(text) {
         text = text.replace(/^\uFEFF/, "");
         const rows = [];
         let row = [],
@@ -2681,13 +3706,19 @@ sitemap: false
         if (quoted) throw Error("CSV 引号未闭合");
         if (field || row.length || closed) endRow();
         if (!rows.length) throw Error("CSV 文件为空");
+        return rows;
+      }
+      function parseRadarCSV(text) {
+        const rows = parseRadarCSVRows(text);
         const header = rows.shift().map((x) => x.trim());
         if (!["纬度", "经度", "问题描述"].every((x) => header.includes(x))) throw Error("缺少纬度、经度或问题描述列");
-        let skipped = 0;
+        let skipped = 0,
+          incomplete = 0;
         const issues = [];
-        for (const row of rows) {
+        for (const [rowIndex, row] of rows.entries()) {
           if (row.length !== header.length) {
             skipped++;
+            incomplete++;
             continue;
           }
           const record = Object.fromEntries(header.map((h, i) => [h, row[i]]));
@@ -2702,12 +3733,17 @@ sitemap: false
             Math.abs(lon) > 180
           ) {
             skipped++;
+            incomplete++;
             continue;
           }
+          if (!record["问题描述"].trim() || !record["记录UTC"]?.trim() || !Number.isFinite(Date.parse(record["记录UTC"]))) incomplete++;
           issues.push({
+            rowIndex,
+            resolved: record["已解决"] === "是" || record["已解决"] === "true",
             latitude: lat,
             longitude: lon,
             name: record["测试名称"] || "",
+            startedUTC: record["测试开始UTC"] || "",
             id: record["问题编号"] || String(issues.length + 1),
             utc: record["记录UTC"] || "",
             utcOffsetMinutes:
@@ -2719,7 +3755,70 @@ sitemap: false
             gpsUTC: record["GPS采样UTC"] || "",
           });
         }
-        return { issues, skipped };
+        return { issues, skipped, incomplete };
+      }
+    </script>
+    <script id="history-folder-reader">
+      const radarHistorySources = new Map();
+      function selectOneHistoryCSVPerRun(items) {
+        const runs = new Map();
+        for (const issue of items) {
+          const run = issue.startedUTC ? "start:" + issue.startedUTC : issue.name?.trim() ? "name:" + issue.name.trim() : "file:" + issue.file;
+          if (!runs.has(run)) runs.set(run, new Map());
+          const files = runs.get(run),
+            path = issue.file || "";
+          if (!files.has(path)) files.set(path, []);
+          files.get(path).push(issue);
+        }
+        const selected = [];
+        for (const files of runs.values()) {
+          const choices = [...files.entries()].sort(
+            ([a, aa], [b, bb]) =>
+              (Number(bb[0].fileModified) || 0) - (Number(aa[0].fileModified) || 0) ||
+              a.split(/[\\/]/).length - b.split(/[\\/]/).length ||
+              a.localeCompare(b)
+          );
+          selected.push(...choices[0][1]);
+        }
+        return selected;
+      }
+      async function authorizeHistoryWrites(handles) {
+        let readOnly = 0;
+        for (const handle of handles) {
+          try {
+            const options = { mode: "readwrite" };
+            if ((await handle.queryPermission(options)) !== "granted" && (await handle.requestPermission(options)) !== "granted") readOnly++;
+          } catch (error) {
+            readOnly++;
+          }
+        }
+        return readOnly;
+      }
+      async function collectRadarFolderCSVs(directory, path = directory.name, files = [], errors = [], cancelled = () => false) {
+        try {
+          for await (const entry of directory.values()) {
+            if (cancelled()) return { files, errors };
+            const relativePath = path + "/" + entry.name;
+            if (entry.kind === "directory") await collectRadarFolderCSVs(entry, relativePath, files, errors, cancelled);
+            else if (/\.csv$/i.test(entry.name)) {
+              try {
+                const file = await entry.getFile();
+                files.push({
+                  name: file.name,
+                  handle: entry,
+                  lastModified: file.lastModified,
+                  webkitRelativePath: relativePath,
+                  text: () => file.text(),
+                });
+              } catch (error) {
+                errors.push(relativePath + "：" + error.message);
+              }
+            }
+          }
+        } catch (error) {
+          errors.push(path + "：" + error.message);
+        }
+        return { files, errors };
       }
     </script>
     <script>
@@ -2728,12 +3827,31 @@ sitemap: false
         let layer = null,
           importRun = 0,
           historyVisible = radarRead("radar-history-visible", true);
+        let historyCardMode = radarRead("radar-history-card-mode", "hover");
+        if (!["hover", "always"].includes(historyCardMode)) historyCardMode = "hover";
         function historyVisibility() {
-          $("toggleHistory").textContent = historyVisible ? "历史问题：显示" : "历史问题：隐藏";
+          $("historyDisplayMode").value = historyVisible ? historyCardMode : "hidden";
+          const label = historyVisible ? "隐藏全部历史问题（含点位）" : "显示全部历史问题";
+          $("toggleHistory").textContent = label;
           $("toggleHistory").setAttribute("aria-pressed", String(historyVisible));
+          $("toggleAllHistory").textContent = label;
+          $("toggleAllHistory").setAttribute("aria-pressed", String(historyVisible));
+          $("toggleAllHistory").hidden = !layer || !layer.getLayers().length;
           if (layer && window.radarMap) {
-            if (historyVisible && !window.radarMap.hasLayer(layer)) layer.addTo(window.radarMap);
-            else if (!historyVisible && window.radarMap.hasLayer(layer)) window.radarMap.removeLayer(layer);
+            if (historyVisible) {
+              if (!window.radarMap.hasLayer(layer)) layer.addTo(window.radarMap);
+              layer.eachLayer((marker) => {
+                marker.options.radarCardsPermanent = historyCardMode === "always";
+                radarRegisterMarker(marker);
+              });
+            } else {
+              layer.eachLayer((marker) => {
+                marker.closePopup();
+                marker.closeTooltip();
+                radarIssueMarkers.delete(marker);
+              });
+              if (window.radarMap.hasLayer(layer)) window.radarMap.removeLayer(layer);
+            }
           }
         }
         $("toggleHistory").onclick = () => {
@@ -2741,46 +3859,111 @@ sitemap: false
           radarSave("radar-history-visible", historyVisible);
           historyVisibility();
         };
+        $("toggleAllHistory").onclick = () => $("toggleHistory").click();
+        $("historyDisplayMode").onchange = () => {
+          const mode = $("historyDisplayMode").value;
+          historyVisible = mode !== "hidden";
+          if (historyVisible) historyCardMode = mode;
+          radarSave("radar-history-visible", historyVisible);
+          radarSave("radar-history-card-mode", historyCardMode);
+          historyVisibility();
+        };
         historyVisibility();
-        $("importFolder").onclick = () => $("folderInput").click();
-        $("importFiles").onclick = () => $("csvInput").click();
+        $("importFolder").onclick = async () => {
+          if (typeof window.showDirectoryPicker !== "function") {
+            $("folderInput").click();
+            return;
+          }
+          try {
+            const directory = await window.showDirectoryPicker({
+              id: "radar-history",
+              mode: "readwrite",
+            });
+            const run = ++importRun;
+            $("importStatus").textContent = "正在遍历「" + directory.name + "」及所有子目录…";
+            const result = await collectRadarFolderCSVs(directory, directory.name, [], [], () => run !== importRun);
+            if (run !== importRun) return;
+            await importFiles(result.files, directory.name, result.errors);
+          } catch (error) {
+            if (error.name !== "AbortError") $("importStatus").textContent = "无法读取文件夹：" + error.message;
+          }
+        };
+        $("importFiles").onclick = async () => {
+          if (!window.showOpenFilePicker) {
+            $("csvInput").click();
+            return;
+          }
+          try {
+            const handles = await window.showOpenFilePicker({
+              multiple: true,
+              types: [{ description: "CSV 问题表", accept: { "text/csv": [".csv"] } }],
+            });
+            $("importStatus").textContent = "正在申请所选 CSV 的读写权限…";
+            const readOnly = await authorizeHistoryWrites(handles);
+            const files = await Promise.all(
+              handles.map(async (handle) => {
+                const file = await handle.getFile();
+                return { name: file.name, handle, lastModified: file.lastModified, text: () => file.text() };
+              })
+            );
+            await importFiles(files);
+            if (readOnly) $("importStatus").textContent += " · " + readOnly + " 个文件未获写入授权，保存时需重新授权";
+          } catch (error) {
+            if (error.name !== "AbortError") $("importStatus").textContent = "无法读取文件：" + error.message;
+          }
+        };
         $("clearImported").onclick = () => {
+          if (window.radarCloseHistoryEditor && !window.radarCloseHistoryEditor()) return;
           importRun++;
           if (layer && window.radarMap) {
             layer.eachLayer((marker) => radarIssueMarkers.delete(marker));
             window.radarMap.removeLayer(layer);
           }
           layer = null;
+          window.radarHistoryItems = [];
+          window.dispatchEvent(new Event("radar-history-updated"));
+          radarHistorySources.clear();
+          historyVisibility();
           radarSave("radar-imported", null);
           $("importFolderPath").textContent = "导入位置：未选择";
-          $("importStatus").textContent = "";
+          $("importStatus").textContent = "已清空历史问题，原 CSV 文件保留。";
           $("clearImported").hidden = true;
         };
         function drawImported(items) {
+          items = selectOneHistoryCSVPerRun(items);
+          window.radarHistoryItems = items;
+          window.dispatchEvent(new Event("radar-history-updated"));
           if (!window.radarMap || !window.L) return;
           if (layer) {
             layer.eachLayer((marker) => radarIssueMarkers.delete(marker));
             window.radarMap.removeLayer(layer);
           }
-          layer = L.featureGroup().addTo(window.radarMap);
+          layer = L.featureGroup();
+          if (historyVisible) layer.addTo(window.radarMap);
           for (const issue of items) {
+            const appearance = issue.resolved ? "history-resolved severity-resolved" : severityClass(issue.severity);
             const label = document.createElement("span");
-            label.textContent = issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes) + " · " + issue.severity;
+            label.textContent =
+              issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes) + " · " + issue.severity + (issue.resolved ? " · 已解决" : "");
             const icon = L.divIcon({
-              className: "issue-pin history-pin " + severityClass(issue.severity),
-              html: "<span>●</span>",
+              className: "issue-pin history-pin " + appearance,
+              html: issue.resolved ? '<span style="background:#18875b;color:white">✓</span>' : "<span>●</span>",
               iconSize: [30, 30],
               iconAnchor: [15, 15],
             });
-            const marker = L.marker([issue.latitude, issue.longitude], { icon }).addTo(layer);
+            const marker = L.marker([issue.latitude, issue.longitude], {
+              icon,
+              radarCardsPermanent: historyCardMode === "always",
+            }).addTo(layer);
+            marker.on("click", () => window.radarEditHistory?.(issue, marker));
             marker.bindTooltip(label, {
               permanent: false,
               direction: "right",
               offset: [12, 0],
-              className: "issue-map-label history-label " + severityClass(issue.severity),
+              className: "issue-map-label history-label " + appearance,
             });
             const popup = document.createElement("div");
-            popup.className = "history-popup";
+            popup.className = "history-popup " + appearance;
             for (const text of [
               "测试：" + (issue.name || "未命名"),
               issueTitle(issue.utc, issue.description, issue.utcOffsetMinutes) + " · " + issue.severity,
@@ -2794,68 +3977,115 @@ sitemap: false
               p.textContent = text;
               popup.append(p);
             }
-            marker.bindPopup(popup);
+            const edit = document.createElement("button");
+            edit.textContent = "编辑历史问题";
+            edit.onclick = () => window.radarEditHistory?.(issue, marker);
+            popup.append(edit);
             radarRegisterMarker(marker);
           }
           $("clearImported").hidden = !items.length;
           historyVisibility();
         }
         const cached = radarRead("radar-imported", null);
+        window.addEventListener("radar-history-file-saved", (event) => {
+          const { path, issues } = event.detail;
+          const items = (window.radarHistoryItems || []).filter((issue) => issue.file !== path);
+          items.push(...issues.map((issue) => ({ ...issue, file: path })));
+          drawImported(items);
+          const cache = radarRead("radar-imported", {});
+          radarSave("radar-imported", { ...cache, items });
+        });
         if (cached && Array.isArray(cached.items)) {
+          cached.items = selectOneHistoryCSVPerRun(cached.items);
           drawImported(cached.items);
-          $("importStatus").textContent = cached.status;
+          radarSave("radar-imported", cached);
+          const incomplete =
+            cached.incomplete ??
+            Number(cached.status?.match(/跳过 (\d+) 条/)?.[1] || 0) +
+              cached.items.filter((issue) => !issue.description?.trim() || !Number.isFinite(Date.parse(issue.utc))).length;
+          $("importStatus").textContent =
+            "已加载 " + cached.items.length + " 条问题 · " + (incomplete ? "有 " + incomplete + " 条问题单数据不全" : "问题单数据完整");
           $("importFolderPath").textContent = cached.path || "导入位置：已恢复 CSV 文件";
         }
         async function importSelected(event) {
           const files = Array.from(event.target.files || []).filter((file) => /\.csv$/i.test(file.name));
           event.target.value = "";
+          await importFiles(files);
+        }
+        async function importFiles(files, folderName = "", scanErrors = []) {
           if (!files.length) {
-            $("importStatus").textContent = "未选择 CSV 文件";
+            $("importStatus").textContent = folderName ? "已遍历「" + folderName + "」及所有子目录，未发现可读取的 CSV 文件" : "未选择 CSV 文件";
             return;
           }
           if (!window.radarMap || !window.L) {
             $("importStatus").textContent = "地图未加载，请检查网络";
             return;
           }
-          const roots = [...new Set(files.map((file) => (file.webkitRelativePath ? file.webkitRelativePath.split("/")[0] : "所选 CSV 文件")))];
+          const roots = folderName
+            ? [folderName]
+            : [...new Set(files.map((file) => (file.webkitRelativePath ? file.webkitRelativePath.split("/")[0] : "所选 CSV 文件")))];
           $("importFolderPath").textContent = "导入位置：" + roots.join("、") + "（浏览器不提供完整磁盘路径）";
           const run = ++importRun;
-          const items = [];
-          let skipped = 0,
-            failed = 0;
-          const errors = [];
+          let items = [];
+          const incompleteByFile = new Map();
+          let incomplete = 0;
           $("importStatus").textContent = "正在解析 " + files.length + " 个 CSV…";
           for (const file of files) {
             try {
-              const result = parseRadarCSV(await file.text());
-              skipped += result.skipped;
-              items.push(...result.issues.map((issue) => ({ ...issue, file: file.webkitRelativePath || file.name })));
+              const text = await file.text();
+              const result = parseRadarCSV(text);
+              const path = file.webkitRelativePath || file.name;
+              radarHistorySources.set(path, {
+                table: readEditableRadarCSV(text),
+                handle: file.handle,
+                original: text,
+                name: file.name,
+              });
+              incompleteByFile.set(path, result.incomplete);
+              items.push(
+                ...result.issues.map((issue) => ({
+                  ...issue,
+                  file: file.webkitRelativePath || file.name,
+                  fileModified: file.lastModified || 0,
+                }))
+              );
             } catch (error) {
-              failed++;
-              errors.push(file.name + "：" + error.message);
+              // Ignore unrelated CSV files; report only incomplete problem records.
             }
             if (run !== importRun) return;
           }
+          items = selectOneHistoryCSVPerRun(items);
+          for (const path of new Set(items.map((issue) => issue.file))) incomplete += incompleteByFile.get(path) || 0;
           drawImported(items);
           $("importStatus").textContent =
-            "已解析 " +
-            (files.length - failed) +
-            "/" +
-            files.length +
-            " 个 CSV，显示 " +
+            "已加载 " +
             items.length +
-            " 条问题，跳过 " +
-            skipped +
-            " 条无效记录" +
-            (errors.length ? "。" + errors.join("；") : "");
-          if (!radarSave("radar-imported", { items, status: $("importStatus").textContent, path: $("importFolderPath").textContent }))
+            " 条问题 · " +
+            (incomplete
+              ? "有 " + incomplete + " 条问题单数据不全（缺少有效坐标的记录未显示）"
+              : items.length
+                ? "问题单数据完整"
+                : "未找到符合格式的问题单数据") +
+            (scanErrors.length ? " · 部分目录或文件无法读取，导入可能不完整" : "");
+          if (
+            !radarSave("radar-imported", {
+              items,
+              incomplete,
+              status: $("importStatus").textContent,
+              path: $("importFolderPath").textContent,
+            })
+          )
             $("importStatus").textContent += " · 本地存储空间不足，刷新后需重新导入";
           if (items.length && historyVisible) {
             const app = document.querySelector(".app"),
               left = !app.classList.contains("sidebar-closed") && innerWidth > 600 ? 360 : 35;
             // Turn off following when viewing historical issues; GPS continues running.
             if ($("start").getAttribute("aria-pressed") === "true") $("start").click();
-            window.radarMap.fitBounds(layer.getBounds(), { paddingTopLeft: [left, 35], paddingBottomRight: [210, 35], maxZoom: 17 });
+            window.radarMap.fitBounds(layer.getBounds(), {
+              paddingTopLeft: [left, 35],
+              paddingBottomRight: [35, 35],
+              maxZoom: 17,
+            });
           }
         }
         $("folderInput").onchange = importSelected;
@@ -2884,7 +4114,11 @@ sitemap: false
           .catch(() => {});
         $("chooseExportFolder").onclick = async () => {
           try {
-            const handle = await window.showDirectoryPicker({ id: "radar-export", mode: "readwrite", startIn: radarExportDirectory || "downloads" });
+            const handle = await window.showDirectoryPicker({
+              id: "radar-export",
+              mode: "readwrite",
+              startIn: radarExportDirectory || "downloads",
+            });
             radarExportDirectory = handle;
             showFolder();
             try {
@@ -2904,6 +4138,1062 @@ sitemap: false
           $("exportFolderStatus").textContent = "导出时使用浏览器下载。";
         };
         showFolder();
+      })();
+    </script>
+    <script id="csv-editor-model">
+      function readEditableRadarCSV(text) {
+        const rows = parseRadarCSVRows(text);
+        const header = rows.shift();
+        const names = header.map((name) => name.trim());
+        if (!names.includes("纬度") || !names.includes("经度") || !names.includes("问题描述")) throw Error("缺少纬度、经度或问题描述列");
+        if (new Set(names).size !== names.length || names.some((name) => !name)) throw Error("列名不能为空或重复");
+        if (rows.some((row) => row.length !== header.length)) throw Error("CSV 行的列数不一致，请先检查文件；未丢弃任何记录");
+        return { header, rows };
+      }
+      function editableRadarCoordinates(table, row) {
+        const names = table.header.map((name) => name.trim());
+        const lat = row[names.indexOf("纬度")],
+          lon = row[names.indexOf("经度")];
+        if (!lat.trim() || !lon.trim()) return null;
+        const latitude = Number(lat),
+          longitude = Number(lon);
+        return Number.isFinite(latitude) && Number.isFinite(longitude) && Math.abs(latitude) <= 90 && Math.abs(longitude) <= 180
+          ? [latitude, longitude]
+          : null;
+      }
+      function validateEditableRadarCSV(table) {
+        const names = table.header.map((name) => name.trim());
+        for (const [index, row] of table.rows.entries()) {
+          const lat = row[names.indexOf("纬度")].trim(),
+            lon = row[names.indexOf("经度")].trim();
+          if ((lat || lon) && !editableRadarCoordinates(table, row)) throw Error("问题 " + (index + 1) + " 的经纬度无效，请填写有效坐标或同时留空");
+          for (const [column, name] of names.entries()) {
+            const value = row[column].trim();
+            if (value && name.endsWith("UTC") && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(value))
+              throw Error("问题 " + (index + 1) + " 的「" + name + "」需要 UTC 格式，例如 2026-10-14T15:17:25.033Z");
+            if (value && name.endsWith("UTC") && !Number.isFinite(Date.parse(value)))
+              throw Error("问题 " + (index + 1) + " 的「" + name + "」时间无效");
+            if (
+              value &&
+              ["精度米", "GPS采样距记录秒数", "记录时区偏移分钟"].includes(name) &&
+              (!Number.isFinite(Number(value)) || (name !== "记录时区偏移分钟" && Number(value) < 0))
+            )
+              throw Error("问题 " + (index + 1) + " 的「" + name + "」数值无效");
+          }
+        }
+      }
+      function sortEditableRadarCSV(table) {
+        const timeColumn = table.header.findIndex((name) => name.trim() === "记录UTC");
+        if (timeColumn < 0) return;
+        const time = (row) => {
+          const value = Date.parse(row[timeColumn]);
+          return Number.isFinite(value) ? value : Infinity;
+        };
+        table.rows.sort((a, b) => {
+          const left = time(a),
+            right = time(b);
+          return left === right ? 0 : left < right ? -1 : 1;
+        });
+        const idColumn = table.header.findIndex((name) => name.trim() === "问题编号");
+        if (idColumn >= 0)
+          table.rows.forEach((row, index) => {
+            row[idColumn] = String(index + 1);
+          });
+      }
+      function newEditableRadarIssue(table, template) {
+        const now = new Date().toISOString();
+        return table.header.map((header, column) => {
+          const name = header.trim();
+          if (["测试名称", "测试开始UTC", "测试结束UTC", "记录时区偏移分钟"].includes(name)) return template?.[column] || "";
+          if (name === "记录UTC") return now;
+          if (name === "问题等级") return "低";
+          if (name === "已确认") return "否";
+          if (name === "位置来源") return "手动选点";
+          return "";
+        });
+      }
+      function serializeEditableRadarCSV(table) {
+        validateEditableRadarCSV(table);
+        sortEditableRadarCSV(table);
+        const cell = (value) => '"' + String(value).replace(/"/g, '""') + '"';
+        return "\uFEFF" + [table.header, ...table.rows].map((row) => row.map(cell).join(",")).join("\r\n") + "\r\n";
+      }
+    </script>
+    <script id="csv-editor-ui">
+      (() => {
+        const $ = (id) => document.getElementById(id);
+        let table = null,
+          filename = "",
+          layer = null,
+          dirty = false,
+          loading = false;
+        let deletedRows = [],
+          issueTemplate = null;
+        const markers = new Map(),
+          fields = new Map();
+        const status = (text) => {
+          $("csvEditorStatus").textContent = text;
+        };
+        function changed() {
+          dirty = true;
+          status(filename + " · " + table.rows.length + " 条问题 · 有未保存修改");
+        }
+        function pauseFollowing() {
+          if ($("start").getAttribute("aria-pressed") === "true") $("start").click();
+        }
+        function openEditor(index) {
+          if (!table) return;
+          if (!$("csvEditorDialog").open) $("csvEditorDialog").showModal();
+          if (index !== undefined) {
+            const row = $("csv-edit-row-" + index);
+            row.open = true;
+            row.scrollIntoView({ block: "start" });
+          }
+        }
+        function refreshMarker(index) {
+          if (!window.radarMap || !window.L) return;
+          if (!layer) layer = L.featureGroup().addTo(window.radarMap);
+          const row = table.rows[index],
+            point = editableRadarCoordinates(table, row);
+          const previous = markers.get(index);
+          if (!point) {
+            if (previous) layer.removeLayer(previous);
+            markers.delete(index);
+            return;
+          }
+          let marker = previous;
+          if (!marker) {
+            marker = L.marker(point, {
+              draggable: true,
+              icon: L.divIcon({
+                className: "issue-pin severity-medium",
+                html: "<span>✎</span>",
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+              }),
+            }).addTo(layer);
+            markers.set(index, marker);
+            marker.on("click", () => openEditor(index));
+            marker.on("dragstart", pauseFollowing);
+            marker.on("dragend", () => {
+              const position = marker.getLatLng();
+              for (const [name, value] of [
+                ["纬度", position.lat],
+                ["经度", position.lng],
+              ]) {
+                const column = table.header.findIndex((header) => header.trim() === name);
+                row[column] = value.toFixed(8);
+                fields.get(index + ":" + column).value = row[column];
+              }
+              changed();
+            });
+          } else marker.setLatLng(point);
+          const description = row[table.header.findIndex((header) => header.trim() === "问题描述")];
+          const label = document.createElement("span");
+          label.textContent = "编辑 #" + (index + 1) + " · " + description;
+          if (marker.getTooltip()) marker.setTooltipContent(label);
+          else marker.bindTooltip(label);
+        }
+        function renderEditor() {
+          if (layer) window.radarMap.removeLayer(layer);
+          layer = null;
+          markers.clear();
+          fields.clear();
+          $("undoCSVDelete").hidden = !deletedRows.length;
+          $("csvEditorList").replaceChildren();
+          $("csvEditorTitle").textContent = filename + " · " + table.rows.length + " 条问题";
+          table.rows.forEach((values, index) => {
+            const details = document.createElement("details");
+            details.className = "issue-row";
+            details.id = "csv-edit-row-" + index;
+            const head = document.createElement("summary");
+            const updateTitle = () => {
+              head.textContent = "#" + (index + 1) + " · " + values[table.header.findIndex((name) => name.trim() === "问题描述")];
+            };
+            updateTitle();
+            details.append(head);
+            table.header.forEach((name, column) => {
+              const label = document.createElement("label");
+              label.className = "field-label";
+              label.textContent = name;
+              const input = document.createElement(name.trim() === "问题描述" ? "textarea" : "input");
+              input.value = values[column];
+              input.id = "csv-field-" + index + "-" + column;
+              input.style.cssText = "width:100%;min-height:40px;padding:8px;margin-bottom:8px";
+              label.htmlFor = input.id;
+              fields.set(index + ":" + column, input);
+              input.oninput = () => {
+                values[column] = input.value;
+                updateTitle();
+                changed();
+                refreshMarker(index);
+              };
+              if (name.trim() === "记录UTC")
+                input.onchange = input.onblur = () => {
+                  sortEditableRadarCSV(table);
+                  if (table.rows.indexOf(values) === index) return;
+                  renderEditor();
+                  openEditor(table.rows.indexOf(values));
+                };
+              details.append(label, input);
+            });
+            const locate = document.createElement("button");
+            locate.textContent = "在地图上拖动位置";
+            locate.onclick = () => {
+              const point = editableRadarCoordinates(table, values);
+              if (!point || !window.radarMap) {
+                status("请先填写有效经纬度，并确认地图已加载");
+                return;
+              }
+              $("csvEditorDialog").close();
+              if (!document.querySelector(".app").classList.contains("sidebar-closed")) $("sidebarClose").click();
+              pauseFollowing();
+              window.radarMap.setView(point, 18);
+              markers.get(index)?.openTooltip();
+              status("拖动 ✎ 标记修改位置；点击标记可返回问题单，完成后点击保存。");
+            };
+            const remove = document.createElement("button");
+            remove.textContent = "删除问题";
+            remove.style.cssText = "color:#b7372b;margin-left:8px";
+            remove.onclick = () => {
+              deletedRows.push(values);
+              table.rows.splice(table.rows.indexOf(values), 1);
+              sortEditableRadarCSV(table);
+              changed();
+              renderEditor();
+            };
+            details.append(locate, remove);
+            $("csvEditorList").append(details);
+            refreshMarker(index);
+          });
+        }
+        $("editCSVFile").onclick = () => {
+          if (dirty && !window.confirm("当前 CSV 有未保存修改，确认选择其他文件？")) return;
+          $("editCSVInput").click();
+        };
+        $("editCSVInput").onchange = async (event) => {
+          const file = event.target.files[0];
+          event.target.value = "";
+          if (!file || loading) return;
+          loading = true;
+          $("editCSVFile").disabled = true;
+          try {
+            const next = readEditableRadarCSV(await file.text());
+            if (layer) window.radarMap.removeLayer(layer);
+            layer = null;
+            markers.clear();
+            table = next;
+            issueTemplate = next.rows[0]?.slice();
+            deletedRows = [];
+            filename = file.name;
+            dirty = false;
+            renderEditor();
+            $("openCSVEditor").disabled = false;
+            $("saveEditedCSV").disabled = false;
+            $("finishCSVEditing").disabled = false;
+            pauseFollowing();
+            if (markers.size)
+              window.radarMap.fitBounds(layer.getBounds(), {
+                padding: [45, 45],
+                maxZoom: 16,
+              });
+            status(filename + " · " + table.rows.length + " 条问题；保存会另存新文件，原文件保留。");
+            openEditor();
+          } catch (error) {
+            status("无法打开 CSV：" + error.message);
+          } finally {
+            loading = false;
+            $("editCSVFile").disabled = false;
+          }
+        };
+        function save() {
+          if (!table) return false;
+          try {
+            const content = serializeEditableRadarCSV(table);
+            renderEditor();
+            const url = URL.createObjectURL(new Blob([content], { type: "text/csv;charset=utf-8;" }));
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename.replace(/\.csv$/i, "") + "_已编辑.csv";
+            document.body.append(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 60000);
+            dirty = false;
+            status("已发起下载，请确认「" + filename.replace(/\.csv$/i, "") + "_已编辑.csv」已保存。");
+            $("csvEditorDialog").close();
+            return true;
+          } catch (error) {
+            status("无法保存：" + error.message);
+            window.alert(error.message);
+            return false;
+          }
+        }
+        function finishEditing() {
+          if (!table) return;
+          $("csvFinishMessage").textContent = dirty
+            ? "有未保存的修改。退出前请保存 CSV；保存会下载新文件，请确认文件已保存。"
+            : "退出前请确认 CSV 已保存。也可以再次保存，下载新文件。";
+          $("csvFinishDialog").showModal();
+        }
+        function exitEditing(saved) {
+          $("csvFinishDialog").close();
+          $("csvEditorDialog").close();
+          if (layer) window.radarMap.removeLayer(layer);
+          layer = null;
+          markers.clear();
+          fields.clear();
+          table = null;
+          issueTemplate = null;
+          deletedRows = [];
+          dirty = false;
+          filename = "";
+          $("csvEditorList").replaceChildren();
+          for (const id of ["openCSVEditor", "saveEditedCSV", "finishCSVEditing"]) $(id).disabled = true;
+          status(saved ? "已退出编辑，CSV 下载已发起，请确认文件已保存。" : "已退出编辑，原 CSV 文件保留；可重新选择文件编辑。");
+        }
+        $("openCSVEditor").onclick = () => openEditor();
+        $("addCSVProblem").onclick = () => {
+          if (!table) return;
+          const row = newEditableRadarIssue(table, issueTemplate);
+          const center = window.radarMap?.getCenter();
+          if (center)
+            for (const [name, value] of [
+              ["纬度", center.lat],
+              ["经度", center.lng],
+            ]) {
+              const column = table.header.findIndex((header) => header.trim() === name);
+              row[column] = value.toFixed(8);
+            }
+          const names = table.header.map((header) => header.trim());
+          const localColumn = names.indexOf("记录当地时间"),
+            offsetColumn = names.indexOf("记录时区偏移分钟");
+          if (localColumn >= 0 && names.includes("记录UTC"))
+            row[localColumn] = formatLocalTime(
+              row[names.indexOf("记录UTC")],
+              offsetColumn >= 0 && row[offsetColumn].trim() ? Number(row[offsetColumn]) : undefined
+            );
+          table.rows.push(row);
+          sortEditableRadarCSV(table);
+          changed();
+          renderEditor();
+          openEditor(table.rows.indexOf(row));
+        };
+        $("sortCSVProblems").onclick = () => {
+          if (!table) return;
+          if (!table.header.some((name) => name.trim() === "记录UTC")) {
+            status("此 CSV 没有记录UTC列，无法按时间排序");
+            return;
+          }
+          sortEditableRadarCSV(table);
+          changed();
+          renderEditor();
+        };
+        $("undoCSVDelete").onclick = () => {
+          if (!table || !deletedRows.length) return;
+          table.rows.push(deletedRows.pop());
+          sortEditableRadarCSV(table);
+          changed();
+          renderEditor();
+        };
+        $("closeCSVEditor").onclick = finishEditing;
+        $("finishCSVEditing").onclick = finishEditing;
+        $("finishCSVDialog").onclick = finishEditing;
+        $("csvEditorDialog").addEventListener("cancel", (event) => {
+          event.preventDefault();
+          finishEditing();
+        });
+        $("continueCSVEditing").onclick = () => $("csvFinishDialog").close();
+        $("discardCSVEditing").onclick = () => exitEditing(false);
+        $("saveAndFinishCSV").onclick = () => {
+          if (save()) exitEditing(true);
+        };
+        $("saveEditedCSV").onclick = save;
+        $("saveCSVDialog").onclick = save;
+        window.addEventListener("beforeunload", (event) => {
+          if (dirty) {
+            event.preventDefault();
+            event.returnValue = "";
+          }
+        });
+      })();
+    </script>
+    <script id="history-edit-model">
+      function mergeHistoryEdit(source, rowIndex, draft, latestText, initial) {
+        const original = source.table,
+          latest = readEditableRadarCSV(latestText),
+          baseRow = original.rows[rowIndex];
+        if (!baseRow) throw Error("找不到原问题，请重新导入");
+        const get = (table, row, name) => {
+          const i = table.header.findIndex((h) => h.trim() === name);
+          return i < 0 ? "" : row[i];
+        };
+        const keys = ["问题编号", "记录UTC", "测试名称"].filter((name) => get(original, baseRow, name).trim());
+        if (!keys.length) throw Error("问题缺少可匹配的编号或时间，请重新导入");
+        const matches = latest.rows
+          .map((row, index) => ({ row, index }))
+          .filter(({ row }) => keys.every((name) => get(latest, row, name) === get(original, baseRow, name)));
+        if (matches.length !== 1) throw Error("原问题已删除或编号、时间已变化，无法唯一匹配，请重新导入");
+        const { row, index } = matches[0],
+          merged = { ...draft };
+        const fields = [
+          ["description", "问题描述"],
+          ["latitude", "纬度"],
+          ["longitude", "经度"],
+          ["resolved", "已解决"],
+        ];
+        const value = (key, text) => (key === "resolved" ? ["是", "true"].includes(text) : text);
+        const equal = (key, a, b) => (key === "latitude" || key === "longitude" ? Number(a) === Number(b) : a === b);
+        for (const [key, column] of fields) {
+          const base = initial ? initial[key] : value(key, get(original, baseRow, column)),
+            current = value(key, get(latest, row, column));
+          const edited = !equal(key, draft[key], base);
+          if (edited && !equal(key, current, base) && !equal(key, current, draft[key]))
+            throw Error("该问题的「" + column + "」已在原 CSV 中修改，与你的改动冲突。未覆盖文件，当前编辑仍保留。");
+          if (!edited) merged[key] = current;
+        }
+        return {
+          source: { ...source, table: latest, original: latestText },
+          rowIndex: index,
+          draft: merged,
+        };
+      }
+      function buildHistoryEditCSV(source, rowIndex, draft) {
+        const table = {
+          header: source.table.header.slice(),
+          rows: source.table.rows.map((row) => row.slice()),
+        };
+        if (!table.rows[rowIndex]) throw Error("原 CSV 中找不到该问题，请重新导入");
+        const point = [Number(draft.latitude), Number(draft.longitude)];
+        if (
+          !String(draft.latitude).trim() ||
+          !String(draft.longitude).trim() ||
+          !point.every(Number.isFinite) ||
+          Math.abs(point[0]) > 90 ||
+          Math.abs(point[1]) > 180
+        )
+          throw Error("请输入有效经纬度");
+        if (!draft.description.trim()) throw Error("请填写问题描述");
+        let column = table.header.findIndex((name) => name.trim() === "已解决");
+        if (column < 0) {
+          column = table.header.length;
+          table.header.push("已解决");
+          table.rows.forEach((row) => row.push("否"));
+        }
+        for (const [name, value] of [
+          ["问题描述", draft.description],
+          ["纬度", String(draft.latitude)],
+          ["经度", String(draft.longitude)],
+          ["已解决", draft.resolved ? "是" : "否"],
+        ]) {
+          table.rows[rowIndex][table.header.findIndex((header) => header.trim() === name)] = value;
+        }
+        // Preserve every original row and its order, including incomplete records.
+        const cell = (value) => '"' + String(value).replace(/"/g, '""') + '"';
+        return {
+          table,
+          text: "\uFEFF" + [table.header, ...table.rows].map((row) => row.map(cell).join(",")).join("\r\n") + "\r\n",
+        };
+      }
+    </script>
+    <script id="history-edit-ui">
+      (() => {
+        const $ = (id) => document.getElementById(id);
+        let session = null,
+          busy = false;
+        const say = (text) => {
+          $("historyEditStatus").textContent = text;
+          $("historyEditState").textContent = dirty() ? "有未保存改动" : "尚未修改";
+          $("historyEditState").dataset.dirty = String(!!dirty());
+        };
+        function dirty() {
+          return session && JSON.stringify(session.draft) !== JSON.stringify(session.initial);
+        }
+        function fill() {
+          if (!session) return;
+          $("historyEditDescription").value = session.draft.description;
+          $("historyEditResolved").checked = session.draft.resolved;
+          $("historyEditLat").value = session.draft.latitude;
+          $("historyEditLon").value = session.draft.longitude;
+          $("historyEditUndo").disabled = busy || !session.undo.length;
+        }
+        function apply(change) {
+          if (!session || busy) return;
+          const next = { ...session.draft, ...change };
+          if (JSON.stringify(next) === JSON.stringify(session.draft)) return;
+          session.undo.push({ ...session.draft });
+          session.draft = next;
+          const lat = Number(next.latitude),
+            lon = Number(next.longitude);
+          if (
+            String(next.latitude).trim() &&
+            String(next.longitude).trim() &&
+            Number.isFinite(lat) &&
+            Number.isFinite(lon) &&
+            Math.abs(lat) <= 90 &&
+            Math.abs(lon) <= 180
+          )
+            session.marker.setLatLng([lat, lon]);
+          $("historyEditUndo").disabled = false;
+          say("有未保存改动；保存后会写回「" + session.source.name + "」。");
+        }
+        function close(discard = false) {
+          if (busy) return false;
+          if (!session) return true;
+          if (!discard && dirty() && !window.confirm("放弃当前未保存改动？原 CSV 尚未修改。")) return false;
+          session.marker.setLatLng([Number(session.initial.latitude), Number(session.initial.longitude)]);
+          session.marker.dragging?.disable();
+          session.marker.off("dragend", session.dragend);
+          if (session.autoOpen) session.marker.off("dragend", session.autoOpen);
+          session.marker.off("click", session.reopen);
+          session = null;
+          $("returnHistoryEdit").hidden = true;
+          $("historyEditDialog").close();
+          return true;
+        }
+        window.radarCloseHistoryEditor = () => close();
+        async function pickSource() {
+          if (!window.showOpenFilePicker) throw Error("写回原 CSV 需要支持文件访问的浏览器，请使用 Chrome 或 Edge 并重新导入原文件");
+          const [handle] = await window.showOpenFilePicker({
+            types: [
+              {
+                description: "原 CSV 问题表",
+                accept: { "text/csv": [".csv"] },
+              },
+            ],
+          });
+          const file = await handle.getFile(),
+            text = await file.text();
+          return {
+            handle,
+            name: file.name,
+            original: text,
+            table: readEditableRadarCSV(text),
+          };
+        }
+        window.radarEditHistory = async (issue, marker) => {
+          if (busy) return;
+          if (session?.marker === marker) {
+            $("returnHistoryEdit").hidden = true;
+            if (!$("historyEditDialog").open) $("historyEditDialog").showModal();
+            return;
+          }
+          if (!close()) return;
+          try {
+            let source = radarHistorySources.get(issue.file);
+            if (!source)
+              source = {
+                name: issue.file.split(/[\\/]/).pop(),
+                table: null,
+                original: null,
+                handle: null,
+              };
+            if (source.table && !Number.isInteger(issue.rowIndex)) {
+              const matches = parseRadarCSV(source.original).issues.filter(
+                (row) => row.utc === issue.utc && row.id === issue.id && row.latitude === issue.latitude && row.longitude === issue.longitude
+              );
+              if (matches.length !== 1) throw Error("无法唯一匹配原 CSV 行，请重新导入");
+              issue.rowIndex = matches[0].rowIndex;
+            }
+            const names = source.table?.header.map((name) => name.trim()),
+              row = source.table?.rows[issue.rowIndex];
+            if (source.table && !row) throw Error("找不到原始行，请重新导入 CSV");
+            const initial = row
+              ? {
+                  description: row[names.indexOf("问题描述")],
+                  latitude: row[names.indexOf("纬度")],
+                  longitude: row[names.indexOf("经度")],
+                  resolved: ["是", "true"].includes(row[names.indexOf("已解决")]),
+                }
+              : {
+                  description: issue.description || "",
+                  latitude: String(issue.latitude),
+                  longitude: String(issue.longitude),
+                  resolved: !!issue.resolved,
+                };
+            session = {
+              source,
+              path: issue.file,
+              originalIssue: { ...issue },
+              rowIndex: issue.rowIndex,
+              marker,
+              initial,
+              draft: { ...initial },
+              undo: [],
+            };
+            session.dragend = () => {
+              const p = marker.getLatLng();
+              apply({
+                latitude: p.lat.toFixed(8),
+                longitude: p.lng.toFixed(8),
+              });
+              fill();
+            };
+            session.reopen = () => {
+              $("returnHistoryEdit").hidden = true;
+              if (session && !$("historyEditDialog").open) $("historyEditDialog").showModal();
+            };
+            marker.on("dragend", session.dragend);
+            marker.on("click", session.reopen);
+            marker.dragging?.enable();
+            $("historyEditFile").textContent = "原文件：" + issue.file;
+            say(source.handle ? "改动可撤回，保存后更新原 CSV。" : "可直接编辑；保存时再选择并授权原 CSV。");
+            fill();
+            $("historyEditDialog").showModal();
+          } catch (error) {
+            if (error.name !== "AbortError") window.alert(error.message);
+          }
+        };
+        $("historyEditDescription").oninput = () => apply({ description: $("historyEditDescription").value });
+        $("historyEditResolved").onchange = () => apply({ resolved: $("historyEditResolved").checked });
+        for (const [id, key] of [
+          ["historyEditLat", "latitude"],
+          ["historyEditLon", "longitude"],
+        ])
+          $(id).oninput = () => apply({ [key]: $(id).value });
+        $("historyEditUndo").onclick = () => {
+          if (!session || busy || !session.undo.length) return;
+          session.draft = session.undo.pop();
+          session.marker.setLatLng([Number(session.draft.latitude), Number(session.draft.longitude)]);
+          fill();
+          say(dirty() ? "已撤回上一步改动" : "已恢复编辑前的数据");
+        };
+        $("historyEditDrag").onclick = () => {
+          if (!session || busy) return;
+          $("historyEditDialog").close();
+          $("returnHistoryEdit").hidden = false;
+          if (!document.querySelector(".app").classList.contains("sidebar-closed")) $("sidebarClose").click();
+          if ($("start").getAttribute("aria-pressed") === "true") $("start").click();
+          window.radarMap.setView(session.marker.getLatLng(), 18);
+          // Reopen the form after moving the point, so Save and Undo remain accessible.
+          if (session.autoOpen) session.marker.off("dragend", session.autoOpen);
+          session.autoOpen = () => {
+            $("returnHistoryEdit").hidden = true;
+            if (session && !$("historyEditDialog").open) $("historyEditDialog").showModal();
+          };
+          session.marker.once("dragend", session.autoOpen);
+        };
+        $("historyEditSave").onclick = async () => {
+          if (!session || busy) return;
+          const editing = session;
+          let writer;
+          try {
+            const lat = Number(editing.draft.latitude),
+              lon = Number(editing.draft.longitude);
+            if (!editing.draft.description.trim()) throw Error("请填写问题描述");
+            if (
+              !String(editing.draft.latitude).trim() ||
+              !String(editing.draft.longitude).trim() ||
+              !Number.isFinite(lat) ||
+              !Number.isFinite(lon) ||
+              Math.abs(lat) > 90 ||
+              Math.abs(lon) > 180
+            )
+              throw Error("请输入有效经纬度");
+
+            busy = true;
+            $("historyEditSave").disabled = true;
+            for (const id of [
+              "historyEditDescription",
+              "historyEditResolved",
+              "historyEditLat",
+              "historyEditLon",
+              "historyEditUndo",
+              "historyEditDrag",
+              "historyEditCancel",
+              "closeHistoryEdit",
+            ])
+              $(id).disabled = true;
+            let handle = editing.source.handle;
+            if (!handle) {
+              say("请选择对应的原 CSV，以便保存此次修改。");
+              const picked = await pickSource();
+              if (picked.name !== editing.source.name) throw Error("请选择原文件「" + editing.source.name + "」");
+              if (!editing.source.table) {
+                if (picked.name !== editing.source.name) throw Error("请选择原文件「" + editing.source.name + "」");
+                const original = editing.originalIssue;
+                const matches = parseRadarCSV(picked.original).issues.filter(
+                  (row) =>
+                    row.utc === original.utc && row.id === original.id && row.latitude === original.latitude && row.longitude === original.longitude
+                );
+                if (matches.length !== 1) throw Error("所选 CSV 无法唯一匹配原问题，未写入");
+                editing.rowIndex = matches[0].rowIndex;
+                editing.source = picked;
+              }
+              handle = picked.handle;
+            }
+            const permission = { mode: "readwrite" };
+            if ((await handle.queryPermission(permission)) !== "granted" && (await handle.requestPermission(permission)) !== "granted")
+              throw Error("未获得原文件写入权限，改动仍保留");
+            const latestText = await (await handle.getFile()).text();
+            const merged = mergeHistoryEdit(editing.source, editing.rowIndex, editing.draft, latestText, editing.initial);
+            const output = buildHistoryEditCSV(merged.source, merged.rowIndex, merged.draft);
+            writer = await handle.createWritable();
+            if ((await (await handle.getFile()).text()) !== latestText) throw Error("保存期间原文件再次变化，请重试保存；当前改动仍保留");
+            await writer.write(output.text);
+            await writer.close();
+            writer = null;
+            editing.source.table = output.table;
+            editing.source.original = output.text;
+            editing.source.handle = handle;
+            editing.draft = merged.draft;
+            radarHistorySources.set(editing.path, editing.source);
+            editing.initial = { ...editing.draft };
+            busy = false;
+            close(true);
+            window.dispatchEvent(
+              new CustomEvent("radar-history-file-saved", {
+                detail: {
+                  path: editing.path,
+                  issues: parseRadarCSV(output.text).issues,
+                },
+              })
+            );
+            $("importStatus").textContent = "已保存到原 CSV：" + editing.path;
+          } catch (error) {
+            if (writer) await writer.abort().catch(() => {});
+            say(error.name === "AbortError" ? "已取消保存，改动仍保留" : "保存未完成：" + error.message);
+          } finally {
+            busy = false;
+            for (const id of [
+              "historyEditSave",
+              "historyEditDescription",
+              "historyEditResolved",
+              "historyEditLat",
+              "historyEditLon",
+              "historyEditDrag",
+              "historyEditCancel",
+              "closeHistoryEdit",
+            ])
+              $(id).disabled = false;
+            $("historyEditUndo").disabled = !session?.undo.length;
+          }
+        };
+        $("closeHistoryEdit").onclick = () => close();
+        $("returnHistoryEdit").onclick = () => {
+          if (session) {
+            $("returnHistoryEdit").hidden = true;
+            $("historyEditDialog").showModal();
+          }
+        };
+        $("historyEditCancel").onclick = () => close();
+        $("historyEditDialog").addEventListener("cancel", (event) => {
+          event.preventDefault();
+          close();
+        });
+        window.addEventListener("beforeunload", (event) => {
+          if (dirty() || busy) {
+            event.preventDefault();
+            event.returnValue = "";
+          }
+        });
+      })();
+    </script>
+    <script>
+      (() => {
+        const DAY = 86400000;
+        function buildTrend(items) {
+          const days = new Map();
+          let excluded = 0;
+          for (const issue of Array.isArray(items) ? items : []) {
+            const time = Date.parse(issue.utc);
+            if (!Number.isFinite(time)) {
+              excluded++;
+              continue;
+            }
+            const date = new Date(time + 480 * 60000).toISOString().slice(0, 10);
+            const count = days.get(date) || { total: 0, resolved: 0, high: 0 };
+            if (issue.resolved === true) {
+              count.resolved++;
+            } else {
+              count.total++;
+              if (issue.severity === "高") count.high++;
+            }
+            days.set(date, count);
+          }
+          const dates = [...days.keys()].sort();
+          const rows = [];
+          let total = 0,
+            resolved = 0,
+            high = 0;
+          if (dates.length) {
+            const start = Date.parse(dates[0] + "T00:00:00Z");
+            const end = Date.parse(dates[dates.length - 1] + "T00:00:00Z");
+            for (let time = start; time <= end; time += DAY) {
+              const date = new Date(time).toISOString().slice(0, 10);
+              const count = days.get(date) || {
+                total: 0,
+                resolved: 0,
+                high: 0,
+              };
+              total += count.total;
+              resolved += count.resolved;
+              high += count.high;
+              rows.push({ date, total, resolved, high });
+            }
+          }
+          return { rows, total, resolved, high, excluded };
+        }
+        function buildDailyAverage(items) {
+          const days = new Map();
+          for (const issue of Array.isArray(items) ? items : []) {
+            const time = Date.parse(issue.utc);
+            if (!Number.isFinite(time)) continue;
+            const date = new Date(time + 480 * 60000).toISOString().slice(0, 10);
+            const day = days.get(date) || { date, problems: 0, runs: new Set() };
+            day.runs.add(JSON.stringify([issue.name || issue.file || "未命名测试", issue.startedUTC || ""]));
+            if (issue.resolved !== true) day.problems++;
+            days.set(date, day);
+          }
+          return [...days.values()]
+            .sort((a, b) => a.date.localeCompare(b.date))
+            .map((day) => ({ date: day.date, problems: day.problems, runs: day.runs.size, average: day.problems / day.runs.size }));
+        }
+        if (typeof module !== "undefined" && module.exports) module.exports = { buildTrend, buildDailyAverage };
+        if (typeof document === "undefined") return;
+
+        const $ = (id) => document.getElementById(id);
+        const dialog = $("historyDashboardDialog");
+        const svg = $("historyTrendChart");
+        const series = [
+          { key: "total", label: "剩余问题", color: "#2864dc", dash: "" },
+          {
+            key: "resolved",
+            label: "累计已解决",
+            color: "#16815d",
+            dash: "7 4",
+          },
+          { key: "high", label: "剩余高优问题", color: "#b96b0a", dash: "2 4" },
+        ];
+        function node(tag, attributes = {}, text) {
+          const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+          for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value));
+          if (text !== undefined) element.textContent = text;
+          return element;
+        }
+        function renderDailyAverage(items) {
+          const rows = buildDailyAverage(items),
+            chart = $("historyAverageChart"),
+            body = $("historyAverageRows");
+          chart.replaceChildren();
+          body.replaceChildren();
+          chart.hidden = !rows.length;
+          $("historyAverageDetails").hidden = !rows.length;
+          $("historyAverageReadout").textContent = rows.length ? "悬停或用 Tab 选择数据点查看每日统计" : "暂无可统计的历史问题";
+          if (!rows.length) return;
+          const width = 840,
+            height = 280,
+            left = 55,
+            right = 24,
+            top = 24,
+            bottom = 48,
+            w = width - left - right,
+            h = height - top - bottom;
+          const max = Math.max(1, ...rows.map((row) => row.average)),
+            step = Math.max(0.5, Math.ceil((max / 5) * 2) / 2),
+            ceiling = step * 5;
+          const first = Date.parse(rows[0].date),
+            last = Date.parse(rows.at(-1).date);
+          const x = (row) => left + (first === last ? w / 2 : ((Date.parse(row.date) - first) / (last - first)) * w),
+            y = (value) => top + h - (value / ceiling) * h;
+          chart.setAttribute("viewBox", `0 0 ${width} ${height}`);
+          chart.append(node("title", {}, "每日每趟平均剩余问题数"));
+          for (let i = 0; i <= 5; i++) {
+            const yy = y(i * step);
+            chart.append(
+              node("line", { x1: left, x2: width - right, y1: yy, y2: yy, stroke: "#e4eaf1" }),
+              node("text", { x: left - 12, y: yy + 4, "text-anchor": "end", fill: "#78899a", "font-size": 12 }, String(i * step))
+            );
+          }
+          chart.append(
+            node("path", {
+              d: rows.map((row, i) => (i ? "L" : "M") + x(row) + "," + y(row.average)).join(" "),
+              fill: "none",
+              stroke: "#7755c7",
+              "stroke-width": 3,
+              "stroke-linejoin": "round",
+            })
+          );
+          rows.forEach((row, i) => {
+            const text = `${row.date} · 未解决 ${row.problems} 条 / ${row.runs} 趟 = ${row.average.toFixed(2)} 条/趟`;
+            const dot = node("circle", {
+              cx: x(row),
+              cy: y(row.average),
+              r: 6,
+              fill: "#7755c7",
+              stroke: "white",
+              "stroke-width": 2,
+              tabindex: 0,
+              "aria-label": text,
+            });
+            dot.append(node("title", {}, text));
+            const show = () => ($("historyAverageReadout").textContent = text);
+            dot.addEventListener("pointerenter", show);
+            dot.addEventListener("focus", show);
+            chart.append(dot);
+            if (i === 0 || i === rows.length - 1 || i % Math.max(1, Math.ceil(rows.length / 7)) === 0)
+              chart.append(node("text", { x: x(row), y: height - 18, "text-anchor": "middle", fill: "#78899a", "font-size": 12 }, row.date.slice(5)));
+            const tr = document.createElement("tr");
+            for (const value of [row.date, row.problems, row.runs, row.average.toFixed(2)]) {
+              const td = document.createElement("td");
+              td.textContent = String(value);
+              tr.append(td);
+            }
+            body.append(tr);
+          });
+        }
+        function render() {
+          renderDailyAverage(window.radarHistoryItems || []);
+          const trend = buildTrend(window.radarHistoryItems || []);
+          const rows = trend.rows;
+          for (const item of series) $("trendCount-" + item.key).textContent = String(trend[item.key]);
+          $("historyDashboardSummary").textContent = `剩余问题 ${trend.total} 条 · 已解决 ${trend.resolved} 条 · 剩余高优问题 ${trend.high} 条`;
+          $("historyTrendRange").textContent = rows.length ? `${rows[0].date} 至 ${rows[rows.length - 1].date} · 北京时间` : "尚无可统计的历史记录";
+          $("historyTrendQuality").textContent = trend.excluded ? `有 ${trend.excluded} 条记录缺少有效时间，未计入趋势。` : "";
+          $("historyTrendEmpty").hidden = !!rows.length;
+          svg.hidden = !rows.length;
+          svg.replaceChildren();
+          const tableBody = $("historyTrendRows");
+          tableBody.replaceChildren();
+          $("historyTrendDetails").hidden = !rows.length;
+          $("historyTrendReadout").textContent = "悬停或用 Tab 选择日期，查看截至该记录日的剩余问题统计";
+          if (!rows.length) return;
+
+          const width = 840,
+            height = 310,
+            left = 52,
+            right = 24,
+            top = 22,
+            bottom = 48;
+          const plotWidth = width - left - right,
+            plotHeight = height - top - bottom;
+          const tick = Math.max(1, Math.ceil(trend.total / 5));
+          const maxY = tick * 5;
+          const x = (i) => left + (rows.length === 1 ? plotWidth / 2 : (i / (rows.length - 1)) * plotWidth);
+          const y = (value) => top + plotHeight - (value / maxY) * plotHeight;
+          svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+          svg.append(node("title", { id: "historyTrendTitle" }, "剩余问题与剩余高优问题趋势图"));
+          svg.append(
+            node(
+              "desc",
+              {},
+              `按北京时间记录日期统计。剩余问题${trend.total}条，已解决${trend.resolved}条，剩余高优问题${trend.high}条。下方提供每日数据表。`
+            )
+          );
+          for (let i = 0; i <= 5; i++) {
+            const value = tick * i;
+            svg.append(
+              node("line", {
+                x1: left,
+                x2: width - right,
+                y1: y(value),
+                y2: y(value),
+                stroke: "#e5ebf3",
+              })
+            );
+            svg.append(
+              node(
+                "text",
+                {
+                  x: left - 10,
+                  y: y(value) + 4,
+                  "text-anchor": "end",
+                  fill: "#64748b",
+                  "font-size": 12,
+                },
+                value
+              )
+            );
+          }
+          svg.append(node("text", { x: left, y: 12, fill: "#64748b", "font-size": 12 }, "问题数 / 条"));
+          const labelEvery = Math.max(1, Math.ceil((rows.length - 1) / 7));
+          rows.forEach((row, i) => {
+            if (i % labelEvery === 0 || i === rows.length - 1) {
+              svg.append(
+                node(
+                  "text",
+                  {
+                    x: x(i),
+                    y: height - 19,
+                    "text-anchor": "middle",
+                    fill: "#64748b",
+                    "font-size": 12,
+                  },
+                  row.date.slice(5)
+                )
+              );
+            }
+          });
+          for (const item of series) {
+            const path = rows.map((row, i) => `${i ? "L" : "M"}${x(i)},${y(row[item.key])}`).join(" ");
+            svg.append(
+              node("path", {
+                d: path,
+                fill: "none",
+                stroke: item.color,
+                "stroke-width": 3,
+                "stroke-dasharray": item.dash,
+                "stroke-linejoin": "round",
+              })
+            );
+            for (let i = 0; i < rows.length; i++) {
+              svg.append(
+                node("circle", {
+                  cx: x(i),
+                  cy: y(rows[i][item.key]),
+                  r: 3.5,
+                  fill: "white",
+                  stroke: item.color,
+                  "stroke-width": 2,
+                })
+              );
+            }
+          }
+          const guide = node("line", {
+            y1: top,
+            y2: top + plotHeight,
+            stroke: "#8c9bb2",
+            "stroke-dasharray": "4 4",
+            visibility: "hidden",
+          });
+          svg.append(guide);
+          rows.forEach((row, i) => {
+            const step = rows.length === 1 ? plotWidth : plotWidth / (rows.length - 1);
+            const hit = node("rect", {
+              x: Math.max(left, x(i) - step / 2),
+              y: top,
+              width: rows.length === 1 ? plotWidth : i === 0 || i === rows.length - 1 ? step / 2 : step,
+              height: plotHeight,
+              fill: "transparent",
+              tabindex: 0,
+              role: "img",
+              "aria-label": `${row.date}：剩余问题${row.total}条，已解决${row.resolved}条，剩余高优问题${row.high}条`,
+            });
+            const show = () => {
+              guide.setAttribute("x1", x(i));
+              guide.setAttribute("x2", x(i));
+              guide.setAttribute("visibility", "visible");
+              $("historyTrendReadout").textContent = `${row.date} · 剩余问题 ${row.total} · 已解决 ${row.resolved} · 剩余高优问题 ${row.high}`;
+            };
+            hit.addEventListener("pointerenter", show);
+            hit.addEventListener("focus", show);
+            svg.append(hit);
+            const tr = document.createElement("tr");
+            for (const value of [row.date, row.total, row.resolved, row.high]) {
+              const td = document.createElement("td");
+              td.textContent = String(value);
+              tr.append(td);
+            }
+            tableBody.append(tr);
+          });
+        }
+        $("openHistoryDashboard").addEventListener("click", () => {
+          render();
+          if (!dialog.open) dialog.showModal();
+        });
+        $("closeHistoryDashboard").addEventListener("click", () => dialog.close());
+        window.addEventListener("radar-history-updated", render);
+        render();
       })();
     </script>
   </body>
