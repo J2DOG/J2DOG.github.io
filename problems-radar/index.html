@@ -1106,139 +1106,9 @@
         filter: grayscale(1);
         opacity: 0.55;
       }
-
-      #historyDashboardDialog {
-        width: min(960px, calc(100vw - 32px));
-        max-width: 960px;
-        max-height: 90dvh;
-        padding: 24px;
-        border: 1px solid #dce4ef;
-        border-radius: 20px;
-        overflow: auto;
-        color: #183047;
-      }
-      #historyDashboardDialog::backdrop {
-        background: #152b4666;
-        backdrop-filter: blur(3px);
-      }
-      #historyDashboardDialog header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-      #historyDashboardDialog h2 {
-        margin: 0;
-        font-size: 22px;
-      }
-      .trend-cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin: 20px 0 14px;
-      }
-      .trend-card {
-        padding: 16px;
-        border-radius: 14px;
-        background: #f3f6fb;
-        border-top: 3px solid var(--trend-color);
-      }
-      .trend-card span {
-        display: block;
-        color: #53677d;
-        font-size: 13px;
-      }
-      .trend-card strong {
-        display: block;
-        margin-top: 6px;
-        font-size: 30px;
-        color: var(--trend-color);
-      }
-      #historyTrendChart {
-        display: block;
-        width: 100%;
-        height: auto;
-        min-height: 190px;
-      }
-      #historyTrendChart[hidden] {
-        display: none;
-      }
-      #historyTrendChart rect:focus {
-        outline: none;
-        fill: #2864dc0c;
-      }
-      .trend-legend {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 18px;
-        margin: 12px 0 6px;
-        font-size: 13px;
-      }
-      .trend-legend span::before {
-        content: "";
-        display: inline-block;
-        width: 20px;
-        border-top: 3px solid var(--trend-color);
-        margin-right: 7px;
-        vertical-align: middle;
-      }
-      #historyTrendReadout {
-        min-height: 20px;
-        font-size: 13px;
-        font-variant-numeric: tabular-nums;
-        color: #35506e;
-      }
-      .trend-note {
-        color: #63738a;
-        font-size: 12px;
-        line-height: 1.7;
-      }
-      #historyTrendEmpty {
-        padding: 48px 12px;
-        text-align: center;
-        background: #f5f7fb;
-        border-radius: 14px;
-      }
-      #historyTrendDetails {
-        margin-top: 18px;
-      }
-      #historyTrendDetails table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 12px;
-        font-size: 13px;
-      }
-      #historyTrendDetails th,
-      #historyTrendDetails td {
-        padding: 9px 6px;
-        border-bottom: 1px solid #e5ebf3;
-        text-align: right;
-      }
-      #historyTrendDetails th:first-child,
-      #historyTrendDetails td:first-child {
-        text-align: left;
-      }
-      #historyDashboardSummary {
-        margin: 0;
-        font-size: 12px;
-        color: #53677d;
-        line-height: 1.7;
-      }
-      @media (max-width: 520px) {
-        #historyDashboardDialog {
-          padding: 16px;
-        }
-        .trend-cards {
-          gap: 6px;
-        }
-        .trend-card {
-          padding: 10px;
-        }
-        .trend-card strong {
-          font-size: 25px;
-        }
-      }
     </style>
+    <link rel="stylesheet" href="./dashboard.css">
+    <link rel="stylesheet" href="./sidebar.css">
   </head>
   <body>
     <main class="app">
@@ -1246,14 +1116,23 @@
       <button id="sidebarOpen" class="icon-button sidebar-toggle" aria-label="展开控制栏" aria-controls="sidebar" aria-expanded="false">☰</button>
       <aside id="sidebar" class="panel" aria-label="控制栏">
         <header>
-          <h1>Problems Radar<small>自动驾驶路测</small>
+          <div>
+            <span class="sidebar-eyebrow">ROAD TEST WORKSPACE</span>
+            <h1>Problems Radar<small>自动驾驶路测 · 记录与回溯</small>
 </h1>
+          </div>
           <button id="sidebarClose" class="icon-button" aria-label="收起控制栏" aria-controls="sidebar" aria-expanded="true">‹</button>
         </header>
-        <p id="status" role="status" aria-live="polite">准备定位</p>
-        <p id="hint" hidden></p>
-        <button id="toggleAllHistory" aria-pressed="false" hidden>隐藏全部历史问题（含点位）</button>
-        <section class="test-tools active-test">
+        <div class="sidebar-location">
+          <p id="status" role="status" aria-live="polite">准备定位</p>
+          <details id="locationHelp" hidden>
+            <summary>定位说明</summary>
+            <p id="hint" hidden></p>
+          </details>
+        </div>
+        <section class="test-tools active-test" aria-labelledby="activeTestTitle">
+          <h2 id="activeTestTitle" class="sidebar-section-title">本次测试 <span>SESSION</span>
+</h2>
           <label for="testPicker">测试记录</label><select id="testPicker">
             <option value="">选择一趟测试</option></select><label for="testName">新测试名称</label><input id="testName" maxlength="120" placeholder="例如：Wolfsburg 第一次路测">
           <button id="beginTest" class="primary">开始测试</button>
@@ -1264,14 +1143,22 @@
           <p id="testStatus" class="test-status" role="status" aria-live="polite">未开始测试</p>
         </section>
         <details class="config-section" id="historyDashboardPanel" open>
-          <summary>数据看板</summary>
+          <summary>
+            <span class="sidebar-summary-title"><span class="sidebar-section-index" aria-hidden="true">01</span>数据看板</span>
+          </summary>
           <div class="history-tools">
             <p id="historyDashboardSummary">尚无历史数据</p>
-            <button id="openHistoryDashboard">查看每日累计趋势</button>
+            <button id="openHistoryDashboard">打开历史问题看板</button>
           </div>
         </details>
+        <section class="sidebar-unlocated-option" aria-label="未定位问题入口">
+          <button id="openHistoryUnlocated"><span>未定位问题</span><span id="sidebarUnlocatedCount" aria-label="未定位问题数量">0</span></button>
+          <p id="sidebarUnlocatedSummary">单独管理无 GPS 的历史问题</p>
+        </section>
         <details class="config-section">
-          <summary>地图设置</summary>
+          <summary>
+            <span class="sidebar-summary-title"><span class="sidebar-section-index" aria-hidden="true">02</span>地图设置</span>
+          </summary>
           <div class="route-actions">
             <label for="route">路线选择</label><select id="route">
               <option value="">不显示路线</option>
@@ -1286,7 +1173,9 @@
           </div>
         </details>
         <details class="config-section">
-          <summary>导入历史问题</summary>
+          <summary>
+            <span class="sidebar-summary-title"><span class="sidebar-section-index" aria-hidden="true">03</span>历史问题</span>
+          </summary>
           <section class="history-tools">
             <div class="import-actions">
 <button id="importFolder">选文件夹</button><button id="importFiles">选文件</button>
@@ -1299,13 +1188,16 @@
               <option value="always">点位和卡片常驻显示</option>
               <option value="hidden">全部隐藏（含点位）</option>
             </select>
+            <button id="toggleAllHistory" aria-pressed="false" hidden>隐藏全部历史问题（含点位）</button>
             <p id="importFolderPath" class="folder-path">导入位置：未选择</p>
             <button id="clearImported" hidden>清空历史问题</button>
             <p id="importStatus" class="test-status" role="status"></p>
           </section>
         </details>
         <details class="config-section">
-          <summary>CSV 问题表重编辑</summary>
+          <summary>
+            <span class="sidebar-summary-title"><span class="sidebar-section-index" aria-hidden="true">04</span>CSV 问题表重编辑</span>
+          </summary>
           <div class="history-tools">
             <button id="editCSVFile">选择 CSV 文件</button>
             <input id="editCSVInput" type="file" accept=".csv,text/csv" hidden>
@@ -1316,7 +1208,9 @@
           </div>
         </details>
         <details class="config-section">
-          <summary>导出设置</summary>
+          <summary>
+            <span class="sidebar-summary-title"><span class="sidebar-section-index" aria-hidden="true">05</span>导出设置</span>
+          </summary>
           <div class="history-tools">
             <button id="chooseExportFolder">选择导出文件夹</button><button id="resetExportFolder">使用浏览器下载</button>
             <p id="exportFolderPath" class="folder-path">导出位置：浏览器下载目录</p>
@@ -1324,7 +1218,9 @@
           </div>
         </details>
         <details class="config-section telemetry">
-          <summary>定位详情</summary>
+          <summary>
+            <span class="sidebar-summary-title"><span class="sidebar-section-index" aria-hidden="true">06</span>定位详情</span>
+          </summary>
           <div class="stats">
             <div>
 <small>纬度 / 经度</small><strong id="coords">— / —</strong>
@@ -1402,68 +1298,144 @@
         </div>
       </dialog>
       <dialog id="historyDashboardDialog" aria-labelledby="historyDashboardTitle">
-        <header>
+        <header class="dashboard-header">
           <div>
+            <span class="dashboard-eyebrow">PROBLEMS RADAR / INSIGHTS</span>
             <h2 id="historyDashboardTitle">历史问题数据看板</h2>
-            <p id="historyTrendRange" class="trend-note"></p>
+            <p id="historyTrendRange"></p>
           </div>
-          <button id="closeHistoryDashboard" class="icon-button" aria-label="关闭数据看板">×</button>
+          <div class="dashboard-header-actions">
+            <span class="dashboard-timezone">德国当地时间</span><button id="closeHistoryDashboard" aria-label="关闭数据看板">×</button>
+          </div>
         </header>
-        <div class="trend-cards">
-          <div class="trend-card" style="--trend-color: #2864dc">
-<span>剩余问题</span><strong id="trendCount-total">0</strong>
-</div>
-          <div class="trend-card" style="--trend-color: #16815d">
-<span>累计已解决</span><strong id="trendCount-resolved">0</strong>
-</div>
-          <div class="trend-card" style="--trend-color: #b96b0a">
-<span>剩余高优问题</span><strong id="trendCount-high">0</strong>
-</div>
+        <div class="dashboard-content">
+          <div class="trend-cards">
+            <div class="trend-card" style="--trend-color: #2864b9">
+              <span>剩余问题</span><strong id="trendCount-total">0</strong><small>当前仍待解决</small>
+            </div>
+            <div class="trend-card" style="--trend-color: #c64545">
+              <span>剩余高优问题</span><strong id="trendCount-high">0</strong><small>优先关注 · 不含已解决</small>
+            </div>
+            <div class="trend-card" style="--trend-color: #258368">
+              <span>累计已解决</span><strong id="trendCount-resolved">0</strong><small>按当前解决状态统计</small>
+            </div>
+            <div class="trend-card" style="--trend-color: #334b42">
+              <span>已解决率</span><strong id="trendResolutionRate">—</strong><small id="trendResolutionCaption">等待导入历史数据</small>
+            </div>
+          </div>
+          <section class="dashboard-panel" aria-labelledby="trendSectionTitle">
+            <div class="dashboard-panel-heading">
+              <div>
+                <h3 id="trendSectionTitle">问题累计趋势</h3>
+                <p>截至各记录日的剩余问题与已解决问题</p>
+              </div>
+              <div class="trend-legend">
+                <span style="--trend-color: #2864b9">剩余问题</span><span style="--trend-color: #258368">累计已解决</span><span style="--trend-color: #c64545">剩余高优问题</span>
+              </div>
+            </div>
+            <div class="dashboard-chart-scroll"><svg id="historyTrendChart" role="img" aria-labelledby="historyTrendTitle"></svg></div>
+            <div id="historyTrendEmpty" class="dashboard-empty">
+              <strong>从一次路测，看到持续改善</strong>
+              <p>导入历史问题 CSV，即可查看问题分布与变化趋势。<br>无 GPS 的问题也会参与统计。</p>
+            </div>
+            <p id="historyTrendReadout" class="dashboard-readout" aria-live="polite"></p>
+            <details id="historyTrendDetails">
+              <summary>查看每日累计明细</summary>
+              <div class="dashboard-table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">日期（德国）</th>
+                      <th scope="col">剩余问题</th>
+                      <th scope="col">累计已解决</th>
+                      <th scope="col">剩余高优问题</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTrendRows"></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+          <section class="dashboard-panel" id="historyAveragePanel" aria-labelledby="averageSectionTitle">
+            <div class="dashboard-panel-heading">
+              <div>
+                <h3 id="averageSectionTitle">每日每趟平均剩余问题</h3>
+                <p>当天剩余问题数 ÷ 当天有问题记录的测试趟数</p>
+              </div>
+              <div class="trend-legend"><span style="--trend-color: #6e6ba7">平均剩余问题 / 趟</span></div>
+            </div>
+            <div class="dashboard-chart-scroll"><svg id="historyAverageChart" role="img" aria-labelledby="historyAverageTitle"></svg></div>
+            <p id="historyAverageReadout" class="dashboard-readout" aria-live="polite"></p>
+            <details id="historyAverageDetails">
+              <summary>查看每日每趟明细</summary>
+              <div class="dashboard-table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">日期（德国）</th>
+                      <th scope="col">剩余问题</th>
+                      <th scope="col">测试趟数</th>
+                      <th scope="col">平均剩余问题 / 趟</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyAverageRows"></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+          <footer class="dashboard-footer">
+            <p id="historyTrendQuality" role="status"></p>
+            <details>
+              <summary>统计口径</summary>
+              <p>
+                按德国当地日期（Europe/Berlin，自动适配夏令时）统计全部已加载的问题，不受地图显示方式影响。每趟仅保留一份
+                CSV，无坐标的问题仍计入看板。
+              </p>
+              <p>剩余问题及剩余高优问题均不含已解决项。已解决项归入原问题记录日期，并非实际解决日期；累计趋势在无新增的日期延续上一日数值。</p>
+              <p>日均统计中，已全部解决但有问题记录的趟次仍计入分母；没有任何问题记录的趟次无法从历史问题 CSV 中识别。</p>
+            </details>
+          </footer>
         </div>
-        <div class="trend-legend">
-          <span style="--trend-color: #2864dc">剩余问题</span><span style="--trend-color: #16815d">累计已解决</span><span style="--trend-color: #b96b0a">剩余高优问题</span>
+      </dialog>
+      <dialog id="historyUnlocatedDialog" aria-labelledby="historyUnlocatedTitle">
+        <header class="dashboard-header">
+          <div>
+            <span class="dashboard-eyebrow">PROBLEMS RADAR / UNLOCATED</span>
+            <h2 id="historyUnlocatedTitle">未定位问题</h2>
+            <p class="unlocated-dialog-note">独立管理没有 GPS 的历史问题，补充位置后自动显示到地图。</p>
+          </div>
+          <button id="closeHistoryUnlocated" aria-label="关闭未定位问题">×</button>
+        </header>
+        <div class="dashboard-content">
+          <div id="historyUnlocatedEmpty" class="dashboard-empty" hidden>
+            <strong>暂无未定位问题</strong>
+            <p>导入历史 CSV 后，缺少 GPS 的问题会显示在这里。</p>
+          </div>
+          <section class="dashboard-panel" id="historyUnlocatedPanel" aria-labelledby="unlocatedTitle" hidden>
+            <div class="dashboard-panel-heading">
+              <div>
+                <h3 id="unlocatedTitle">未定位问题 <span id="historyUnlocatedCount">0</span>
+</h3>
+                <p>未显示在地图上的问题 · 可编辑、标记已解决或补充 GPS</p>
+              </div>
+            </div>
+            <div class="dashboard-table-scroll">
+              <table class="unlocated-table">
+                <thead>
+                  <tr>
+                    <th scope="col">记录时间（德国）</th>
+                    <th scope="col">测试趟次</th>
+                    <th scope="col">问题描述</th>
+                    <th scope="col">等级</th>
+                    <th scope="col">状态</th>
+                    <th scope="col">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="historyUnlocatedRows"></tbody>
+              </table>
+            </div>
+          </section>
         </div>
-        <p id="historyTrendReadout"></p>
-        <svg id="historyTrendChart" role="img" aria-labelledby="historyTrendTitle"></svg>
-        <p id="historyTrendEmpty">导入历史问题后，将在这里展示三条累计趋势线。</p>
-        <p class="trend-note">统计全部已加载的历史记录，不受地图显示开关影响。按北京时间的问题记录日期逐日累计，无新增的日期延续前一天数值。</p>
-        <p class="trend-note">“剩余问题”和“剩余高优问题”均不包含已解决的问题。“已解决”按当前解决状态归入原问题记录日，并非实际解决日期。</p>
-        <p id="historyTrendQuality" class="trend-note" role="status"></p>
-        <h3>每日每趟平均剩余问题数</h3>
-        <p id="historyAverageReadout" class="trend-note">悬停数据点查看每日统计</p>
-        <svg id="historyAverageChart" role="img" aria-label="每日每趟平均剩余问题数" style="width: 100%; height: auto; display: block"></svg>
-        <p class="trend-note">
-          按北京时间统计：当天未解决问题数 ÷
-          当天有问题记录的测试趟数。同一趟中已解决的问题不计入分子，仍计入趟数；没有问题记录的测试无法从历史数据识别。
-        </p>
-        <details id="historyAverageDetails">
-          <summary>每日每趟明细</summary>
-          <table>
-            <thead>
-              <tr>
-                <th>日期（北京）</th>
-                <th>未解决问题</th>
-                <th>测试趟数</th>
-                <th>平均剩余问题 / 趟</th>
-              </tr>
-            </thead>
-            <tbody id="historyAverageRows"></tbody>
-          </table>
-        </details>
-        <details id="historyTrendDetails">
-          <summary>每日累计明细</summary>
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">日期（北京）</th>
-                <th scope="col">剩余问题</th>
-                <th scope="col">累计已解决</th>
-                <th scope="col">剩余高优问题</th>
-              </tr>
-            </thead>
-            <tbody id="historyTrendRows"></tbody>
-          </table>
-        </details>
       </dialog>
       <dialog id="historyEditDialog" aria-labelledby="historyEditTitle">
         <header>
@@ -2528,7 +2500,13 @@
           el("sidebarOpen").focus();
         };
         document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && !app.classList.contains("sidebar-closed")) el("sidebarClose").click();
+          if (
+            event.key === "Escape" &&
+            !event.defaultPrevented &&
+            !document.querySelector("dialog[open]") &&
+            !app.classList.contains("sidebar-closed")
+          )
+            el("sidebarClose").click();
         });
         setSidebar(preferences.sidebarOpen ?? !window.matchMedia("(max-width:600px)").matches);
         function message(status, hint) {
@@ -2536,6 +2514,8 @@
           const isError = /失败|不支持|未成功|无法|需要安全/.test(status);
           el("hint").textContent = isError ? hint : "";
           el("hint").hidden = !isError;
+          el("locationHelp").hidden = !isError;
+          el("status").dataset.state = isError ? "warning" : "ready";
           if (isError) setSidebar(true);
         }
         function locationButtonState() {
@@ -2826,7 +2806,7 @@
               animate: false,
             });
           document.querySelectorAll(".config-section").forEach((section, i) => {
-            section.open = Boolean(preferences.sections?.[i]);
+            section.open = preferences.sections?.[i] ?? section.open;
             section.addEventListener("toggle", savePreferences);
           });
           document.addEventListener("click", () => setTimeout(savePreferences, 0));
@@ -3711,7 +3691,8 @@
         if (!["纬度", "经度", "问题描述"].every((x) => header.includes(x))) throw Error("缺少纬度、经度或问题描述列");
         let skipped = 0,
           incomplete = 0;
-        const issues = [];
+        const issues = [],
+          records = [];
         for (const [rowIndex, row] of rows.entries()) {
           if (row.length !== header.length) {
             skipped++;
@@ -3721,27 +3702,25 @@
           const record = Object.fromEntries(header.map((h, i) => [h, row[i]]));
           const lat = Number(record["纬度"]),
             lon = Number(record["经度"]);
-          if (
+          const hasCoordinates = !(
             !record["纬度"].trim() ||
             !record["经度"].trim() ||
             !Number.isFinite(lat) ||
             !Number.isFinite(lon) ||
             Math.abs(lat) > 90 ||
             Math.abs(lon) > 180
-          ) {
-            skipped++;
+          );
+          if (!hasCoordinates) skipped++;
+          if (!hasCoordinates || !record["问题描述"].trim() || !record["记录UTC"]?.trim() || !Number.isFinite(Date.parse(record["记录UTC"])))
             incomplete++;
-            continue;
-          }
-          if (!record["问题描述"].trim() || !record["记录UTC"]?.trim() || !Number.isFinite(Date.parse(record["记录UTC"]))) incomplete++;
-          issues.push({
+          const issue = {
             rowIndex,
             resolved: record["已解决"] === "是" || record["已解决"] === "true",
-            latitude: lat,
-            longitude: lon,
+            latitude: hasCoordinates ? lat : null,
+            longitude: hasCoordinates ? lon : null,
             name: record["测试名称"] || "",
             startedUTC: record["测试开始UTC"] || "",
-            id: record["问题编号"] || String(issues.length + 1),
+            id: record["问题编号"] || String(records.length + 1),
             utc: record["记录UTC"] || "",
             utcOffsetMinutes:
               record["记录时区偏移分钟"]?.trim() && Number.isFinite(Number(record["记录时区偏移分钟"]))
@@ -3750,9 +3729,11 @@
             description: record["问题描述"],
             severity: record["问题等级"] || "未知",
             gpsUTC: record["GPS采样UTC"] || "",
-          });
+          };
+          records.push(issue);
+          if (hasCoordinates) issues.push(issue);
         }
-        return { issues, skipped, incomplete };
+        return { issues, records, skipped, incomplete };
       }
     </script>
     <script id="history-folder-reader">
@@ -3938,6 +3919,7 @@
           layer = L.featureGroup();
           if (historyVisible) layer.addTo(window.radarMap);
           for (const issue of items) {
+            if (!Number.isFinite(issue.latitude) || !Number.isFinite(issue.longitude)) continue;
             const appearance = issue.resolved ? "history-resolved severity-resolved" : severityClass(issue.severity);
             const label = document.createElement("span");
             label.textContent =
@@ -4032,15 +4014,21 @@
               const text = await file.text();
               const result = parseRadarCSV(text);
               const path = file.webkitRelativePath || file.name;
+              let editableTable = null;
+              try {
+                editableTable = readEditableRadarCSV(text);
+              } catch {
+                /* Valid records remain available for viewing and statistics. */
+              }
               radarHistorySources.set(path, {
-                table: readEditableRadarCSV(text),
+                table: editableTable,
                 handle: file.handle,
                 original: text,
                 name: file.name,
               });
               incompleteByFile.set(path, result.incomplete);
               items.push(
-                ...result.issues.map((issue) => ({
+                ...result.records.map((issue) => ({
                   ...issue,
                   file: file.webkitRelativePath || file.name,
                   fileModified: file.lastModified || 0,
@@ -4073,7 +4061,7 @@
             })
           )
             $("importStatus").textContent += " · 本地存储空间不足，刷新后需重新导入";
-          if (items.length && historyVisible) {
+          if (layer?.getLayers().length && historyVisible) {
             const app = document.querySelector(".app"),
               left = !app.classList.contains("sidebar-closed") && innerWidth > 600 ? 360 : 35;
             // Turn off following when viewing historical issues; GPS continues running.
@@ -4516,6 +4504,15 @@
       })();
     </script>
     <script id="history-edit-model">
+      function historyEditPosition(draft) {
+        const latitude = String(draft.latitude ?? "").trim(),
+          longitude = String(draft.longitude ?? "").trim();
+        if (!latitude && !longitude) return null;
+        const point = [Number(latitude), Number(longitude)];
+        if (!latitude || !longitude || !point.every(Number.isFinite) || Math.abs(point[0]) > 90 || Math.abs(point[1]) > 180)
+          throw Error("请填写有效的经纬度，或将两项同时留空");
+        return point;
+      }
       function mergeHistoryEdit(source, rowIndex, draft, latestText, initial) {
         const original = source.table,
           latest = readEditableRadarCSV(latestText),
@@ -4540,7 +4537,12 @@
           ["resolved", "已解决"],
         ];
         const value = (key, text) => (key === "resolved" ? ["是", "true"].includes(text) : text);
-        const equal = (key, a, b) => (key === "latitude" || key === "longitude" ? Number(a) === Number(b) : a === b);
+        const equal = (key, a, b) => {
+          if (key !== "latitude" && key !== "longitude") return a === b;
+          const left = String(a ?? "").trim(),
+            right = String(b ?? "").trim();
+          return !left || !right ? left === right : Number(left) === Number(right);
+        };
         for (const [key, column] of fields) {
           const base = initial ? initial[key] : value(key, get(original, baseRow, column)),
             current = value(key, get(latest, row, column));
@@ -4561,15 +4563,7 @@
           rows: source.table.rows.map((row) => row.slice()),
         };
         if (!table.rows[rowIndex]) throw Error("原 CSV 中找不到该问题，请重新导入");
-        const point = [Number(draft.latitude), Number(draft.longitude)];
-        if (
-          !String(draft.latitude).trim() ||
-          !String(draft.longitude).trim() ||
-          !point.every(Number.isFinite) ||
-          Math.abs(point[0]) > 90 ||
-          Math.abs(point[1]) > 180
-        )
-          throw Error("请输入有效经纬度");
+        const point = historyEditPosition(draft);
         if (!draft.description.trim()) throw Error("请填写问题描述");
         let column = table.header.findIndex((name) => name.trim() === "已解决");
         if (column < 0) {
@@ -4579,8 +4573,8 @@
         }
         for (const [name, value] of [
           ["问题描述", draft.description],
-          ["纬度", String(draft.latitude)],
-          ["经度", String(draft.longitude)],
+          ["纬度", point ? String(draft.latitude).trim() : ""],
+          ["经度", point ? String(draft.longitude).trim() : ""],
           ["已解决", draft.resolved ? "是" : "否"],
         ]) {
           table.rows[rowIndex][table.header.findIndex((header) => header.trim() === name)] = value;
@@ -4638,7 +4632,9 @@
           if (busy) return false;
           if (!session) return true;
           if (!discard && dirty() && !window.confirm("放弃当前未保存改动？原 CSV 尚未修改。")) return false;
-          session.marker.setLatLng([Number(session.initial.latitude), Number(session.initial.longitude)]);
+          if (String(session.initial.latitude).trim() && String(session.initial.longitude).trim())
+            session.marker.setLatLng([Number(session.initial.latitude), Number(session.initial.longitude)]);
+          if (session.temporaryMarker) session.marker.remove();
           session.marker.dragging?.disable();
           session.marker.off("dragend", session.dragend);
           if (session.autoOpen) session.marker.off("dragend", session.autoOpen);
@@ -4685,8 +4681,10 @@
                 original: null,
                 handle: null,
               };
+            if (source.original && !source.table)
+              throw Error("原 CSV 有列数不一致等格式问题。有效问题已保留显示，请先修正 CSV 格式后重新导入再编辑。");
             if (source.table && !Number.isInteger(issue.rowIndex)) {
-              const matches = parseRadarCSV(source.original).issues.filter(
+              const matches = parseRadarCSV(source.original).records.filter(
                 (row) => row.utc === issue.utc && row.id === issue.id && row.latitude === issue.latitude && row.longitude === issue.longitude
               );
               if (matches.length !== 1) throw Error("无法唯一匹配原 CSV 行，请重新导入");
@@ -4704,16 +4702,22 @@
                 }
               : {
                   description: issue.description || "",
-                  latitude: String(issue.latitude),
-                  longitude: String(issue.longitude),
+                  latitude: issue.latitude == null ? "" : String(issue.latitude),
+                  longitude: issue.longitude == null ? "" : String(issue.longitude),
                   resolved: !!issue.resolved,
                 };
+            const temporaryMarker = !marker;
+            if (temporaryMarker) {
+              if (!window.radarMap || !window.L) throw Error("地图尚未加载，请稍后重试");
+              marker = L.marker(window.radarMap.getCenter(), { draggable: true });
+            }
             session = {
               source,
               path: issue.file,
               originalIssue: { ...issue },
               rowIndex: issue.rowIndex,
               marker,
+              temporaryMarker,
               initial,
               draft: { ...initial },
               undo: [],
@@ -4732,9 +4736,13 @@
             };
             marker.on("dragend", session.dragend);
             marker.on("click", session.reopen);
-            marker.dragging?.enable();
+            if (!temporaryMarker) marker.dragging?.enable();
             $("historyEditFile").textContent = "原文件：" + issue.file;
-            say(source.handle ? "改动可撤回，保存后更新原 CSV。" : "可直接编辑；保存时再选择并授权原 CSV。");
+            $("historyEditDrag").textContent = temporaryMarker ? "在地图上添加位置" : "在地图上调整";
+            say(
+              (source.handle ? "改动可撤回，保存后更新原 CSV。" : "可直接编辑；保存时再选择并授权原 CSV。") +
+                (temporaryMarker ? " 经纬度可同时留空，也可以补充位置。" : "")
+            );
             fill();
             $("historyEditDialog").showModal();
           } catch (error) {
@@ -4751,12 +4759,23 @@
         $("historyEditUndo").onclick = () => {
           if (!session || busy || !session.undo.length) return;
           session.draft = session.undo.pop();
-          session.marker.setLatLng([Number(session.draft.latitude), Number(session.draft.longitude)]);
+          if (String(session.draft.latitude).trim() && String(session.draft.longitude).trim())
+            session.marker.setLatLng([Number(session.draft.latitude), Number(session.draft.longitude)]);
+          else if (session.temporaryMarker) session.marker.remove();
           fill();
           say(dirty() ? "已撤回上一步改动" : "已恢复编辑前的数据");
         };
         $("historyEditDrag").onclick = () => {
           if (!session || busy) return;
+          if (session.temporaryMarker) {
+            session.marker.addTo(window.radarMap);
+            session.marker.dragging?.enable();
+            if (!String(session.draft.latitude).trim() && !String(session.draft.longitude).trim()) {
+              const point = session.marker.getLatLng();
+              apply({ latitude: point.lat.toFixed(8), longitude: point.lng.toFixed(8) });
+              fill();
+            }
+          }
           $("historyEditDialog").close();
           $("returnHistoryEdit").hidden = false;
           if (!document.querySelector(".app").classList.contains("sidebar-closed")) $("sidebarClose").click();
@@ -4775,18 +4794,8 @@
           const editing = session;
           let writer;
           try {
-            const lat = Number(editing.draft.latitude),
-              lon = Number(editing.draft.longitude);
             if (!editing.draft.description.trim()) throw Error("请填写问题描述");
-            if (
-              !String(editing.draft.latitude).trim() ||
-              !String(editing.draft.longitude).trim() ||
-              !Number.isFinite(lat) ||
-              !Number.isFinite(lon) ||
-              Math.abs(lat) > 90 ||
-              Math.abs(lon) > 180
-            )
-              throw Error("请输入有效经纬度");
+            historyEditPosition(editing.draft);
 
             busy = true;
             $("historyEditSave").disabled = true;
@@ -4809,7 +4818,7 @@
               if (!editing.source.table) {
                 if (picked.name !== editing.source.name) throw Error("请选择原文件「" + editing.source.name + "」");
                 const original = editing.originalIssue;
-                const matches = parseRadarCSV(picked.original).issues.filter(
+                const matches = parseRadarCSV(picked.original).records.filter(
                   (row) =>
                     row.utc === original.utc && row.id === original.id && row.latitude === original.latitude && row.longitude === original.longitude
                 );
@@ -4842,7 +4851,7 @@
               new CustomEvent("radar-history-file-saved", {
                 detail: {
                   path: editing.path,
-                  issues: parseRadarCSV(output.text).issues,
+                  issues: parseRadarCSV(output.text).records,
                 },
               })
             );
@@ -4886,312 +4895,6 @@
         });
       })();
     </script>
-    <script>
-      (() => {
-        const DAY = 86400000;
-        function buildTrend(items) {
-          const days = new Map();
-          let excluded = 0;
-          for (const issue of Array.isArray(items) ? items : []) {
-            const time = Date.parse(issue.utc);
-            if (!Number.isFinite(time)) {
-              excluded++;
-              continue;
-            }
-            const date = new Date(time + 480 * 60000).toISOString().slice(0, 10);
-            const count = days.get(date) || { total: 0, resolved: 0, high: 0 };
-            if (issue.resolved === true) {
-              count.resolved++;
-            } else {
-              count.total++;
-              if (issue.severity === "高") count.high++;
-            }
-            days.set(date, count);
-          }
-          const dates = [...days.keys()].sort();
-          const rows = [];
-          let total = 0,
-            resolved = 0,
-            high = 0;
-          if (dates.length) {
-            const start = Date.parse(dates[0] + "T00:00:00Z");
-            const end = Date.parse(dates[dates.length - 1] + "T00:00:00Z");
-            for (let time = start; time <= end; time += DAY) {
-              const date = new Date(time).toISOString().slice(0, 10);
-              const count = days.get(date) || {
-                total: 0,
-                resolved: 0,
-                high: 0,
-              };
-              total += count.total;
-              resolved += count.resolved;
-              high += count.high;
-              rows.push({ date, total, resolved, high });
-            }
-          }
-          return { rows, total, resolved, high, excluded };
-        }
-        function buildDailyAverage(items) {
-          const days = new Map();
-          for (const issue of Array.isArray(items) ? items : []) {
-            const time = Date.parse(issue.utc);
-            if (!Number.isFinite(time)) continue;
-            const date = new Date(time + 480 * 60000).toISOString().slice(0, 10);
-            const day = days.get(date) || { date, problems: 0, runs: new Set() };
-            day.runs.add(JSON.stringify([issue.name || issue.file || "未命名测试", issue.startedUTC || ""]));
-            if (issue.resolved !== true) day.problems++;
-            days.set(date, day);
-          }
-          return [...days.values()]
-            .sort((a, b) => a.date.localeCompare(b.date))
-            .map((day) => ({ date: day.date, problems: day.problems, runs: day.runs.size, average: day.problems / day.runs.size }));
-        }
-        if (typeof module !== "undefined" && module.exports) module.exports = { buildTrend, buildDailyAverage };
-        if (typeof document === "undefined") return;
-
-        const $ = (id) => document.getElementById(id);
-        const dialog = $("historyDashboardDialog");
-        const svg = $("historyTrendChart");
-        const series = [
-          { key: "total", label: "剩余问题", color: "#2864dc", dash: "" },
-          {
-            key: "resolved",
-            label: "累计已解决",
-            color: "#16815d",
-            dash: "7 4",
-          },
-          { key: "high", label: "剩余高优问题", color: "#b96b0a", dash: "2 4" },
-        ];
-        function node(tag, attributes = {}, text) {
-          const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
-          for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value));
-          if (text !== undefined) element.textContent = text;
-          return element;
-        }
-        function renderDailyAverage(items) {
-          const rows = buildDailyAverage(items),
-            chart = $("historyAverageChart"),
-            body = $("historyAverageRows");
-          chart.replaceChildren();
-          body.replaceChildren();
-          chart.hidden = !rows.length;
-          $("historyAverageDetails").hidden = !rows.length;
-          $("historyAverageReadout").textContent = rows.length ? "悬停或用 Tab 选择数据点查看每日统计" : "暂无可统计的历史问题";
-          if (!rows.length) return;
-          const width = 840,
-            height = 280,
-            left = 55,
-            right = 24,
-            top = 24,
-            bottom = 48,
-            w = width - left - right,
-            h = height - top - bottom;
-          const max = Math.max(1, ...rows.map((row) => row.average)),
-            step = Math.max(0.5, Math.ceil((max / 5) * 2) / 2),
-            ceiling = step * 5;
-          const first = Date.parse(rows[0].date),
-            last = Date.parse(rows.at(-1).date);
-          const x = (row) => left + (first === last ? w / 2 : ((Date.parse(row.date) - first) / (last - first)) * w),
-            y = (value) => top + h - (value / ceiling) * h;
-          chart.setAttribute("viewBox", `0 0 ${width} ${height}`);
-          chart.append(node("title", {}, "每日每趟平均剩余问题数"));
-          for (let i = 0; i <= 5; i++) {
-            const yy = y(i * step);
-            chart.append(
-              node("line", { x1: left, x2: width - right, y1: yy, y2: yy, stroke: "#e4eaf1" }),
-              node("text", { x: left - 12, y: yy + 4, "text-anchor": "end", fill: "#78899a", "font-size": 12 }, String(i * step))
-            );
-          }
-          chart.append(
-            node("path", {
-              d: rows.map((row, i) => (i ? "L" : "M") + x(row) + "," + y(row.average)).join(" "),
-              fill: "none",
-              stroke: "#7755c7",
-              "stroke-width": 3,
-              "stroke-linejoin": "round",
-            })
-          );
-          rows.forEach((row, i) => {
-            const text = `${row.date} · 未解决 ${row.problems} 条 / ${row.runs} 趟 = ${row.average.toFixed(2)} 条/趟`;
-            const dot = node("circle", {
-              cx: x(row),
-              cy: y(row.average),
-              r: 6,
-              fill: "#7755c7",
-              stroke: "white",
-              "stroke-width": 2,
-              tabindex: 0,
-              "aria-label": text,
-            });
-            dot.append(node("title", {}, text));
-            const show = () => ($("historyAverageReadout").textContent = text);
-            dot.addEventListener("pointerenter", show);
-            dot.addEventListener("focus", show);
-            chart.append(dot);
-            if (i === 0 || i === rows.length - 1 || i % Math.max(1, Math.ceil(rows.length / 7)) === 0)
-              chart.append(node("text", { x: x(row), y: height - 18, "text-anchor": "middle", fill: "#78899a", "font-size": 12 }, row.date.slice(5)));
-            const tr = document.createElement("tr");
-            for (const value of [row.date, row.problems, row.runs, row.average.toFixed(2)]) {
-              const td = document.createElement("td");
-              td.textContent = String(value);
-              tr.append(td);
-            }
-            body.append(tr);
-          });
-        }
-        function render() {
-          renderDailyAverage(window.radarHistoryItems || []);
-          const trend = buildTrend(window.radarHistoryItems || []);
-          const rows = trend.rows;
-          for (const item of series) $("trendCount-" + item.key).textContent = String(trend[item.key]);
-          $("historyDashboardSummary").textContent = `剩余问题 ${trend.total} 条 · 已解决 ${trend.resolved} 条 · 剩余高优问题 ${trend.high} 条`;
-          $("historyTrendRange").textContent = rows.length ? `${rows[0].date} 至 ${rows[rows.length - 1].date} · 北京时间` : "尚无可统计的历史记录";
-          $("historyTrendQuality").textContent = trend.excluded ? `有 ${trend.excluded} 条记录缺少有效时间，未计入趋势。` : "";
-          $("historyTrendEmpty").hidden = !!rows.length;
-          svg.hidden = !rows.length;
-          svg.replaceChildren();
-          const tableBody = $("historyTrendRows");
-          tableBody.replaceChildren();
-          $("historyTrendDetails").hidden = !rows.length;
-          $("historyTrendReadout").textContent = "悬停或用 Tab 选择日期，查看截至该记录日的剩余问题统计";
-          if (!rows.length) return;
-
-          const width = 840,
-            height = 310,
-            left = 52,
-            right = 24,
-            top = 22,
-            bottom = 48;
-          const plotWidth = width - left - right,
-            plotHeight = height - top - bottom;
-          const tick = Math.max(1, Math.ceil(trend.total / 5));
-          const maxY = tick * 5;
-          const x = (i) => left + (rows.length === 1 ? plotWidth / 2 : (i / (rows.length - 1)) * plotWidth);
-          const y = (value) => top + plotHeight - (value / maxY) * plotHeight;
-          svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-          svg.append(node("title", { id: "historyTrendTitle" }, "剩余问题与剩余高优问题趋势图"));
-          svg.append(
-            node(
-              "desc",
-              {},
-              `按北京时间记录日期统计。剩余问题${trend.total}条，已解决${trend.resolved}条，剩余高优问题${trend.high}条。下方提供每日数据表。`
-            )
-          );
-          for (let i = 0; i <= 5; i++) {
-            const value = tick * i;
-            svg.append(
-              node("line", {
-                x1: left,
-                x2: width - right,
-                y1: y(value),
-                y2: y(value),
-                stroke: "#e5ebf3",
-              })
-            );
-            svg.append(
-              node(
-                "text",
-                {
-                  x: left - 10,
-                  y: y(value) + 4,
-                  "text-anchor": "end",
-                  fill: "#64748b",
-                  "font-size": 12,
-                },
-                value
-              )
-            );
-          }
-          svg.append(node("text", { x: left, y: 12, fill: "#64748b", "font-size": 12 }, "问题数 / 条"));
-          const labelEvery = Math.max(1, Math.ceil((rows.length - 1) / 7));
-          rows.forEach((row, i) => {
-            if (i % labelEvery === 0 || i === rows.length - 1) {
-              svg.append(
-                node(
-                  "text",
-                  {
-                    x: x(i),
-                    y: height - 19,
-                    "text-anchor": "middle",
-                    fill: "#64748b",
-                    "font-size": 12,
-                  },
-                  row.date.slice(5)
-                )
-              );
-            }
-          });
-          for (const item of series) {
-            const path = rows.map((row, i) => `${i ? "L" : "M"}${x(i)},${y(row[item.key])}`).join(" ");
-            svg.append(
-              node("path", {
-                d: path,
-                fill: "none",
-                stroke: item.color,
-                "stroke-width": 3,
-                "stroke-dasharray": item.dash,
-                "stroke-linejoin": "round",
-              })
-            );
-            for (let i = 0; i < rows.length; i++) {
-              svg.append(
-                node("circle", {
-                  cx: x(i),
-                  cy: y(rows[i][item.key]),
-                  r: 3.5,
-                  fill: "white",
-                  stroke: item.color,
-                  "stroke-width": 2,
-                })
-              );
-            }
-          }
-          const guide = node("line", {
-            y1: top,
-            y2: top + plotHeight,
-            stroke: "#8c9bb2",
-            "stroke-dasharray": "4 4",
-            visibility: "hidden",
-          });
-          svg.append(guide);
-          rows.forEach((row, i) => {
-            const step = rows.length === 1 ? plotWidth : plotWidth / (rows.length - 1);
-            const hit = node("rect", {
-              x: Math.max(left, x(i) - step / 2),
-              y: top,
-              width: rows.length === 1 ? plotWidth : i === 0 || i === rows.length - 1 ? step / 2 : step,
-              height: plotHeight,
-              fill: "transparent",
-              tabindex: 0,
-              role: "img",
-              "aria-label": `${row.date}：剩余问题${row.total}条，已解决${row.resolved}条，剩余高优问题${row.high}条`,
-            });
-            const show = () => {
-              guide.setAttribute("x1", x(i));
-              guide.setAttribute("x2", x(i));
-              guide.setAttribute("visibility", "visible");
-              $("historyTrendReadout").textContent = `${row.date} · 剩余问题 ${row.total} · 已解决 ${row.resolved} · 剩余高优问题 ${row.high}`;
-            };
-            hit.addEventListener("pointerenter", show);
-            hit.addEventListener("focus", show);
-            svg.append(hit);
-            const tr = document.createElement("tr");
-            for (const value of [row.date, row.total, row.resolved, row.high]) {
-              const td = document.createElement("td");
-              td.textContent = String(value);
-              tr.append(td);
-            }
-            tableBody.append(tr);
-          });
-        }
-        $("openHistoryDashboard").addEventListener("click", () => {
-          render();
-          if (!dialog.open) dialog.showModal();
-        });
-        $("closeHistoryDashboard").addEventListener("click", () => dialog.close());
-        window.addEventListener("radar-history-updated", render);
-        render();
-      })();
-    </script>
+    <script src="./dashboard.js"></script>
   </body>
 </html>
