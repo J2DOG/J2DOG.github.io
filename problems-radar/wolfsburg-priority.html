@@ -732,6 +732,7 @@
           [16.9, 17.5, "修图", "完成该路段地图修正。"],
         ];
       const range = (x) => x[0].toFixed(2) + "–" + x[1].toFixed(2) + " km";
+      const resolvedIssues = new Set([0, 1, 2, 3, 4, 6, 7]);
       const exportMode = new URLSearchParams(location.search).has("export");
       if (exportMode) document.body.classList.add("export");
       if (!window.L) {
@@ -770,7 +771,7 @@
           cards[i].scrollIntoView({ block: "nearest" });
         }
         issues.forEach((issue, i) => {
-          const color = i === 1 || i === 3 || i >= 6 ? "#18875b" : issue[2] === "高度" ? "#d74343" : "#e49824";
+          const color = resolvedIssues.has(i) ? "#18875b" : issue[2] === "高度" ? "#d74343" : "#e49824";
           const line = L.polyline(segment(issue[0], issue[1]), {
             color,
             weight: i === 3 || i >= 6 ? 5 : 9,
@@ -780,7 +781,7 @@
           lines.push(line);
           const popup = document.createElement("div");
           const title = document.createElement("strong");
-          title.textContent = i + 1 + ". " + range(issue) + " · " + issue[2];
+          title.textContent = i + 1 + ". " + range(issue) + " · " + (resolvedIssues.has(i) ? "已解决" : issue[2]);
           const desc = document.createElement("p");
           desc.textContent = issue[3];
           popup.append(title, desc);
@@ -809,7 +810,7 @@
             '</div><div class="top"><strong>' +
             range(issue) +
             '</strong><span class="badge">' +
-            issue[2] +
+            (resolvedIssues.has(i) ? "已解决" : issue[2]) +
             "</span></div>";
           const p = document.createElement("p");
           p.textContent = issue[3];
@@ -852,10 +853,10 @@
             [-400, -95],
           ];
           const annotations = issues.slice(0, 6).map((issue, i) => {
-            const color = i === 1 || i === 3 || i >= 6 ? "#18875b" : issue[2] === "高度" ? "#d74343" : "#e49824";
+            const color = resolvedIssues.has(i) ? "#18875b" : issue[2] === "高度" ? "#d74343" : "#e49824";
             const card = document.createElement("div");
             card.className = "figure-callout";
-            if (i === 1 || i === 3) {
+            if (resolvedIssues.has(i)) {
               card.style.background = "#eef9f2";
               card.style.borderColor = "#c9e6d5";
             }
@@ -865,7 +866,7 @@
             title.textContent = i === 3 ? "4 · 地图修正" : i + 1 + " · " + range(issue);
             const badge = document.createElement("span");
             badge.className = "badge";
-            badge.textContent = i === 1 || i === 3 ? "已解决" : issue[2];
+            badge.textContent = resolvedIssues.has(i) ? "已解决" : issue[2];
             const description = document.createElement("p");
             description.textContent = i === 3 ? "完成标注路段的地图修正。" : issue[3];
             description.style.whiteSpace = "pre-line";
@@ -888,11 +889,11 @@
                 html:
                   '<div style="background:' +
                   color +
-                  ';position:relative;color:#20354b;border:1px solid white;border-radius:50%;width:12px;height:12px;text-align:center;line-height:12px;font-weight:800;font-size:26px"><span style="position:absolute;left:15px;top:-17px;text-shadow:0 1px 3px white,0 -1px 3px white">' +
+                  ';color:white;border:3px solid white;border-radius:50%;width:44px;height:44px;text-align:center;line-height:38px;font-weight:800;font-size:26px"><span>' +
                   (i + 1) +
                   "</span></div>",
-                iconSize: [12, 12],
-                iconAnchor: i === 2 ? [6, 20] : i === 3 ? [-8, 6] : [6, 6],
+                iconSize: [44, 44],
+                iconAnchor: i === 2 ? [22, 36] : i === 3 ? [8, 22] : [22, 22],
               }),
             }).addTo(map);
             const targets = i === 3 ? [issue, issues[6], issues[7]] : [issue];
